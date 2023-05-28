@@ -79,6 +79,8 @@ dependencies {
 
     implementation(libs.coil.kt.compose)
 
+    implementation(libs.accompanist.webview)
+
     testImplementation(libs.junit)
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.androidx.test.ext.junit)
