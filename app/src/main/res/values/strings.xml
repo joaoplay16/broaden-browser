@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Broaden Browser</string>
+    <string name="search_bar_placeholder">Search or enter address</string>
+    <string name="clear_icon_cd">clear\n</string>
 </resources>
