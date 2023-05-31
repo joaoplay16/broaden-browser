@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -34,7 +35,6 @@ import com.playlab.broadenbrowser.R
 import com.playlab.broadenbrowser.ui.components.SearchBar
 import com.playlab.broadenbrowser.ui.components.TabCounter
 import com.playlab.broadenbrowser.ui.theme.BroadenBrowserTheme
-import com.playlab.broadenbrowser.ui.theme.PurpleGrey40
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
@@ -53,7 +53,8 @@ fun BrowserScreen(
             Box(
                 modifier = modifier
                     .weight(1f)
-                    .background(Color.Red)
+                    .fillMaxSize()
+                    .background(Color.Gray)
             )
         } else {
             WebView(
