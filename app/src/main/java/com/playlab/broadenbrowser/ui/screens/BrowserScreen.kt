@@ -114,7 +114,6 @@ fun BrowserScreen(
             )
 
             // TODO: Add click action
-            // TODO: Change the temporary icon
             Icon(
                 modifier = Modifier
                     .clickable { },
