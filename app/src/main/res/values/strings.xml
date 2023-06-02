@@ -4,4 +4,14 @@
     <string name="clear_icon_cd">Clear</string>
     <string name="menu_icon_cd">Menu</string>
     <string name="expand_icon_cd">Fullscreen</string>
+    <string name="new_tab">New tab</string>
+    <string name="add">Add</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="history">History</string>
+    <string name="desktop_site">Desktop site</string>
+    <string name="settings">Settings</string>
+    <string name="ic_arrow_left_cd">Go back</string>
+    <string name="ic_arrow_right_cd">Go forward</string>
+    <string name="ic_reload_cd">Reload</string>
+    <string name="ic_share_cd">Share</string>
 </resources>
