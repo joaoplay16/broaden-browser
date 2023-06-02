@@ -54,6 +54,8 @@ fun BrowserScreen(
 
     var searchBarText by remember { mutableStateOf("") }
 
+    var browserOptionsMenuExpanded by remember { mutableStateOf(false) }
+
     Column(
         verticalArrangement = Arrangement.Bottom
     ) {
@@ -121,14 +123,20 @@ fun BrowserScreen(
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
 
-            // TODO: Add click action
-            Icon(
-                modifier = Modifier
-                    .clickable { },
-                painter = painterResource(id = R.drawable.dots_vertical),
-                contentDescription = stringResource(id = R.string.menu_icon_cd),
-                tint = MaterialTheme.colorScheme.outline
-            )
+            Box {
+                Icon(
+                    modifier = Modifier.clickable { browserOptionsMenuExpanded = true },
+                    painter = painterResource(id = R.drawable.dots_vertical),
+                    contentDescription = stringResource(id = R.string.menu_icon_cd),
+                    tint = MaterialTheme.colorScheme.outline
+                )
+                if (browserOptionsMenuExpanded) {
+                    BrowserOptionsMenu(
+                        expanded = browserOptionsMenuExpanded,
+                        onDismissRequest = { browserOptionsMenuExpanded = false }
+                    )
+                }
+            }
             Spacer(
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
