@@ -50,6 +50,7 @@ fun BrowserScreen(
     modifier: Modifier = Modifier
 ) {
     val isInEditMode = LocalInspectionMode.current
+
     val webViewState = rememberWebViewState("https://m3.material.io/")
 
     var searchBarText by remember { mutableStateOf("") }
@@ -91,7 +92,7 @@ fun BrowserScreen(
                     .weight(1f),
                 text = searchBarText,
                 onTextChange = { searchBarText = it },
-                onClearClick = { searchBarText = ""},
+                onClearClick = { searchBarText = "" },
                 onSearch = { }
             )
 
@@ -102,7 +103,7 @@ fun BrowserScreen(
             // TODO: Add click action
             // TODO: Provide counter value
             TabCounter(
-                modifier = Modifier.clickable {  },
+                modifier = Modifier.clickable { },
                 count = 0
             )
 
@@ -130,11 +131,11 @@ fun BrowserScreen(
                     contentDescription = stringResource(id = R.string.menu_icon_cd),
                     tint = MaterialTheme.colorScheme.outline
                 )
-                    BrowserOptionsMenu(
-                        expanded = browserOptionsMenuExpanded,
-                        onDismissRequest = { browserOptionsMenuExpanded = false }
-                    )
-                }
+                BrowserOptionsMenu(
+                    expanded = browserOptionsMenuExpanded,
+                    onDismissRequest = { browserOptionsMenuExpanded = false }
+                )
+            }
             Spacer(
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
@@ -269,7 +270,7 @@ private fun BrowserOptionsMenu(
                 .height(1.dp)
                 .background(MaterialTheme.colorScheme.outline.copy(0.2f))
         )
-        Row (
+        Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
