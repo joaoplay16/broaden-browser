@@ -130,13 +130,11 @@ fun BrowserScreen(
                     contentDescription = stringResource(id = R.string.menu_icon_cd),
                     tint = MaterialTheme.colorScheme.outline
                 )
-                if (browserOptionsMenuExpanded) {
                     BrowserOptionsMenu(
                         expanded = browserOptionsMenuExpanded,
                         onDismissRequest = { browserOptionsMenuExpanded = false }
                     )
                 }
-            }
             Spacer(
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
