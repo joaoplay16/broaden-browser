@@ -1,4 +1,4 @@
-package com.playlab.broadenbrowser.ui.screens
+package com.playlab.broadenbrowser.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,8 +17,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.playlab.broadenbrowser.ui.components.SheetTabBar
-import com.playlab.broadenbrowser.ui.components.TabPage
 import com.playlab.broadenbrowser.ui.theme.BroadenBrowserTheme
 
 @Composable
