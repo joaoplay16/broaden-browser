@@ -51,7 +51,7 @@ fun TabCounter(
                 shape = RoundedCornerShape(3.dp)
             )
             .border(
-                1.dp,
+                1.5.dp,
                 colors.borderColor,
                 RoundedCornerShape(3.dp)
             ),
