@@ -16,17 +16,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Expand
+import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,10 +44,13 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewState
 import com.playlab.broadenbrowser.R
+import com.playlab.broadenbrowser.ui.components.BottomSheetContent
 import com.playlab.broadenbrowser.ui.components.SearchBar
 import com.playlab.broadenbrowser.ui.components.TabCounter
 import com.playlab.broadenbrowser.ui.theme.BroadenBrowserTheme
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun BrowserScreen(
@@ -57,88 +64,102 @@ fun BrowserScreen(
 
     var browserOptionsMenuExpanded by remember { mutableStateOf(false) }
 
-    Column(
-        verticalArrangement = Arrangement.Bottom
+    val coroutineScope = rememberCoroutineScope()
+
+    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
+
+    BottomSheetScaffold(
+        scaffoldState = bottomSheetScaffoldState,
+        sheetPeekHeight = 0.dp,
+        sheetContent = { BottomSheetContent() }
     ) {
-        if (isInEditMode) {
-            Box(
-                modifier = modifier
-                    .weight(1f)
-                    .fillMaxSize()
-                    .background(Color.Gray)
-            )
-        } else {
-            WebView(
-                modifier = modifier.weight(1f),
-                state = webViewState,
-                onCreated = {
-                    it.settings.domStorageEnabled = true
-                    it.settings.javaScriptEnabled = true
-                }
-            )
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background),
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            verticalArrangement = Arrangement.Bottom
         ) {
-
-            // TODO: Implement onSearch action
-            SearchBar(
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .padding(vertical = 8.dp)
-                    .weight(1f),
-                text = searchBarText,
-                onTextChange = { searchBarText = it },
-                onClearClick = { searchBarText = "" },
-                onSearch = { }
-            )
-
-            Spacer(
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
-
-            // TODO: Add click action
-            // TODO: Provide counter value
-            TabCounter(
-                modifier = Modifier.clickable { },
-                count = 0
-            )
-
-            Spacer(
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
-
-            // TODO: Add click action
-            Icon(
-                modifier = Modifier
-                    .clickable { },
-                imageVector = Icons.Default.Expand,
-                contentDescription = stringResource(id = R.string.expand_icon_cd),
-                tint = MaterialTheme.colorScheme.outline
-            )
-
-            Spacer(
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
-
-            Box {
-                Icon(
-                    modifier = Modifier.clickable { browserOptionsMenuExpanded = true },
-                    painter = painterResource(id = R.drawable.dots_vertical),
-                    contentDescription = stringResource(id = R.string.menu_icon_cd),
-                    tint = MaterialTheme.colorScheme.outline
+            if (isInEditMode) {
+                Box(
+                    modifier = modifier
+                        .weight(1f)
+                        .fillMaxSize()
+                        .background(Color.Gray)
                 )
-                BrowserOptionsMenu(
-                    expanded = browserOptionsMenuExpanded,
-                    onDismissRequest = { browserOptionsMenuExpanded = false }
+            } else {
+                WebView(
+                    modifier = modifier.weight(1f),
+                    state = webViewState,
+                    onCreated = {
+                        it.settings.domStorageEnabled = true
+                        it.settings.javaScriptEnabled = true
+                    }
                 )
             }
-            Spacer(
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.background),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                // TODO: Implement onSearch action
+                SearchBar(
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .padding(vertical = 8.dp)
+                        .weight(1f),
+                    text = searchBarText,
+                    onTextChange = { searchBarText = it },
+                    onClearClick = { searchBarText = "" },
+                    onSearch = { }
+                )
+
+                Spacer(
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+
+                // TODO: Add click action
+                // TODO: Provide counter value
+                TabCounter(
+                    modifier = Modifier.clickable {
+                        coroutineScope.launch {
+                            bottomSheetScaffoldState.bottomSheetState.expand()
+                        }
+                    },
+                    count = 0
+                )
+
+                Spacer(
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+
+                // TODO: Add click action
+                Icon(
+                    modifier = Modifier
+                        .clickable { },
+                    imageVector = Icons.Default.Expand,
+                    contentDescription = stringResource(id = R.string.expand_icon_cd),
+                    tint = MaterialTheme.colorScheme.outline
+                )
+
+                Spacer(
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+
+                Box {
+                    Icon(
+                        modifier = Modifier.clickable { browserOptionsMenuExpanded = true },
+                        painter = painterResource(id = R.drawable.dots_vertical),
+                        contentDescription = stringResource(id = R.string.menu_icon_cd),
+                        tint = MaterialTheme.colorScheme.outline
+                    )
+                    BrowserOptionsMenu(
+                        expanded = browserOptionsMenuExpanded,
+                        onDismissRequest = { browserOptionsMenuExpanded = false }
+                    )
+                }
+                Spacer(
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+            }
         }
     }
 }
