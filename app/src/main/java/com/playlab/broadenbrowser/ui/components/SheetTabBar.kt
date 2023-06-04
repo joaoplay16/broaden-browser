@@ -55,11 +55,21 @@ fun SheetTabBar(
         }
     ) {
 
+        val selectionColor: @Composable (TabPage) -> Color = { page ->
+            if (page == tabPage)
+                MaterialTheme.colorScheme.primary
+            else MaterialTheme.colorScheme.outline
+        }
+
         IconButton(
             modifier = Modifier,
             onClick = { onTabSelected(TabPage.OpenTabs) }
         ) {
             TabCounter(
+                colors = TabCounterDefaults.tabCounterColors().copy(
+                        borderColor = selectionColor(TabPage.OpenTabs),
+                        textColor = selectionColor(TabPage.OpenTabs)
+                    ),
                 count = openTabsCount
             )
         }
@@ -68,6 +78,7 @@ fun SheetTabBar(
             Icon(
                 painter = painterResource(id = R.drawable.star_shooting_outline),
                 contentDescription = null,
+                tint = selectionColor(TabPage.Favorite)
             )
         }
 
@@ -75,6 +86,7 @@ fun SheetTabBar(
             Icon(
                 painter = painterResource(id = R.drawable.clock_outline),
                 contentDescription = null,
+                tint = selectionColor(TabPage.History)
             )
         }
     }
