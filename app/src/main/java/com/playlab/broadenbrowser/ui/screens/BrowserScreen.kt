@@ -42,8 +42,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.web.WebView
+import com.google.accompanist.web.rememberWebViewNavigator
 import com.google.accompanist.web.rememberWebViewState
 import com.playlab.broadenbrowser.R
+import com.playlab.broadenbrowser.ui.utils.Util.isUrl
+import com.playlab.broadenbrowser.ui.utils.Util.toSearchMechanismUrl
 import com.playlab.broadenbrowser.ui.components.BottomSheetContent
 import com.playlab.broadenbrowser.ui.components.SearchBar
 import com.playlab.broadenbrowser.ui.components.TabCounter
@@ -68,6 +71,8 @@ fun BrowserScreen(
 
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
 
+    val navigator = rememberWebViewNavigator()
+
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetPeekHeight = 0.dp,
@@ -86,6 +91,7 @@ fun BrowserScreen(
             } else {
                 WebView(
                     modifier = modifier.weight(1f),
+                    navigator = navigator,
                     state = webViewState,
                     onCreated = {
                         it.settings.domStorageEnabled = true
@@ -100,7 +106,6 @@ fun BrowserScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                // TODO: Implement onSearch action
                 SearchBar(
                     modifier = Modifier
                         .padding(start = 8.dp)
@@ -109,7 +114,13 @@ fun BrowserScreen(
                     text = searchBarText,
                     onTextChange = { searchBarText = it },
                     onClearClick = { searchBarText = "" },
-                    onSearch = { }
+                    onSearch = {
+                        if (searchBarText.isUrl()) {
+                            navigator.loadUrl(searchBarText)
+                        } else {
+                            navigator.loadUrl(searchBarText.toSearchMechanismUrl())
+                        }
+                    }
                 )
 
                 Spacer(
