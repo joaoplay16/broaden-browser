@@ -185,10 +185,10 @@ fun BrowserScreen(
                             /*TODO implement settings click action*/
                         },
                         onArrowLeftClick = {
-                            /*TODO* implement arrow left click action */
+                            navigator.navigateBack()
                         },
                         onArrowRightClick = {
-                            /*TODO* implement arrow right click action */
+                            navigator.navigateForward()
                         },
                         onReloadClick = {
                             /*TODO* implement reload click action */
