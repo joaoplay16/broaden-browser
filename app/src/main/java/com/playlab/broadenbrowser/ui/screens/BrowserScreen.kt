@@ -45,12 +45,12 @@ import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewNavigator
 import com.google.accompanist.web.rememberWebViewState
 import com.playlab.broadenbrowser.R
-import com.playlab.broadenbrowser.ui.utils.Util.isUrl
-import com.playlab.broadenbrowser.ui.utils.Util.toSearchMechanismUrl
 import com.playlab.broadenbrowser.ui.components.BottomSheetContent
 import com.playlab.broadenbrowser.ui.components.SearchBar
 import com.playlab.broadenbrowser.ui.components.TabCounter
 import com.playlab.broadenbrowser.ui.theme.BroadenBrowserTheme
+import com.playlab.broadenbrowser.ui.utils.Util.isUrl
+import com.playlab.broadenbrowser.ui.utils.Util.toSearchMechanismUrl
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -162,9 +162,40 @@ fun BrowserScreen(
                         contentDescription = stringResource(id = R.string.menu_icon_cd),
                         tint = MaterialTheme.colorScheme.outline
                     )
+
                     BrowserOptionsMenu(
                         expanded = browserOptionsMenuExpanded,
-                        onDismissRequest = { browserOptionsMenuExpanded = false }
+                        onDismissRequest = { browserOptionsMenuExpanded = false },
+                        onNewTabClick = {
+                            /*TODO implement new tab click action*/
+                        },
+                        onBookmarksClick = {
+                            /*TODO: implement bookmarks click action*/
+                        },
+                        onAddBookmarksClick = {
+                            /*TODO: implement add bookmark click action*/
+                        },
+                        onHistoryClick = {
+                            /*TODO implement history click action*/
+                        },
+                        onDesktopSiteClick = {
+                            /*TODO implement desktop site click action*/
+                        },
+                        onSettingClick = {
+                            /*TODO implement settings click action*/
+                        },
+                        onArrowLeftClick = {
+                            /*TODO* implement arrow left click action */
+                        },
+                        onArrowRightClick = {
+                            /*TODO* implement arrow right click action */
+                        },
+                        onReloadClick = {
+                            /*TODO* implement reload click action */
+                        },
+                        onShareClick = {
+                            /*TODO* implement arrow right click action */
+                        }
                     )
                 }
                 Spacer(
@@ -178,7 +209,17 @@ fun BrowserScreen(
 @Composable
 private fun BrowserOptionsMenu(
     expanded: Boolean,
-    onDismissRequest: () -> Unit = {}
+    onDismissRequest: () -> Unit = {},
+    onNewTabClick: () -> Unit,
+    onBookmarksClick: () -> Unit,
+    onAddBookmarksClick: () -> Unit,
+    onHistoryClick: () -> Unit,
+    onDesktopSiteClick: () -> Unit,
+    onSettingClick: () -> Unit,
+    onArrowLeftClick: () -> Unit,
+    onArrowRightClick: () -> Unit,
+    onShareClick: () -> Unit,
+    onReloadClick: () -> Unit
 ) {
     DropdownMenu(
         expanded = expanded,
@@ -196,7 +237,7 @@ private fun BrowserOptionsMenu(
                     text = stringResource(id = R.string.new_tab)
                 )
             },
-            onClick = { /*TODO implement new tab click action*/ },
+            onClick = onNewTabClick,
             contentPadding = PaddingValues(
                 start = 12.dp,
                 end = 22.dp
@@ -213,7 +254,7 @@ private fun BrowserOptionsMenu(
             trailingIcon = {
                 Row(
                     modifier = Modifier.clickable {
-                        // TODO: implement bookmark click action
+                        onAddBookmarksClick()
                     },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -236,7 +277,7 @@ private fun BrowserOptionsMenu(
                     text = stringResource(id = R.string.bookmarks),
                 )
             },
-            onClick = { /*TODO implement bookmarks click action*/ },
+            onClick = onBookmarksClick,
             contentPadding = PaddingValues(
                 start = 12.dp,
                 end = 22.dp
@@ -254,7 +295,7 @@ private fun BrowserOptionsMenu(
                     text = stringResource(id = R.string.history)
                 )
             },
-            onClick = { /*TODO implement history click action*/ },
+            onClick = onHistoryClick,
             contentPadding = PaddingValues(
                 start = 12.dp,
                 end = 22.dp
@@ -272,7 +313,7 @@ private fun BrowserOptionsMenu(
                     text = stringResource(id = R.string.desktop_site)
                 )
             },
-            onClick = { /*TODO implement desktop site click action*/ },
+            onClick = onDesktopSiteClick,
             contentPadding = PaddingValues(
                 start = 12.dp,
                 end = 22.dp
@@ -290,7 +331,7 @@ private fun BrowserOptionsMenu(
                     text = stringResource(id = R.string.settings)
                 )
             },
-            onClick = { /*TODO implement settings click action*/ },
+            onClick = onSettingClick,
             contentPadding = PaddingValues(
                 start = 12.dp,
                 end = 22.dp
@@ -306,25 +347,25 @@ private fun BrowserOptionsMenu(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            IconButton(onClick = { /*TODO* implement arrow left click action */ }) {
+            IconButton(onClick = onArrowLeftClick) {
                 Icon(
                     painter = painterResource(id = R.drawable.arrow_left),
                     contentDescription = stringResource(id = R.string.ic_arrow_left_cd)
                 )
             }
-            IconButton(onClick = { /*TODO* implement arrow right click action */ }) {
+            IconButton(onClick = onArrowRightClick) {
                 Icon(
                     painter = painterResource(id = R.drawable.arrow_right),
                     contentDescription = stringResource(id = R.string.ic_arrow_right_cd)
                 )
             }
-            IconButton(onClick = { /*TODO* implement share click action */ }) {
+            IconButton(onClick = onShareClick) {
                 Icon(
                     painter = painterResource(id = R.drawable.share_variant_outline),
                     contentDescription = stringResource(id = R.string.ic_share_cd)
                 )
             }
-            IconButton(onClick = { /*TODO* implement reload click action */ }) {
+            IconButton(onClick = onReloadClick) {
                 Icon(
                     painter = painterResource(id = R.drawable.reload),
                     contentDescription = stringResource(id = R.string.ic_reload_cd)
@@ -342,7 +383,20 @@ private fun BrowserOptionsMenu(
 fun DropdownPreview() {
     BroadenBrowserTheme(true) {
         Surface {
-            BrowserOptionsMenu(true)
+            BrowserOptionsMenu(
+                expanded = false,
+                onDismissRequest = {},
+                onNewTabClick = {},
+                onBookmarksClick = {},
+                onAddBookmarksClick = {},
+                onHistoryClick = {},
+                onDesktopSiteClick = {},
+                onSettingClick = {},
+                onReloadClick = {},
+                onArrowLeftClick = {},
+                onArrowRightClick = {},
+                onShareClick = {}
+            )
         }
     }
 }
