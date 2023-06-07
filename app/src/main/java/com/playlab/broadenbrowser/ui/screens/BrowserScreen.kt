@@ -1,6 +1,7 @@
 package com.playlab.broadenbrowser.ui.screens
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_MASK
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -72,6 +74,8 @@ fun BrowserScreen(
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
 
     val navigator = rememberWebViewNavigator()
+
+    val context = LocalContext.current
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
@@ -196,7 +200,14 @@ fun BrowserScreen(
                             navigator.reload()
                         },
                         onShareClick = {
-                            /*TODO* implement arrow right click action */
+                            val intent = Intent(Intent.ACTION_SEND).apply {
+                                type = "text/plain"
+                                putExtra(
+                                    Intent.EXTRA_TEXT,
+                                    webViewState.lastLoadedUrl
+                                )
+                            }
+                            context.startActivity(intent)
                         }
                     )
                 }
