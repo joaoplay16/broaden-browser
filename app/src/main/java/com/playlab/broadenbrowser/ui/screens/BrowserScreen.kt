@@ -166,6 +166,8 @@ fun BrowserScreen(
                     BrowserOptionsMenu(
                         expanded = browserOptionsMenuExpanded,
                         onDismissRequest = { browserOptionsMenuExpanded = false },
+                        enableArrowLeft = navigator.canGoBack,
+                        enableArrowRight = navigator.canGoForward,
                         onNewTabClick = {
                             /*TODO implement new tab click action*/
                         },
@@ -209,6 +211,8 @@ fun BrowserScreen(
 @Composable
 private fun BrowserOptionsMenu(
     expanded: Boolean,
+    enableArrowLeft: Boolean,
+    enableArrowRight: Boolean,
     onDismissRequest: () -> Unit = {},
     onNewTabClick: () -> Unit,
     onBookmarksClick: () -> Unit,
@@ -350,13 +354,17 @@ private fun BrowserOptionsMenu(
             IconButton(onClick = onArrowLeftClick) {
                 Icon(
                     painter = painterResource(id = R.drawable.arrow_left),
-                    contentDescription = stringResource(id = R.string.ic_arrow_left_cd)
+                    contentDescription = stringResource(id = R.string.ic_arrow_left_cd),
+                    tint = if (enableArrowLeft) MaterialTheme.colorScheme.onSurface
+                    else MaterialTheme.colorScheme.onSurface.copy(0.5f)
                 )
             }
             IconButton(onClick = onArrowRightClick) {
                 Icon(
                     painter = painterResource(id = R.drawable.arrow_right),
-                    contentDescription = stringResource(id = R.string.ic_arrow_right_cd)
+                    contentDescription = stringResource(id = R.string.ic_arrow_right_cd),
+                    tint = if (enableArrowRight) MaterialTheme.colorScheme.onSurface
+                    else MaterialTheme.colorScheme.onSurface.copy(0.5f)
                 )
             }
             IconButton(onClick = onShareClick) {
@@ -385,6 +393,8 @@ fun DropdownPreview() {
         Surface {
             BrowserOptionsMenu(
                 expanded = false,
+                enableArrowLeft = false,
+                enableArrowRight = true,
                 onDismissRequest = {},
                 onNewTabClick = {},
                 onBookmarksClick = {},
