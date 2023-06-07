@@ -193,7 +193,7 @@ fun BrowserScreen(
                             navigator.navigateForward()
                         },
                         onReloadClick = {
-                            /*TODO* implement reload click action */
+                            navigator.reload()
                         },
                         onShareClick = {
                             /*TODO* implement arrow right click action */
