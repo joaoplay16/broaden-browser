@@ -77,6 +77,10 @@ fun BrowserScreen(
 
     val context = LocalContext.current
 
+    var isDesktopSite by remember { mutableStateOf(false) }
+
+    val webViewInstance = remember { android.webkit.WebView(context) }
+
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetPeekHeight = 0.dp,
@@ -100,6 +104,9 @@ fun BrowserScreen(
                     onCreated = {
                         it.settings.domStorageEnabled = true
                         it.settings.javaScriptEnabled = true
+                    },
+                    factory = {
+                        webViewInstance
                     }
                 )
             }
@@ -185,7 +192,25 @@ fun BrowserScreen(
                             /*TODO implement history click action*/
                         },
                         onDesktopSiteClick = {
-                            /*TODO implement desktop site click action*/
+                            isDesktopSite = !isDesktopSite
+                            if (isDesktopSite) {
+                                // set desktop mode
+                                webViewInstance.settings.userAgentString =
+                                    "Mozilla/5.0 (X11; Linux x86_64) " +
+                                            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
+                                /* Sets whether the WebView should enable support for the
+                               "viewport" HTML meta tag or should use a wide viewport.*/
+                                webViewInstance.settings.useWideViewPort = true
+                                /* Sets whether the WebView loads pages in overview mode, that
+                                is, zooms out the content to fit on screen by width. */
+                                webViewInstance.settings.loadWithOverviewMode = true
+                            } else {
+                                // set mobile mode
+                                webViewInstance.settings.userAgentString = null
+                                webViewInstance.settings.useWideViewPort = false
+                                webViewInstance.settings.loadWithOverviewMode = false
+                            }
+                            navigator.reload()
                         },
                         onSettingClick = {
                             /*TODO implement settings click action*/
