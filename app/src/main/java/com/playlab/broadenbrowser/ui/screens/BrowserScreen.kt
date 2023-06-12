@@ -39,6 +39,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -119,8 +120,8 @@ fun BrowserScreen(
 
                 SearchBar(
                     modifier = Modifier
-                        .padding(start = 8.dp)
-                        .padding(vertical = 8.dp)
+                        .padding(start = dimensionResource(id = R.dimen.search_bar_item_hr_padding))
+                        .padding(vertical = dimensionResource(id = R.dimen.search_bar_item_hr_padding))
                         .weight(1f),
                     text = searchBarText,
                     onTextChange = { searchBarText = it },
@@ -135,7 +136,9 @@ fun BrowserScreen(
                 )
 
                 Spacer(
-                    modifier = Modifier.padding(horizontal = 8.dp)
+                    modifier = Modifier.padding(
+                        horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
+                    )
                 )
 
                 // TODO: Add click action
@@ -150,7 +153,9 @@ fun BrowserScreen(
                 )
 
                 Spacer(
-                    modifier = Modifier.padding(horizontal = 8.dp)
+                    modifier = Modifier.padding(
+                        horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
+                    )
                 )
 
                 // TODO: Add click action
@@ -163,7 +168,9 @@ fun BrowserScreen(
                 )
 
                 Spacer(
-                    modifier = Modifier.padding(horizontal = 8.dp)
+                    modifier = Modifier.padding(
+                        horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
+                    )
                 )
 
                 Box {
@@ -236,7 +243,9 @@ fun BrowserScreen(
                     )
                 }
                 Spacer(
-                    modifier = Modifier.padding(horizontal = 8.dp)
+                    modifier = Modifier.padding(
+                        horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
+                    )
                 )
             }
         }
