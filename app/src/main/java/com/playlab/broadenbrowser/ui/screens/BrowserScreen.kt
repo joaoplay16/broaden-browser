@@ -105,18 +105,20 @@ fun BrowserScreen(
                             .align(Alignment.TopEnd)
                             .background(Color.Gray)
                     )
-                    IconButton(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd),
-                        onClick = onExitFullScreenClick
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.fullscreen_exit),
-                            contentDescription = stringResource(
-                                id = R.string.ic_exit_full_description
-                            ),
-                            tint = MaterialTheme.colorScheme.outline
-                        )
+                    if(isInFullscreenMode) {
+                        IconButton(
+                            modifier = Modifier
+                                .align(Alignment.TopEnd),
+                            onClick = onExitFullScreenClick
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.fullscreen_exit),
+                                contentDescription = stringResource(
+                                    id = R.string.ic_exit_full_description
+                                ),
+                                tint = MaterialTheme.colorScheme.outline
+                            )
+                        }
                     }
                 }
             } else {
@@ -136,18 +138,20 @@ fun BrowserScreen(
                             webViewInstance
                         }
                     )
-                    IconButton(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd),
-                        onClick = onExitFullScreenClick
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.fullscreen_exit),
-                            contentDescription = stringResource(
-                                id = R.string.ic_exit_full_description
-                            ),
-                            tint = MaterialTheme.colorScheme.outline
-                        )
+                    if (isInFullscreenMode) {
+                        IconButton(
+                            modifier = Modifier
+                                .align(Alignment.TopEnd),
+                            onClick = onExitFullScreenClick
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.fullscreen_exit),
+                                contentDescription = stringResource(
+                                    id = R.string.ic_exit_full_description
+                                ),
+                                tint = MaterialTheme.colorScheme.outline
+                            )
+                        }
                     }
                 }
             }
