@@ -61,6 +61,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun BrowserScreen(
     modifier: Modifier = Modifier,
+    isInFullscreenMode: Boolean = false,
     onEnterFullScreenClick: () -> Unit,
     onExitFullScreenClick: () -> Unit
 ) {
@@ -157,137 +158,140 @@ fun BrowserScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                SearchBar(
-                    modifier = Modifier
-                        .padding(start = dimensionResource(id = R.dimen.search_bar_item_hr_padding))
-                        .padding(vertical = dimensionResource(id = R.dimen.search_bar_item_hr_padding))
-                        .weight(1f),
-                    text = searchBarText,
-                    onTextChange = { searchBarText = it },
-                    onClearClick = { searchBarText = "" },
-                    onSearch = {
-                        if (searchBarText.isUrl()) {
-                            navigator.loadUrl(searchBarText)
-                        } else {
-                            navigator.loadUrl(searchBarText.toSearchMechanismUrl())
+                if (isInFullscreenMode.not()) {
+                    SearchBar(
+                        modifier = Modifier
+                            .padding(start = dimensionResource(id = R.dimen.search_bar_item_hr_padding))
+                            .padding(vertical = dimensionResource(id = R.dimen.search_bar_item_hr_padding))
+                            .weight(1f),
+                        text = searchBarText,
+                        onTextChange = { searchBarText = it },
+                        onClearClick = { searchBarText = "" },
+                        onSearch = {
+                            if (searchBarText.isUrl()) {
+                                navigator.loadUrl(searchBarText)
+                            } else {
+                                navigator.loadUrl(searchBarText.toSearchMechanismUrl())
+                            }
                         }
-                    }
-                )
-
-                Spacer(
-                    modifier = Modifier.padding(
-                        horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
                     )
-                )
 
-                // TODO: Add click action
-                // TODO: Provide counter value
-                TabCounter(
-                    modifier = Modifier.clickable {
-                        coroutineScope.launch {
-                            bottomSheetScaffoldState.bottomSheetState.expand()
-                        }
-                    },
-                    count = 0
-                )
 
-                Spacer(
-                    modifier = Modifier.padding(
-                        horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
+                    Spacer(
+                        modifier = Modifier.padding(
+                            horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
+                        )
                     )
-                )
 
-                // TODO: Add click action
-                Icon(
-                    modifier = Modifier
-                        .clickable {
-                             onEnterFullScreenClick()
+                    // TODO: Add click action
+                    // TODO: Provide counter value
+                    TabCounter(
+                        modifier = Modifier.clickable {
+                            coroutineScope.launch {
+                                bottomSheetScaffoldState.bottomSheetState.expand()
+                            }
                         },
-                    imageVector = Icons.Default.Expand,
-                    contentDescription = stringResource(id = R.string.expand_icon_cd),
-                    tint = MaterialTheme.colorScheme.outline
-                )
-
-                Spacer(
-                    modifier = Modifier.padding(
-                        horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
+                        count = 0
                     )
-                )
 
-                Box {
+                    Spacer(
+                        modifier = Modifier.padding(
+                            horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
+                        )
+                    )
+
+                    // TODO: Add click action
                     Icon(
-                        modifier = Modifier.clickable { browserOptionsMenuExpanded = true },
-                        painter = painterResource(id = R.drawable.dots_vertical),
-                        contentDescription = stringResource(id = R.string.menu_icon_cd),
+                        modifier = Modifier
+                            .clickable {
+                                onEnterFullScreenClick()
+                            },
+                        imageVector = Icons.Default.Expand,
+                        contentDescription = stringResource(id = R.string.expand_icon_cd),
                         tint = MaterialTheme.colorScheme.outline
                     )
 
-                    BrowserOptionsMenu(
-                        expanded = browserOptionsMenuExpanded,
-                        onDismissRequest = { browserOptionsMenuExpanded = false },
-                        enableArrowLeft = navigator.canGoBack,
-                        enableArrowRight = navigator.canGoForward,
-                        onNewTabClick = {
-                            /*TODO implement new tab click action*/
-                        },
-                        onBookmarksClick = {
-                            /*TODO: implement bookmarks click action*/
-                        },
-                        onAddBookmarksClick = {
-                            /*TODO: implement add bookmark click action*/
-                        },
-                        onHistoryClick = {
-                            /*TODO implement history click action*/
-                        },
-                        onDesktopSiteClick = {
-                            isDesktopSite = !isDesktopSite
-                            if (isDesktopSite) {
-                                // set desktop mode
-                                webViewInstance.settings.userAgentString =
-                                    "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/113.0"
-                                /* Sets whether the WebView should enable support for the
+                    Spacer(
+                        modifier = Modifier.padding(
+                            horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
+                        )
+                    )
+
+                    Box {
+                        Icon(
+                            modifier = Modifier.clickable { browserOptionsMenuExpanded = true },
+                            painter = painterResource(id = R.drawable.dots_vertical),
+                            contentDescription = stringResource(id = R.string.menu_icon_cd),
+                            tint = MaterialTheme.colorScheme.outline
+                        )
+
+                        BrowserOptionsMenu(
+                            expanded = browserOptionsMenuExpanded,
+                            onDismissRequest = { browserOptionsMenuExpanded = false },
+                            enableArrowLeft = navigator.canGoBack,
+                            enableArrowRight = navigator.canGoForward,
+                            onNewTabClick = {
+                                /*TODO implement new tab click action*/
+                            },
+                            onBookmarksClick = {
+                                /*TODO: implement bookmarks click action*/
+                            },
+                            onAddBookmarksClick = {
+                                /*TODO: implement add bookmark click action*/
+                            },
+                            onHistoryClick = {
+                                /*TODO implement history click action*/
+                            },
+                            onDesktopSiteClick = {
+                                isDesktopSite = !isDesktopSite
+                                if (isDesktopSite) {
+                                    // set desktop mode
+                                    webViewInstance.settings.userAgentString =
+                                        "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/113.0"
+                                    /* Sets whether the WebView should enable support for the
                                "viewport" HTML meta tag or should use a wide viewport.*/
-                                webViewInstance.settings.useWideViewPort = true
-                                /* Sets whether the WebView loads pages in overview mode, that
+                                    webViewInstance.settings.useWideViewPort = true
+                                    /* Sets whether the WebView loads pages in overview mode, that
                                 is, zooms out the content to fit on screen by width. */
-                                webViewInstance.settings.loadWithOverviewMode = true
-                            } else {
-                                // set mobile mode
-                                webViewInstance.settings.userAgentString = null
-                                webViewInstance.settings.useWideViewPort = false
-                                webViewInstance.settings.loadWithOverviewMode = false
+                                    webViewInstance.settings.loadWithOverviewMode = true
+                                } else {
+                                    // set mobile mode
+                                    webViewInstance.settings.userAgentString = null
+                                    webViewInstance.settings.useWideViewPort = false
+                                    webViewInstance.settings.loadWithOverviewMode = false
+                                }
+                                navigator.reload()
+                            },
+                            onSettingClick = {
+                                /*TODO implement settings click action*/
+                            },
+                            onArrowLeftClick = {
+                                navigator.navigateBack()
+                            },
+                            onArrowRightClick = {
+                                navigator.navigateForward()
+                            },
+                            onReloadClick = {
+                                navigator.reload()
+                            },
+                            onShareClick = {
+                                val intent = Intent(Intent.ACTION_SEND).apply {
+                                    type = "text/plain"
+                                    putExtra(
+                                        Intent.EXTRA_TEXT,
+                                        webViewState.lastLoadedUrl
+                                    )
+                                }
+                                context.startActivity(intent)
                             }
-                            navigator.reload()
-                        },
-                        onSettingClick = {
-                            /*TODO implement settings click action*/
-                        },
-                        onArrowLeftClick = {
-                            navigator.navigateBack()
-                        },
-                        onArrowRightClick = {
-                            navigator.navigateForward()
-                        },
-                        onReloadClick = {
-                            navigator.reload()
-                        },
-                        onShareClick = {
-                            val intent = Intent(Intent.ACTION_SEND).apply {
-                                type = "text/plain"
-                                putExtra(
-                                    Intent.EXTRA_TEXT,
-                                    webViewState.lastLoadedUrl
-                                )
-                            }
-                            context.startActivity(intent)
-                        }
+                        )
+                    }
+                    Spacer(
+                        modifier = Modifier.padding(
+                            horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
+                        )
                     )
                 }
-                Spacer(
-                    modifier = Modifier.padding(
-                        horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
-                    )
-                )
             }
         }
     }
