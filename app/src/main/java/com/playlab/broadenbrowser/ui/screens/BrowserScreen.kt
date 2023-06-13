@@ -93,23 +93,60 @@ fun BrowserScreen(
             if (isInEditMode) {
                 Box(
                     modifier = modifier
-                        .weight(1f)
-                        .fillMaxSize()
-                        .background(Color.Gray)
-                )
-            } else {
-                WebView(
-                    modifier = modifier.weight(1f),
-                    navigator = navigator,
-                    state = webViewState,
-                    onCreated = {
-                        it.settings.domStorageEnabled = true
-                        it.settings.javaScriptEnabled = true
-                    },
-                    factory = {
-                        webViewInstance
+                        .weight(1f),
+                    Alignment.TopCenter,
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .align(Alignment.TopEnd)
+                            .background(Color.Gray)
+                    )
+                    IconButton(
+                        modifier = Modifier
+                            .align(Alignment.TopEnd),
+                        onClick = { }
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.fullscreen_exit),
+                            contentDescription = stringResource(
+                                id = R.string.ic_exit_full_description
+                            ),
+                            tint = MaterialTheme.colorScheme.outline
+                        )
                     }
-                )
+                }
+            } else {
+                Box(
+                    modifier = modifier.weight(1f),
+                    Alignment.TopCenter
+                ) {
+                    WebView(
+                        modifier = Modifier.fillMaxSize(),
+                        navigator = navigator,
+                        state = webViewState,
+                        onCreated = {
+                            it.settings.domStorageEnabled = true
+                            it.settings.javaScriptEnabled = true
+                        },
+                        factory = {
+                            webViewInstance
+                        }
+                    )
+                    IconButton(
+                        modifier = Modifier
+                            .align(Alignment.TopEnd),
+                        onClick = { }
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.fullscreen_exit),
+                            contentDescription = stringResource(
+                                id = R.string.ic_exit_full_description
+                            ),
+                            tint = MaterialTheme.colorScheme.outline
+                        )
+                    }
+                }
             }
             Row(
                 modifier = Modifier
