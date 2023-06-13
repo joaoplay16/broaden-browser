@@ -60,7 +60,9 @@ import kotlinx.coroutines.launch
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun BrowserScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onEnterFullScreenClick: () -> Unit,
+    onExitFullScreenClick: () -> Unit
 ) {
     val isInEditMode = LocalInspectionMode.current
 
@@ -105,7 +107,7 @@ fun BrowserScreen(
                     IconButton(
                         modifier = Modifier
                             .align(Alignment.TopEnd),
-                        onClick = { }
+                        onClick = onExitFullScreenClick
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.fullscreen_exit),
@@ -136,7 +138,7 @@ fun BrowserScreen(
                     IconButton(
                         modifier = Modifier
                             .align(Alignment.TopEnd),
-                        onClick = { }
+                        onClick = onExitFullScreenClick
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.fullscreen_exit),
@@ -198,7 +200,9 @@ fun BrowserScreen(
                 // TODO: Add click action
                 Icon(
                     modifier = Modifier
-                        .clickable { },
+                        .clickable {
+                             onEnterFullScreenClick()
+                        },
                     imageVector = Icons.Default.Expand,
                     contentDescription = stringResource(id = R.string.expand_icon_cd),
                     tint = MaterialTheme.colorScheme.outline
@@ -497,7 +501,10 @@ fun DropdownPreview() {
 fun BrowserScreenPreview() {
     BroadenBrowserTheme {
         Surface {
-            BrowserScreen()
+            BrowserScreen(
+                onEnterFullScreenClick = {},
+                onExitFullScreenClick = {}
+            )
         }
     }
 }
@@ -507,7 +514,10 @@ fun BrowserScreenPreview() {
 fun BrowserScreenDarkPreview() {
     BroadenBrowserTheme(true) {
         Surface {
-            BrowserScreen()
+            BrowserScreen(
+                onEnterFullScreenClick = {},
+                onExitFullScreenClick = {}
+            )
         }
     }
 }
