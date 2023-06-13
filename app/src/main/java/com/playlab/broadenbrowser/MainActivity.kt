@@ -17,8 +17,30 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.attributes.layoutInDisplayCutoutMode =
-            WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+
+        setContent {
+            BroadenBrowserTheme {
+                Surface(
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    BrowserScreen(
+                        onEnterFullScreenClick = {
+                            enterFullScreenMode()
+                        },
+                        onExitFullScreenClick = {
+                            leaveFullScreenMode()
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    private fun enterFullScreenMode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            window.attributes.layoutInDisplayCutoutMode =
+                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+        }
         val windowInsetsCompat = WindowInsetsControllerCompat(
             window,
             window.decorView
@@ -27,15 +49,20 @@ class MainActivity : ComponentActivity() {
         windowInsetsCompat.hide(WindowInsetsCompat.Type.statusBars())
         windowInsetsCompat.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+    }
 
-        setContent {
-            BroadenBrowserTheme {
-                Surface(
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    BrowserScreen()
-                }
-            }
+    private fun leaveFullScreenMode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            window.attributes.layoutInDisplayCutoutMode =
+                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
         }
+        val windowInsetsCompat = WindowInsetsControllerCompat(
+            window,
+            window.decorView
+        )
+        windowInsetsCompat.show(WindowInsetsCompat.Type.navigationBars())
+        windowInsetsCompat.show(WindowInsetsCompat.Type.statusBars())
+        windowInsetsCompat.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
     }
 }
