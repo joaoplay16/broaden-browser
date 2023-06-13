@@ -8,6 +8,10 @@ import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.playlab.broadenbrowser.ui.screens.BrowserScreen
@@ -23,12 +27,17 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    var isInFullScreenMode by remember { mutableStateOf(false) }
+
                     BrowserScreen(
+                        isInFullscreenMode = isInFullScreenMode,
                         onEnterFullScreenClick = {
                             enterFullScreenMode()
+                            isInFullScreenMode = true
                         },
                         onExitFullScreenClick = {
                             leaveFullScreenMode()
+                            isInFullScreenMode = false
                         }
                     )
                 }
