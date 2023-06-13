@@ -14,4 +14,5 @@
     <string name="ic_arrow_right_cd">Go forward</string>
     <string name="ic_reload_cd">Reload</string>
     <string name="ic_share_cd">Share</string>
+    <string name="ic_exit_full_description">Exit fullscreen</string>
 </resources>
