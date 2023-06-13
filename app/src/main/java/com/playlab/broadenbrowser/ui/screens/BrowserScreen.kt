@@ -155,14 +155,14 @@ fun BrowserScreen(
                     }
                 }
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.background),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            if (isInFullscreenMode.not()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.background),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
 
-                if (isInFullscreenMode.not()) {
                     SearchBar(
                         modifier = Modifier
                             .padding(start = dimensionResource(id = R.dimen.search_bar_item_hr_padding))
