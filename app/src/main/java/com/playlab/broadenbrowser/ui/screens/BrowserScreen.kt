@@ -29,6 +29,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,8 +47,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.web.WebView
+import com.google.accompanist.web.rememberSaveableWebViewState
 import com.google.accompanist.web.rememberWebViewNavigator
-import com.google.accompanist.web.rememberWebViewState
 import com.playlab.broadenbrowser.R
 import com.playlab.broadenbrowser.ui.components.BottomSheetContent
 import com.playlab.broadenbrowser.ui.components.SearchBar
@@ -68,7 +69,7 @@ fun BrowserScreen(
 ) {
     val isInEditMode = LocalInspectionMode.current
 
-    val webViewState = rememberWebViewState("https://m3.material.io/")
+    val webViewState = rememberSaveableWebViewState()
 
     var searchBarText by remember { mutableStateOf("") }
 
@@ -85,6 +86,13 @@ fun BrowserScreen(
     var isDesktopSite by remember { mutableStateOf(false) }
 
     val webViewInstance = remember { android.webkit.WebView(context) }
+
+    LaunchedEffect(navigator) {
+        val bundle = webViewState.viewState
+        if (bundle == null) {
+            navigator.loadUrl("https://m3.material.io/")
+        }
+    }
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
