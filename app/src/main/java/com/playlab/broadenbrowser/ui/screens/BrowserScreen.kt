@@ -3,6 +3,7 @@ package com.playlab.broadenbrowser.ui.screens
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_MASK
+import android.webkit.WebSettings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -133,6 +134,7 @@ fun BrowserScreen(
                         onCreated = {
                             it.settings.domStorageEnabled = true
                             it.settings.javaScriptEnabled = true
+                            it.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
                         },
                         factory = {
                             webViewInstance
