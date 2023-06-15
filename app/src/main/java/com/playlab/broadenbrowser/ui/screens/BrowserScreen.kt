@@ -63,9 +63,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun BrowserScreen(
     modifier: Modifier = Modifier,
+    externalLink: String? = null,
     isInFullscreenMode: Boolean = false,
     onEnterFullScreenClick: () -> Unit,
-    onExitFullScreenClick: () -> Unit
+    onExitFullScreenClick: () -> Unit,
 ) {
     val isInEditMode = LocalInspectionMode.current
 
@@ -87,10 +88,10 @@ fun BrowserScreen(
 
     val webViewInstance = remember { android.webkit.WebView(context) }
 
-    LaunchedEffect(navigator) {
+    LaunchedEffect(navigator, externalLink) {
         val bundle = webViewState.viewState
         if (bundle == null) {
-            navigator.loadUrl("https://m3.material.io/")
+            navigator.loadUrl(externalLink ?: "https://m3.material.io/")
         }
     }
 

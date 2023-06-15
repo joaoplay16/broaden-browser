@@ -1,5 +1,6 @@
 package com.playlab.broadenbrowser
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
@@ -22,6 +23,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val intent = intent
+        var externalLink: String? = null
+        if (Intent.ACTION_VIEW == intent.action && intent.data != null) {
+            externalLink = intent.data.toString()
+        }
+
         setContent {
             BroadenBrowserTheme {
                 Surface(
@@ -30,6 +37,7 @@ class MainActivity : ComponentActivity() {
                     var isInFullScreenMode by remember { mutableStateOf(false) }
 
                     BrowserScreen(
+                        externalLink = externalLink,
                         isInFullscreenMode = isInFullScreenMode,
                         onEnterFullScreenClick = {
                             enterFullScreenMode()
