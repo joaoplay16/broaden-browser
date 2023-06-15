@@ -81,6 +81,10 @@ dependencies {
 
     implementation(libs.accompanist.webview)
 
+    implementation(libs.hilt.android)
+
+    implementation(libs.androidx.datastore.preferences)
+
     testImplementation(libs.junit)
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.androidx.test.ext.junit)
