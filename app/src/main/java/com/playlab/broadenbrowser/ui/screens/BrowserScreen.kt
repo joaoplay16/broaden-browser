@@ -63,11 +63,19 @@ import kotlinx.coroutines.launch
 @Composable
 fun BrowserScreen(
     modifier: Modifier = Modifier,
-    externalLink: String? = null,
-    isInFullscreenMode: Boolean = false,
-    onEnterFullScreenClick: () -> Unit,
-    onExitFullScreenClick: () -> Unit,
+    browserState: BrowserState,
+    onEvent: (UiEvent) -> Unit
 ) {
+
+    val (
+        isInFullscreenMode,
+        isStartInFullscreenEnabled,
+        isJavascriptAllowed,
+        isDarkThemeEnabled,
+        searchMechanism,
+        externalLink,
+    ) = browserState
+
     val isInEditMode = LocalInspectionMode.current
 
     val webViewState = rememberSaveableWebViewState()
@@ -88,7 +96,10 @@ fun BrowserScreen(
 
     val webViewInstance = remember { android.webkit.WebView(context) }
 
-    LaunchedEffect(navigator, externalLink) {
+    LaunchedEffect(
+        navigator,
+        externalLink
+    ) {
         val bundle = webViewState.viewState
         if (bundle == null) {
             navigator.loadUrl(externalLink ?: "https://m3.material.io/")
@@ -115,11 +126,11 @@ fun BrowserScreen(
                             .align(Alignment.TopEnd)
                             .background(Color.Gray)
                     )
-                    if(isInFullscreenMode) {
+                    if (isInFullscreenMode) {
                         IconButton(
                             modifier = Modifier
                                 .align(Alignment.TopEnd),
-                            onClick = onExitFullScreenClick
+                            onClick = { onEvent(UiEvent.OnEnableFullscreen(false)) }
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.fullscreen_exit),
@@ -153,7 +164,7 @@ fun BrowserScreen(
                         IconButton(
                             modifier = Modifier
                                 .align(Alignment.TopEnd),
-                            onClick = onExitFullScreenClick
+                            onClick = { onEvent(UiEvent.OnEnableFullscreen(false)) }
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.fullscreen_exit),
@@ -198,7 +209,6 @@ fun BrowserScreen(
                         )
                     )
 
-                    // TODO: Add click action
                     // TODO: Provide counter value
                     TabCounter(
                         modifier = Modifier.clickable {
@@ -215,11 +225,10 @@ fun BrowserScreen(
                         )
                     )
 
-                    // TODO: Add click action
                     Icon(
                         modifier = Modifier
                             .clickable {
-                                onEnterFullScreenClick()
+                                onEvent(UiEvent.OnEnableFullscreen(true))
                             },
                         imageVector = Icons.Default.Expand,
                         contentDescription = stringResource(id = R.string.expand_icon_cd),
@@ -520,9 +529,11 @@ fun DropdownPreview() {
 fun BrowserScreenPreview() {
     BroadenBrowserTheme {
         Surface {
+            val browserState = remember { BrowserState() }
+
             BrowserScreen(
-                onEnterFullScreenClick = {},
-                onExitFullScreenClick = {}
+                onEvent = {},
+                browserState = browserState
             )
         }
     }
@@ -533,9 +544,11 @@ fun BrowserScreenPreview() {
 fun BrowserScreenDarkPreview() {
     BroadenBrowserTheme(true) {
         Surface {
+            val browserState = remember { BrowserState() }
+
             BrowserScreen(
-                onEnterFullScreenClick = {},
-                onExitFullScreenClick = {}
+                onEvent = {},
+                browserState = browserState
             )
         }
     }
