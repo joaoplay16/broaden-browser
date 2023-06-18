@@ -6,6 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.playlab.broadenbrowser.repository.PreferencesRepository
+import com.playlab.broadenbrowser.ui.screens.common.BrowserState
+import com.playlab.broadenbrowser.ui.screens.common.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

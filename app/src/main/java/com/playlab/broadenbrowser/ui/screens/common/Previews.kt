@@ -1,4 +1,4 @@
-package com.playlab.broadenbrowser.ui.screens
+package com.playlab.broadenbrowser.ui.screens.common
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.ui.tooling.preview.Devices

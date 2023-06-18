@@ -53,6 +53,8 @@ import com.playlab.broadenbrowser.R
 import com.playlab.broadenbrowser.ui.components.BottomSheetContent
 import com.playlab.broadenbrowser.ui.components.SearchBar
 import com.playlab.broadenbrowser.ui.components.TabCounter
+import com.playlab.broadenbrowser.ui.screens.common.BrowserState
+import com.playlab.broadenbrowser.ui.screens.common.UiEvent
 import com.playlab.broadenbrowser.ui.theme.BroadenBrowserTheme
 import com.playlab.broadenbrowser.ui.utils.Util.isUrl
 import com.playlab.broadenbrowser.ui.utils.Util.toSearchMechanismUrl

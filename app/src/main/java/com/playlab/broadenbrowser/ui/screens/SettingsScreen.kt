@@ -33,6 +33,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.playlab.broadenbrowser.R
+import com.playlab.broadenbrowser.ui.screens.common.BrowserState
+import com.playlab.broadenbrowser.ui.screens.common.DevicesPreviews
+import com.playlab.broadenbrowser.ui.screens.common.UiEvent
 import com.playlab.broadenbrowser.ui.theme.BroadenBrowserTheme
 
 @Composable

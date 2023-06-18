@@ -1,4 +1,4 @@
-package com.playlab.broadenbrowser.ui.screens
+package com.playlab.broadenbrowser.ui.screens.common
 
 data class BrowserState(
     val isInFullscreen: Boolean = false,

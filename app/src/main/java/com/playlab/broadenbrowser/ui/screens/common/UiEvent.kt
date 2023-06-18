@@ -1,4 +1,4 @@
-package com.playlab.broadenbrowser.ui.screens
+package com.playlab.broadenbrowser.ui.screens.common
 
 import com.playlab.broadenbrowser.ui.utils.SearchMechanism
 
