@@ -2,4 +2,5 @@
 <resources>
     <dimen name="search_bar_font_size">16sp</dimen>
     <dimen name="search_bar_item_hr_padding">8dp</dimen>
+    <dimen name="screen_title_font_size">24sp</dimen>
 </resources>

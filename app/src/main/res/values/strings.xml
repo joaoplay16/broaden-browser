@@ -15,4 +15,14 @@
     <string name="ic_reload_cd">Reload</string>
     <string name="ic_share_cd">Share</string>
     <string name="ic_exit_full_description">Exit fullscreen</string>
+    <string name="arrow_back_icon_content_description">Back</string>
+    <string name="settings_screen_title">Settings</string>
+    <string name="settings_category_label">General</string>
+    <string name="enable_dark_theme">Enable dark theme</string>
+    <string name="start_in_fullscreen">Start browser in fullscreen</string>
+    <string name="set_as_default_browser">Set as default browser</string>
+    <string name="enable_javascript">Enable javascript</string>
+    <string name="rate_on_google_play">Rate on Google Play</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="settings_about_label">About</string>
 </resources>
