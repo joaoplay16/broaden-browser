@@ -77,6 +77,16 @@ fun SettingsScreen(
             ).padding(paddingValues).padding(horizontal = 16.dp)
         ) {
 
+
+            val (
+                _,
+                isStartInFullscreenEnabled,
+                isJavascriptAllowed,
+                isDarkThemeEnabled,
+                searchMechanism,
+                _,
+            ) = browserState
+
             Text(
                 text = stringResource(id = R.string.settings_category_label),
                 style = MaterialTheme.typography.labelLarge,
@@ -106,9 +116,13 @@ fun SettingsScreen(
                     text = stringResource(id = R.string.start_in_fullscreen),
                     style = MaterialTheme.typography.titleMedium,
                 )
-                Switch(modifier = Modifier.scale(0.7f),
-                       checked = false,
-                       onCheckedChange = { })
+                Switch(
+                    modifier = Modifier.scale(0.7f),
+                    checked = isStartInFullscreenEnabled,
+                    onCheckedChange = {
+                        onEvent(UiEvent.OnEnableStartInFullscreen(it))
+                    }
+                )
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
