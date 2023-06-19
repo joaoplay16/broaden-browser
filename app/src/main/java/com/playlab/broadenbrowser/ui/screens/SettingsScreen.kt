@@ -133,9 +133,11 @@ fun SettingsScreen(
                     text = stringResource(id = R.string.enable_javascript),
                     style = MaterialTheme.typography.titleMedium,
                 )
-                Switch(modifier = Modifier.scale(0.7f),
-                       checked = false,
-                       onCheckedChange = { })
+                Switch(
+                    modifier = Modifier.scale(0.7f),
+                    checked = isJavascriptAllowed,
+                    onCheckedChange = { onEvent(UiEvent.OnAllowJavascript(it)) }
+                )
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
