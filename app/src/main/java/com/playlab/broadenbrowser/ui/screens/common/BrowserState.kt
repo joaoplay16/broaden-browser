@@ -8,5 +8,6 @@ data class BrowserState(
     val isJavascriptAllowed: Boolean = true,
     val isDarkThemeEnabled: Boolean = false,
     val searchMechanism: SearchMechanism = SearchMechanism.GOOGLE,
-    val externalLink: String? = null
+    val externalLink: String? = null,
+    val isDefaultBrowser: Boolean = false
 )
