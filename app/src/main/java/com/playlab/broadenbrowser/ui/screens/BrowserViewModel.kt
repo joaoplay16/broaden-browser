@@ -52,6 +52,9 @@ class BrowserViewModel @Inject constructor(
                 is UiEvent.OnSetSearchMechanism -> {
                     preferencesRepository.setSearchMechanism(uiEvent.searchMechanism.name)
                 }
+                is UiEvent.OnSetAsDefaultBrowser -> {
+                    state = state.copy(isDefaultBrowser = uiEvent.isDefaultBrowser)
+                }
             }
         }
     }
