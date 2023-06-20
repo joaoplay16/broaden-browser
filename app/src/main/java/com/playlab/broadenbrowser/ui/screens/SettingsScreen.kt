@@ -104,7 +104,7 @@ fun SettingsScreen(
             Column(
                 modifier = Modifier
                     .clickable { searchDropDownExpanded = true }
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 16.dp)
                     .fillMaxWidth(),
             ) {
                 Text(
@@ -224,12 +224,34 @@ fun SettingsScreen(
 fun SettingsScreenPreview() {
     BroadenBrowserTheme {
         Surface {
-            val browserState = remember {
-                BrowserState()
+            var browserState by remember {
+                mutableStateOf(BrowserState())
             }
             SettingsScreen(
                 browserState = browserState,
-                onEvent = { },
+                onEvent = {uiEvent ->
+                    when (uiEvent) {
+                        is UiEvent.OnAllowJavascript -> {
+                            browserState = browserState.copy(isJavascriptAllowed = uiEvent.allowed)
+                        }
+
+                        is UiEvent.OnEnableFullscreen -> {
+                            browserState = browserState.copy(isInFullscreen = uiEvent.enabled)
+                        }
+
+                        is UiEvent.OnEnableStartInFullscreen -> {
+                            browserState = browserState.copy(isStartInFullscreenEnabled = uiEvent.enabled)
+                        }
+
+                        is UiEvent.OnEnableDarkTheme -> {
+                            browserState = browserState.copy(isDarkThemeEnabled = uiEvent.enabled)
+                        }
+
+                        is UiEvent.OnSetSearchMechanism -> {
+                            browserState = browserState.copy(searchMechanism = uiEvent.searchMechanism)
+                        }
+                    }
+                },
                 onArrowBackPressed = {}
             )
         }
@@ -242,12 +264,34 @@ fun SettingsScreenPreview() {
 fun SettingsScreenPreviewDark() {
     BroadenBrowserTheme(true) {
         Surface {
-            val browserState = remember {
-                BrowserState()
+            var browserState by remember {
+                mutableStateOf(BrowserState())
             }
             SettingsScreen(
                 browserState = browserState,
-                onEvent = { },
+                onEvent = {uiEvent ->
+                    when (uiEvent) {
+                        is UiEvent.OnAllowJavascript -> {
+                            browserState = browserState.copy(isJavascriptAllowed = uiEvent.allowed)
+                        }
+
+                        is UiEvent.OnEnableFullscreen -> {
+                            browserState = browserState.copy(isInFullscreen = uiEvent.enabled)
+                        }
+
+                        is UiEvent.OnEnableStartInFullscreen -> {
+                            browserState = browserState.copy(isStartInFullscreenEnabled = uiEvent.enabled)
+                        }
+
+                        is UiEvent.OnEnableDarkTheme -> {
+                            browserState = browserState.copy(isDarkThemeEnabled = uiEvent.enabled)
+                        }
+
+                        is UiEvent.OnSetSearchMechanism -> {
+                            browserState = browserState.copy(searchMechanism = uiEvent.searchMechanism)
+                        }
+                    }
+                },
                 onArrowBackPressed = {}
             )
         }
