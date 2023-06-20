@@ -8,4 +8,5 @@ sealed class UiEvent {
     data class OnEnableStartInFullscreen(val enabled: Boolean): UiEvent()
     data class OnEnableDarkTheme(val enabled: Boolean): UiEvent()
     data class OnSetSearchMechanism(val searchMechanism: SearchMechanism): UiEvent()
+    data class OnSetAsDefaultBrowser(val isDefaultBrowser: Boolean): UiEvent()
 }
