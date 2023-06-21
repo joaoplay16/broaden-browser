@@ -8,7 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.playlab.broadenbrowser.repository.PreferencesRepository
 import com.playlab.broadenbrowser.ui.screens.common.BrowserState
 import com.playlab.broadenbrowser.ui.screens.common.UiEvent
+import com.playlab.broadenbrowser.ui.utils.SearchMechanism
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,12 +24,22 @@ class BrowserViewModel @Inject constructor(
         private set
 
     init {
-        viewModelScope.launch {
-            with(preferencesRepository) {
-                isStartInFullscreenEnabled().collect {
-                    state = state.copy(isStartInFullscreenEnabled = it)
-                }
-            }
+        with(preferencesRepository) {
+            isStartInFullscreenEnabled().onEach {
+                state = state.copy(isStartInFullscreenEnabled = it)
+            }.launchIn(viewModelScope)
+
+            isJavascriptAllowed().onEach {
+                state = state.copy(isJavascriptAllowed = it)
+            }.launchIn(viewModelScope)
+
+            isDarkThemeEnabled().onEach {
+                state = state.copy(isDarkThemeEnabled = it)
+            }.launchIn(viewModelScope)
+
+            searchMechanism().onEach {
+                state = state.copy(searchMechanism = SearchMechanism.valueOf(it))
+            }.launchIn(viewModelScope)
         }
     }
 
@@ -52,6 +65,7 @@ class BrowserViewModel @Inject constructor(
                 is UiEvent.OnSetSearchMechanism -> {
                     preferencesRepository.setSearchMechanism(uiEvent.searchMechanism.name)
                 }
+
                 is UiEvent.OnSetAsDefaultBrowser -> {
                     state = state.copy(isDefaultBrowser = uiEvent.isDefaultBrowser)
                 }
