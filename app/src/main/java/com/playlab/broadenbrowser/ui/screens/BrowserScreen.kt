@@ -155,7 +155,7 @@ fun BrowserScreen(
                         state = webViewState,
                         onCreated = {
                             it.settings.domStorageEnabled = true
-                            it.settings.javaScriptEnabled = true
+                            it.settings.javaScriptEnabled = isJavascriptAllowed
                             it.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
                         },
                         factory = {
