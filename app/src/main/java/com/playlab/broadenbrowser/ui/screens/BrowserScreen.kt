@@ -3,6 +3,7 @@ package com.playlab.broadenbrowser.ui.screens
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_MASK
+import android.util.Log
 import android.webkit.WebSettings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -199,7 +200,15 @@ fun BrowserScreen(
                             if (searchBarText.isUrl()) {
                                 navigator.loadUrl(searchBarText)
                             } else {
-                                navigator.loadUrl(searchBarText.toSearchMechanismUrl())
+                                Log.d(
+                                    "SETTINGS",
+                                    " $searchMechanism "
+                                )
+                                navigator.loadUrl(
+                                    searchBarText.toSearchMechanismUrl(
+                                        searchMechanism
+                                    )
+                                )
                             }
                         }
                     )
