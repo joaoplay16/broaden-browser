@@ -1,5 +1,11 @@
 package com.playlab.broadenbrowser.ui.screens
 
+import android.content.Intent
+import android.os.Build
+import android.os.Build.VERSION_CODES
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
@@ -95,6 +101,11 @@ fun SettingsScreen(
 
             var searchDropDownExpanded by remember { mutableStateOf(false) }
 
+            val actForResult = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.StartActivityForResult(),
+                onResult = {}
+            )
+
             Text(
                 text = stringResource(id = R.string.settings_category_label),
                 style = MaterialTheme.typography.labelLarge,
@@ -181,19 +192,36 @@ fun SettingsScreen(
                     onCheckedChange = { onEvent(UiEvent.OnAllowJavascript(it)) }
                 )
             }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(id = R.string.set_as_default_browser),
-                    style = MaterialTheme.typography.titleMedium,
-                )
-                Switch(modifier = Modifier.scale(0.7f),
-                       checked = false,
-                       onCheckedChange = { })
+             /*Don't show when versions below nougat as there is no way to redirect
+              the user to the default browser chooser.*/
+            if (Build.VERSION.SDK_INT >= VERSION_CODES.N) {
+                Row(
+                    modifier = Modifier
+                        .clickable {
+                            val intent = Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS)
+
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+                            actForResult.launch(intent)
+                        }
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.set_as_default_browser),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    Switch(
+                        modifier = Modifier.scale(0.7f),
+                        checked = browserState.isDefaultBrowser,
+                        onCheckedChange = {
+
+                        }
+                    )
+                }
             }
+
             Spacer(modifier = Modifier.padding(4.dp))
             Text(
                 text = stringResource(id = R.string.settings_about_label),
@@ -229,7 +257,7 @@ fun SettingsScreenPreview() {
             }
             SettingsScreen(
                 browserState = browserState,
-                onEvent = {uiEvent ->
+                onEvent = { uiEvent ->
                     when (uiEvent) {
                         is UiEvent.OnAllowJavascript -> {
                             browserState = browserState.copy(isJavascriptAllowed = uiEvent.allowed)
@@ -240,7 +268,8 @@ fun SettingsScreenPreview() {
                         }
 
                         is UiEvent.OnEnableStartInFullscreen -> {
-                            browserState = browserState.copy(isStartInFullscreenEnabled = uiEvent.enabled)
+                            browserState =
+                                browserState.copy(isStartInFullscreenEnabled = uiEvent.enabled)
                         }
 
                         is UiEvent.OnEnableDarkTheme -> {
@@ -248,7 +277,13 @@ fun SettingsScreenPreview() {
                         }
 
                         is UiEvent.OnSetSearchMechanism -> {
-                            browserState = browserState.copy(searchMechanism = uiEvent.searchMechanism)
+                            browserState =
+                                browserState.copy(searchMechanism = uiEvent.searchMechanism)
+                        }
+
+                        is UiEvent.OnSetAsDefaultBrowser -> {
+                            browserState =
+                                browserState.copy(isDefaultBrowser = uiEvent.isDefaultBrowser)
                         }
                     }
                 },
@@ -269,7 +304,7 @@ fun SettingsScreenPreviewDark() {
             }
             SettingsScreen(
                 browserState = browserState,
-                onEvent = {uiEvent ->
+                onEvent = { uiEvent ->
                     when (uiEvent) {
                         is UiEvent.OnAllowJavascript -> {
                             browserState = browserState.copy(isJavascriptAllowed = uiEvent.allowed)
@@ -280,7 +315,8 @@ fun SettingsScreenPreviewDark() {
                         }
 
                         is UiEvent.OnEnableStartInFullscreen -> {
-                            browserState = browserState.copy(isStartInFullscreenEnabled = uiEvent.enabled)
+                            browserState =
+                                browserState.copy(isStartInFullscreenEnabled = uiEvent.enabled)
                         }
 
                         is UiEvent.OnEnableDarkTheme -> {
@@ -288,7 +324,13 @@ fun SettingsScreenPreviewDark() {
                         }
 
                         is UiEvent.OnSetSearchMechanism -> {
-                            browserState = browserState.copy(searchMechanism = uiEvent.searchMechanism)
+                            browserState =
+                                browserState.copy(searchMechanism = uiEvent.searchMechanism)
+                        }
+
+                        is UiEvent.OnSetAsDefaultBrowser -> {
+                            browserState =
+                                browserState.copy(isDefaultBrowser = uiEvent.isDefaultBrowser)
                         }
                     }
                 },
