@@ -6,20 +6,24 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.RequiresApi
+import androidx.activity.viewModels
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.playlab.broadenbrowser.ui.screens.BrowserScreen
+import com.playlab.broadenbrowser.ui.screens.BrowserViewModel
+import com.playlab.broadenbrowser.ui.screens.common.UiEvent
 import com.playlab.broadenbrowser.ui.theme.BroadenBrowserTheme
+import com.playlab.broadenbrowser.ui.utils.Util.isDefaultBrowser
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.R)
+
+    private val browserViewModel: BrowserViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -34,23 +38,34 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    var isInFullScreenMode by remember { mutableStateOf(false) }
+                    val isInFullScreenMode = browserViewModel.state.isInFullscreen
+
+                    LaunchedEffect(
+                        key1 = isInFullScreenMode
+                    ) {
+                        if (isInFullScreenMode) {
+                            enterFullScreenMode()
+                        } else {
+                            leaveFullScreenMode()
+                        }
+                    }
 
                     BrowserScreen(
-                        externalLink = externalLink,
-                        isInFullscreenMode = isInFullScreenMode,
-                        onEnterFullScreenClick = {
-                            enterFullScreenMode()
-                            isInFullScreenMode = true
-                        },
-                        onExitFullScreenClick = {
-                            leaveFullScreenMode()
-                            isInFullScreenMode = false
-                        }
+                        onEvent = browserViewModel::onUiEvent,
+                        browserState = browserViewModel.state.copy(
+                            externalLink = externalLink
+                        )
                     )
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        browserViewModel.onUiEvent(
+            UiEvent.OnSetAsDefaultBrowser(isDefaultBrowser(this))
+        )
     }
 
     private fun enterFullScreenMode() {
