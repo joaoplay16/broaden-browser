@@ -67,7 +67,8 @@ import kotlinx.coroutines.launch
 fun BrowserScreen(
     modifier: Modifier = Modifier,
     browserState: BrowserState,
-    onEvent: (UiEvent) -> Unit
+    onEvent: (UiEvent) -> Unit,
+    onSettingClick: () -> Unit
 ) {
 
     val (
@@ -297,9 +298,7 @@ fun BrowserScreen(
                                 }
                                 navigator.reload()
                             },
-                            onSettingClick = {
-                                /*TODO implement settings click action*/
-                            },
+                            onSettingClick =  onSettingClick,
                             onArrowLeftClick = {
                                 navigator.navigateBack()
                             },
@@ -544,7 +543,8 @@ fun BrowserScreenPreview() {
 
             BrowserScreen(
                 onEvent = {},
-                browserState = browserState
+                browserState = browserState,
+                onSettingClick = {}
             )
         }
     }
@@ -559,7 +559,8 @@ fun BrowserScreenDarkPreview() {
 
             BrowserScreen(
                 onEvent = {},
-                browserState = browserState
+                browserState = browserState,
+                onSettingClick = {}
             )
         }
     }
