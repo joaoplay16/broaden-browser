@@ -72,9 +72,9 @@ fun BrowserScreen(
 
     val (
         isInFullscreenMode,
-        isStartInFullscreenEnabled,
+        _,
         isJavascriptAllowed,
-        isDarkThemeEnabled,
+        _,
         searchMechanism,
         externalLink,
     ) = browserState
