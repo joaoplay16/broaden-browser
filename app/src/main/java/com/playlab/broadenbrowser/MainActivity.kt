@@ -9,11 +9,19 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.playlab.broadenbrowser.ui.screens.BrowserScreen
 import com.playlab.broadenbrowser.ui.screens.BrowserViewModel
+import com.playlab.broadenbrowser.ui.screens.SettingsScreen
+import com.playlab.broadenbrowser.ui.screens.common.ScreenRoutes
 import com.playlab.broadenbrowser.ui.screens.common.UiEvent
 import com.playlab.broadenbrowser.ui.theme.BroadenBrowserTheme
 import com.playlab.broadenbrowser.ui.utils.Util.isDefaultBrowser
@@ -50,11 +58,9 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    BrowserScreen(
-                        onEvent = browserViewModel::onUiEvent,
-                        browserState = browserViewModel.state.copy(
-                            externalLink = externalLink
-                        )
+                    DefaultNavController(
+                        browserViewModel = browserViewModel,
+                        externalLink = externalLink
                     )
                 }
             }
@@ -96,5 +102,42 @@ class MainActivity : ComponentActivity() {
         windowInsetsCompat.show(WindowInsetsCompat.Type.statusBars())
         windowInsetsCompat.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
+    }
+}
+
+@Composable
+fun DefaultNavController(
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
+    browserViewModel: BrowserViewModel,
+    startDestination: String = ScreenRoutes.HOME.name,
+    externalLink: String? = null
+) {
+    NavHost(
+        modifier = modifier,
+        navController = navController,
+        startDestination = startDestination,
+    ) {
+        composable(ScreenRoutes.HOME.name) {
+            BrowserScreen(
+                onEvent = browserViewModel::onUiEvent,
+                browserState = browserViewModel.state.copy(
+                    externalLink = externalLink
+                ),
+                onSettingClick = {
+                    navController.navigate(ScreenRoutes.SETTINGS.name)
+                }
+            )
+        }
+
+        composable(ScreenRoutes.SETTINGS.name){
+            SettingsScreen(
+                onEvent = browserViewModel::onUiEvent,
+                browserState = browserViewModel.state,
+                onArrowBackPressed = {
+                    navController.popBackStack()
+                }
+            )
+        }
     }
 }
