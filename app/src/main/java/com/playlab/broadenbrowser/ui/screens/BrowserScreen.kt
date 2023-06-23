@@ -104,10 +104,7 @@ fun BrowserScreen(
         navigator,
         externalLink
     ) {
-        val bundle = webViewState.viewState
-        if (bundle == null) {
-            navigator.loadUrl(externalLink ?: "https://m3.material.io/")
-        }
+         navigator.loadUrl(externalLink ?: "https://m3.material.io/")
     }
 
     BottomSheetScaffold(
