@@ -104,6 +104,7 @@ fun BrowserScreen(
         navigator,
         externalLink
     ) {
+         externalLink?.let{ searchBarText = it }
          navigator.loadUrl(externalLink ?: "https://m3.material.io/")
     }
 
