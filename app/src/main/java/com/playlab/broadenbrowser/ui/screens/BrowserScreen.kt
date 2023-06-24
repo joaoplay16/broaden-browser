@@ -104,8 +104,15 @@ fun BrowserScreen(
         navigator,
         externalLink
     ) {
-         externalLink?.let{ searchBarText = it }
          navigator.loadUrl(externalLink ?: "https://m3.material.io/")
+    }
+
+    LaunchedEffect(
+        key1 = webViewState.lastLoadedUrl
+    ){
+        webViewState.lastLoadedUrl?.let{
+            searchBarText = it
+        }
     }
 
     BottomSheetScaffold(
