@@ -1,6 +1,8 @@
 package com.playlab.broadenbrowser.ui.screens
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION_CODES
 import android.provider.Settings
@@ -35,12 +37,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.playlab.broadenbrowser.BuildConfig
 import com.playlab.broadenbrowser.R
 import com.playlab.broadenbrowser.ui.screens.common.BrowserState
 import com.playlab.broadenbrowser.ui.screens.common.DevicesPreviews
@@ -87,6 +91,7 @@ fun SettingsScreen(
             ).padding(paddingValues).padding(horizontal = 16.dp)
         ) {
 
+            val context = LocalContext.current
 
             val (
                 _,
@@ -192,8 +197,8 @@ fun SettingsScreen(
                     onCheckedChange = { onEvent(UiEvent.OnAllowJavascript(it)) }
                 )
             }
-             /*Don't show when versions below nougat as there is no way to redirect
-              the user to the default browser chooser.*/
+            /*Don't show when versions below nougat as there is no way to redirect
+             the user to the default browser chooser.*/
             if (Build.VERSION.SDK_INT >= VERSION_CODES.N) {
                 Row(
                     modifier = Modifier
@@ -231,9 +236,28 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.padding(4.dp))
             Text(
                 modifier = Modifier
-                    // TODO: implement Rate on Google Play click
-                    .clickable { }.fillMaxWidth().padding(vertical = 10.dp),
-                text = stringResource(id = R.string.rate_on_google_play),
+                    .fillMaxWidth()
+                    .clickable {
+                        val playstoreIntent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(BuildConfig.STORE_URI)
+                        )
+                        val browserIntent = Intent(Intent.ACTION_VIEW).apply {
+                            data = Uri.parse(BuildConfig.STORE_URL)
+                            setPackage(BuildConfig.APPLICATION_ID)
+                        }
+
+                        try {
+                            context.startActivity(playstoreIntent)
+                        } catch (e: ActivityNotFoundException) {
+                            context.startActivity(browserIntent)
+                        }
+                    }
+                    .padding(vertical = 10.dp),
+                text = context.getString(
+                    R.string.rate_on_store,
+                    BuildConfig.STORE_NAME
+                ),
                 style = MaterialTheme.typography.titleMedium,
             )
             Text(
