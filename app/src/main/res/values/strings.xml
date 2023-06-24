@@ -22,7 +22,7 @@
     <string name="start_in_fullscreen">Start browser in fullscreen</string>
     <string name="set_as_default_browser">Set as default browser</string>
     <string name="enable_javascript">Enable javascript</string>
-    <string name="rate_on_google_play">Rate on Google Play</string>
+    <string name="rate_on_store">Rate on %s</string>
     <string name="privacy_policy">Privacy policy</string>
     <string name="settings_about_label">About</string>
     <string name="search_mechanism">Search</string>
