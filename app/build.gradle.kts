@@ -31,6 +31,54 @@ android {
             )
         }
     }
+
+    android.buildFeatures.buildConfig = true
+
+    productFlavors {
+        setFlavorDimensions(listOf("store"))
+
+        create("google") {
+            dimension = "store"
+            applicationIdSuffix = ".google"
+
+            buildConfigField(
+                "String",
+                "STORE_URI",
+                "\"market://details?id=$namespace\""
+            )
+            buildConfigField(
+                "String",
+                "STORE_URL",
+                "\"https://play.google.com/store/apps/details?id=$namespace\""
+            )
+            buildConfigField(
+                "String",
+                "STORE_NAME",
+                "\"Google Play\""
+            )
+        }
+
+        create("samsung") {
+            dimension = "store"
+            applicationIdSuffix = ".samsung"
+
+            buildConfigField(
+                "String",
+                "STORE_URI",
+                "\"samsungapps://ProductDetail/$namespace\""
+            )
+            buildConfigField(
+                "String",
+                "STORE_URL",
+                "\"https://galaxystore.samsung.com/detail/$namespace\""
+            )
+            buildConfigField(
+                "String",
+                "STORE_NAME",
+                "\"Galaxy Store\""
+            )
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
