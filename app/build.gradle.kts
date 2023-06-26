@@ -137,6 +137,10 @@ dependencies {
 
     implementation(libs.androidx.datastore.preferences)
 
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.runtime)
+
     testImplementation(libs.junit)
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.androidx.test.ext.junit)
