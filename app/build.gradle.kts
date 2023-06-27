@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("dagger.hilt.android.plugin")
     id("kotlin-kapt")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -19,6 +20,20 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+
+        /**
+         * room.schemaLocation: Configures and enables exporting database schemas
+         * into JSON files in the given directory
+         * room.incremental: Enables Gradle incremental annotation processor.
+         */
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += mapOf(
+                    "room.schemaLocation" to "$projectDir/schemas",
+                    "room.incremental" to "true"
+                )
+            }
         }
     }
 
@@ -137,6 +152,7 @@ dependencies {
 
     implementation(libs.androidx.datastore.preferences)
 
+    ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     annotationProcessor(libs.androidx.room.compiler)
     implementation(libs.androidx.room.runtime)
