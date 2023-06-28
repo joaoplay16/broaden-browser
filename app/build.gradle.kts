@@ -164,6 +164,7 @@ dependencies {
     testImplementation(libs.androidx.test.ext.truth)
     testImplementation(libs.androidx.test.runner)
     testImplementation(libs.hilt.android.testing)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.core)
@@ -171,4 +172,5 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext.truth)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.hilt.android.testing)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
 }
