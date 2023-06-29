@@ -8,6 +8,7 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import com.playlab.broadenbrowser.data.local.BrowserDatabase
 import com.playlab.broadenbrowser.data.preferences.PreferencesDataStore
+import com.playlab.broadenbrowser.repository.BrowserRepository
 import com.playlab.broadenbrowser.repository.PreferencesRepository
 import com.playlab.broadenbrowser.ui.utils.Constants.BROWSER_DATABASE
 import dagger.Module
@@ -49,4 +50,10 @@ object DatabaseModule {
             BROWSER_DATABASE
         ).build()
     }
+
+    @Provides
+    @Singleton
+    fun provideBrowserRepository(
+        database: BrowserDatabase
+    ) = BrowserRepository(database)
 }
