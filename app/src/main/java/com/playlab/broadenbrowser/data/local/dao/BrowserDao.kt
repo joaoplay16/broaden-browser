@@ -18,4 +18,7 @@ interface BrowserDao {
 
     @Delete
     suspend fun deleteTabPages(tabPages: List<TabPage>)
+
+    @Query("DELETE FROM tabs")
+    suspend fun deleteAllTabPages()
 }
