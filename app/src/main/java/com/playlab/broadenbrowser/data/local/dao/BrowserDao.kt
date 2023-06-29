@@ -17,5 +17,5 @@ interface BrowserDao {
     suspend fun insertTabPage(tabPage: TabPage)
 
     @Delete
-    suspend fun deleteTabPage(tabPage: TabPage)
+    suspend fun deleteTabPages(tabPages: List<TabPage>)
 }
