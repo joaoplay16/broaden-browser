@@ -10,6 +10,7 @@ import com.playlab.broadenbrowser.data.local.BrowserDatabase
 import com.playlab.broadenbrowser.data.preferences.PreferencesDataStore
 import com.playlab.broadenbrowser.repository.BrowserRepository
 import com.playlab.broadenbrowser.repository.DefaultBrowserRepository
+import com.playlab.broadenbrowser.repository.DefaultPreferencesRepository
 import com.playlab.broadenbrowser.repository.PreferencesRepository
 import com.playlab.broadenbrowser.ui.utils.Constants.BROWSER_DATABASE
 import dagger.Module
@@ -38,7 +39,7 @@ object DatabaseModule {
     fun providePreferencesRepository(
         dataStore: PreferencesDataStore
     ): PreferencesRepository =
-        PreferencesRepository(dataStore)
+        DefaultPreferencesRepository(dataStore)
 
     @Provides
     @Singleton

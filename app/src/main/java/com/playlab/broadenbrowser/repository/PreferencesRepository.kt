@@ -1,36 +1,22 @@
 package com.playlab.broadenbrowser.repository
 
-import com.playlab.broadenbrowser.data.preferences.PreferencesDataStore
-import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 
-class PreferencesRepository @Inject constructor(
-    private val preferencesDataStore: PreferencesDataStore
-) {
-    fun isJavascriptAllowed() =
-        preferencesDataStore.isJavascriptAllowed
+interface PreferencesRepository {
+    
+    fun isJavascriptAllowed(): Flow<Boolean>
 
-    suspend fun allowJavascript(allowed: Boolean) {
-        preferencesDataStore.allowJavascript(allowed)
-    }
+    suspend fun allowJavascript(allowed: Boolean)
 
-    fun isStartInFullscreenEnabled() =
-        preferencesDataStore.isStartInFullscreenEnabled
+    fun isStartInFullscreenEnabled(): Flow<Boolean>
 
-    suspend fun enableStartInFullscreen(enabled: Boolean) {
-        preferencesDataStore.enableStartInFullscreen(enabled)
-    }
+    suspend fun enableStartInFullscreen(enabled: Boolean)
 
-    fun isDarkThemeEnabled() =
-        preferencesDataStore.isDarkThemeEnabled
+    fun isDarkThemeEnabled(): Flow<Boolean> 
+    
+    suspend fun enableDarkTheme(enabled: Boolean)
 
-    suspend fun enableDarkTheme(enabled: Boolean) {
-        preferencesDataStore.enableDarkTheme(enabled)
-    }
-
-    fun searchMechanism() =
-        preferencesDataStore.searchMechanism
-
-    suspend fun setSearchMechanism(searchMechanism: String) {
-        preferencesDataStore.setSearchMechanism(searchMechanism)
-    }
+    fun searchMechanism(): Flow<String>
+    
+    suspend fun setSearchMechanism(searchMechanism: String)
 }
