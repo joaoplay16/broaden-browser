@@ -3,8 +3,9 @@ package com.playlab.broadenbrowser.repository
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.google.common.truth.Truth.assertThat
+import com.playlab.broadenbrowser.mocks.MockTabPages.tab1
+import com.playlab.broadenbrowser.mocks.MockTabPages.tab2
 import com.playlab.broadenbrowser.data.local.BrowserDatabase
-import com.playlab.broadenbrowser.model.TabPage
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -40,21 +41,6 @@ TestBrowserRepository {
         hiltRule.inject()
 
         repository.deleteAllTabPages()
-    }
-
-    companion object {
-        val tab1 = TabPage(
-            1,
-            "Google",
-            "https://google.com",
-            0
-        )
-        val tab2 = TabPage(
-            2,
-            "Bing",
-            "https://bing.com",
-            0
-        )
     }
 
     @Test
