@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.playlab.broadenbrowser.data.local.BrowserDatabase
 import com.playlab.broadenbrowser.repository.BrowserRepository
+import com.playlab.broadenbrowser.repository.DefaultBrowserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,5 +32,5 @@ object DatabaseModuleAndroidTest {
     fun provideBrowserRepository(
         @Named("test_browser_db")
         database: BrowserDatabase
-    ) = BrowserRepository(database)
+    ) : BrowserRepository = DefaultBrowserRepository(database)
 }

@@ -29,7 +29,7 @@ TestBrowserRepository {
 
     @Inject
     @Named("test_browser_repo")
-    lateinit var repository: BrowserRepository
+    lateinit var repository: DefaultBrowserRepository
 
     @Inject
     @Named("test_browser_db")

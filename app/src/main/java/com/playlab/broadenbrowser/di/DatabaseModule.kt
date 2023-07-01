@@ -9,6 +9,7 @@ import androidx.room.Room
 import com.playlab.broadenbrowser.data.local.BrowserDatabase
 import com.playlab.broadenbrowser.data.preferences.PreferencesDataStore
 import com.playlab.broadenbrowser.repository.BrowserRepository
+import com.playlab.broadenbrowser.repository.DefaultBrowserRepository
 import com.playlab.broadenbrowser.repository.PreferencesRepository
 import com.playlab.broadenbrowser.ui.utils.Constants.BROWSER_DATABASE
 import dagger.Module
@@ -55,5 +56,5 @@ object DatabaseModule {
     @Singleton
     fun provideBrowserRepository(
         database: BrowserDatabase
-    ) = BrowserRepository(database)
+    ): BrowserRepository = DefaultBrowserRepository(database)
 }
