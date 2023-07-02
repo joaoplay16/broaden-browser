@@ -8,7 +8,7 @@ interface BrowserRepository {
 
     suspend fun insertTabPage(tabPage: TabPage)
 
-    suspend fun deleteTabPage(tabPages: List<TabPage>)
+    suspend fun deleteTabPages(tabPages: List<TabPage>)
 
     suspend fun deleteAllTabPages()
 }

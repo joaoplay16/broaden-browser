@@ -15,7 +15,7 @@ class DefaultBrowserRepository @Inject constructor(
         db.browserDao().insertTabPage(tabPage)
     }
 
-    override suspend fun deleteTabPage(tabPages: List<TabPage>) {
+    override suspend fun deleteTabPages(tabPages: List<TabPage>) {
         db.browserDao().deleteTabPages(tabPages)
     }
 
