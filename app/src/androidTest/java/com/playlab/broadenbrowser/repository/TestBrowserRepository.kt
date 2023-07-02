@@ -66,7 +66,7 @@ TestBrowserRepository {
 
         assertThat(allTabs.size).isEqualTo(2)
 
-        repository.deleteTabPage(listOf(tab1))
+        repository.deleteTabPages(listOf(tab1))
 
         allTabs = repository.getTabs().first()
 
