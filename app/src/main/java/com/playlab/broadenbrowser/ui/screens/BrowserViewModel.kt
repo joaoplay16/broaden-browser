@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.playlab.broadenbrowser.repository.BrowserRepository
 import com.playlab.broadenbrowser.repository.PreferencesRepository
 import com.playlab.broadenbrowser.ui.screens.common.BrowserState
 import com.playlab.broadenbrowser.ui.screens.common.UiEvent
@@ -17,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BrowserViewModel @Inject constructor(
-    private val preferencesRepository: PreferencesRepository
+    private val preferencesRepository: PreferencesRepository,
+    private val browserRepository: BrowserRepository
 ) : ViewModel() {
 
     var state by mutableStateOf(BrowserState())
@@ -39,6 +41,12 @@ class BrowserViewModel @Inject constructor(
 
             searchMechanism().onEach {
                 state = state.copy(searchMechanism = SearchMechanism.valueOf(it))
+            }.launchIn(viewModelScope)
+        }
+
+        with(browserRepository) {
+            getTabs().onEach {
+                state = state.copy(tabs = it)
             }.launchIn(viewModelScope)
         }
     }
@@ -68,6 +76,18 @@ class BrowserViewModel @Inject constructor(
 
                 is UiEvent.OnSetAsDefaultBrowser -> {
                     state = state.copy(isDefaultBrowser = uiEvent.isDefaultBrowser)
+                }
+
+                is UiEvent.OnNewTab -> {
+                    browserRepository.insertTabPage(tabPage = uiEvent.tabPage)
+                }
+
+                is UiEvent.OnCloseTabs -> {
+                    browserRepository.deleteTabPages(uiEvent.tabPages)
+                }
+
+                is UiEvent.OnCloseAllTabs -> {
+                    browserRepository.deleteAllTabPages()
                 }
             }
         }
