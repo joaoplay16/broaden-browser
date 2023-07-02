@@ -99,4 +99,15 @@ class TestBrowserViewModel {
             assertThat(state.isStartInFullscreenEnabled).isTrue()
         }
     }
+
+    @Test
+    fun `test dark theme enabling`() = runTest {
+        with(viewModel) {
+            assertThat(state.isDarkThemeEnabled).isFalse()
+
+            onUiEvent(UiEvent.OnEnableDarkTheme(true))
+
+            assertThat(state.isDarkThemeEnabled).isTrue()
+        }
+    }
 }
