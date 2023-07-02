@@ -67,4 +67,14 @@ class TestBrowserViewModel {
             assertThat(state.tabs).isEmpty()
         }
     }
+
+    @Test
+    fun `test javascript enabling`() = runTest {
+        with(viewModel) {
+            assertThat(state.isJavascriptAllowed).isTrue()
+            onUiEvent(UiEvent.OnAllowJavascript(false))
+
+            assertThat(state.isJavascriptAllowed).isFalse()
+        }
+    }
 }
