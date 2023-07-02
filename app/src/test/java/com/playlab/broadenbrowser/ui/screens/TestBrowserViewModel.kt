@@ -88,4 +88,15 @@ class TestBrowserViewModel {
             assertThat(state.isInFullscreen).isTrue()
         }
     }
+
+    @Test
+    fun `test fullscreen startup enabling`() = runTest {
+        with(viewModel) {
+            assertThat(state.isStartInFullscreenEnabled).isFalse()
+
+            onUiEvent(UiEvent.OnEnableStartInFullscreen(true))
+
+            assertThat(state.isStartInFullscreenEnabled).isTrue()
+        }
+    }
 }
