@@ -8,6 +8,7 @@ import com.playlab.broadenbrowser.mocks.MockTabPages.tab3
 import com.playlab.broadenbrowser.repository.FakeBrowserRepository
 import com.playlab.broadenbrowser.repository.FakePreferencesRepository
 import com.playlab.broadenbrowser.ui.screens.common.UiEvent
+import com.playlab.broadenbrowser.ui.utils.SearchMechanism
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -108,6 +109,17 @@ class TestBrowserViewModel {
             onUiEvent(UiEvent.OnEnableDarkTheme(true))
 
             assertThat(state.isDarkThemeEnabled).isTrue()
+        }
+    }
+
+    @Test
+    fun `test search engine setting`() = runTest {
+        with(viewModel) {
+            assertThat(state.searchMechanism).isEqualTo(SearchMechanism.GOOGLE)
+
+            onUiEvent(UiEvent.OnSetSearchMechanism(SearchMechanism.BING))
+
+            assertThat(state.searchMechanism).isEqualTo(SearchMechanism.BING)
         }
     }
 }
