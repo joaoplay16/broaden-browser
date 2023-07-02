@@ -309,6 +309,7 @@ fun SettingsScreenPreview() {
                             browserState =
                                 browserState.copy(isDefaultBrowser = uiEvent.isDefaultBrowser)
                         }
+                        else -> {}
                     }
                 },
                 onArrowBackPressed = {}
@@ -356,6 +357,8 @@ fun SettingsScreenPreviewDark() {
                             browserState =
                                 browserState.copy(isDefaultBrowser = uiEvent.isDefaultBrowser)
                         }
+
+                        else -> {}
                     }
                 },
                 onArrowBackPressed = {}
