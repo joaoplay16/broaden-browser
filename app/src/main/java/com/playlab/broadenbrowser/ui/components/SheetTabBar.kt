@@ -30,63 +30,63 @@ import androidx.compose.ui.unit.dp
 import com.playlab.broadenbrowser.R
 import com.playlab.broadenbrowser.ui.theme.BroadenBrowserTheme
 
-enum class TabPage {
-    OpenTabs, Favorite, History
+enum class SheetTabBarSection {
+    OpenTabs, Favorites, History
 }
 
 @Composable
 fun SheetTabBar(
     modifier: Modifier = Modifier,
     openTabsCount: Int,
-    tabPage: TabPage,
+    tabSection: SheetTabBarSection,
     backgroundColor: Color = MaterialTheme.colorScheme.background,
-    onTabSelected: (tabPage: TabPage) -> Unit,
+    onTabSectionSelected: (tabSection: SheetTabBarSection) -> Unit,
 ) {
     TabRow(
         modifier = modifier,
-        selectedTabIndex = tabPage.ordinal,
+        selectedTabIndex = tabSection.ordinal,
         containerColor = backgroundColor,
         divider = {},
         indicator = { tabPositions ->
             HomeTabIndicator(
                 tabPositions,
-                tabPage
+                tabSection
             )
         }
     ) {
 
-        val selectionColor: @Composable (TabPage) -> Color = { page ->
-            if (page == tabPage)
+        val selectionColor: @Composable (SheetTabBarSection) -> Color = { page ->
+            if (page == tabSection)
                 MaterialTheme.colorScheme.primary
             else MaterialTheme.colorScheme.outline
         }
 
         IconButton(
             modifier = Modifier,
-            onClick = { onTabSelected(TabPage.OpenTabs) }
+            onClick = { onTabSectionSelected(SheetTabBarSection.OpenTabs) }
         ) {
             TabCounter(
                 colors = TabCounterDefaults.tabCounterColors().copy(
-                        borderColor = selectionColor(TabPage.OpenTabs),
-                        textColor = selectionColor(TabPage.OpenTabs)
+                    borderColor = selectionColor(SheetTabBarSection.OpenTabs),
+                    textColor = selectionColor(SheetTabBarSection.OpenTabs)
                     ),
                 count = openTabsCount
             )
         }
 
-        IconButton(onClick = { onTabSelected(TabPage.Favorite) }) {
+        IconButton(onClick = { onTabSectionSelected(SheetTabBarSection.Favorites) }) {
             Icon(
                 painter = painterResource(id = R.drawable.star_shooting_outline),
                 contentDescription = null,
-                tint = selectionColor(TabPage.Favorite)
+                tint = selectionColor(SheetTabBarSection.Favorites)
             )
         }
 
-        IconButton(onClick = { onTabSelected(TabPage.History) }) {
+        IconButton(onClick = { onTabSectionSelected(SheetTabBarSection.History) }) {
             Icon(
                 painter = painterResource(id = R.drawable.clock_outline),
                 contentDescription = null,
-                tint = selectionColor(TabPage.History)
+                tint = selectionColor(SheetTabBarSection.History)
             )
         }
     }
@@ -95,10 +95,10 @@ fun SheetTabBar(
 @Composable
 private fun HomeTabIndicator(
     tabPositions: List<TabPosition>,
-    tabPage: TabPage
+    tabSection: SheetTabBarSection
 ) {
     val transition = updateTransition(
-        tabPage,
+        tabSection,
         label = "Tab indicator"
     )
 
@@ -107,16 +107,16 @@ private fun HomeTabIndicator(
             spring(stiffness = Spring.StiffnessMedium)
         },
         label = "Indicator left"
-    ) { page ->
-        tabPositions[page.ordinal].left
+    ) { section ->
+        tabPositions[section.ordinal].left
     }
     val indicatorRight by transition.animateDp(
         transitionSpec = {
             spring(stiffness = Spring.StiffnessMedium)
         },
         label = "Indicator right"
-    ) { page ->
-        tabPositions[page.ordinal].right
+    ) { section ->
+        tabPositions[section.ordinal].right
     }
     val color = MaterialTheme.colorScheme.primary
 
@@ -149,13 +149,13 @@ fun HomeTabPreview() {
     BroadenBrowserTheme(false) {
         Surface {
 
-            var selectedTab by remember { mutableStateOf(TabPage.OpenTabs) }
+            var selectedTabSection by remember { mutableStateOf(SheetTabBarSection.OpenTabs) }
 
             SheetTabBar(
                 modifier = Modifier.width(140.dp),
-                tabPage = selectedTab,
+                tabSection = selectedTabSection,
                 openTabsCount = 0,
-                onTabSelected = { selectedTab = it }
+                onTabSectionSelected = { selectedTabSection = it }
             )
         }
     }
