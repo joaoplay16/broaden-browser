@@ -27,4 +27,6 @@ object MockTabPages {
         "https://duckduckgo.com",
         0L
     )
+
+    val tabList = listOf(tab1, tab2, tab3, tab4)
 }
