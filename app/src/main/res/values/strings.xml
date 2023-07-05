@@ -27,4 +27,5 @@
     <string name="settings_about_label">About</string>
     <string name="search_mechanism">Search</string>
     <string name="close_icon_cd">close</string>
+    <string name="icon_add_cd">Add new tab</string>
 </resources>

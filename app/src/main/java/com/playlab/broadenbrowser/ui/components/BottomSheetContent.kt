@@ -2,24 +2,31 @@ package com.playlab.broadenbrowser.ui.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
@@ -77,18 +84,44 @@ fun BottomSheetContent(
                     maxHeight = 600.dp
                 )
         ) {
-            when(selectedTab){
+            when (selectedTab) {
                 SheetTabBarSection.OpenTabs -> {
-                    TabsSection(
-                        tabs = browserState.tabs,
-                        onCloseTabs = {
-                            onUiEvent(UiEvent.OnCloseTabs(it))
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                    ) {
+                        TabsSection(
+                            modifier = Modifier.align(Alignment.TopCenter),
+
+                            tabs = browserState.tabs,
+                            onCloseTabs = {
+                                onUiEvent(UiEvent.OnCloseTabs(it))
+                            }
+                        )
+                        FloatingActionButton(
+                            modifier = Modifier
+                                .padding(
+                                    bottom = 36.dp,
+                                    end = 8.dp
+                                )
+                                .align(alignment = Alignment.BottomEnd),
+                            shape = CircleShape,
+                            containerColor = MaterialTheme.colorScheme.tertiary,
+                            contentColor = MaterialTheme.colorScheme.onTertiary,
+                            onClick = {
+
+                            }) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = stringResource(id = R.string.icon_add_cd)
+                            )
                         }
-                    )
+                    }
                 }
+
                 SheetTabBarSection.Favorites -> {
                     // TODO: Add favorites section
                 }
+
                 SheetTabBarSection.History -> {
                     // TODO: Add history section
                 }
