@@ -40,6 +40,16 @@ class TestBrowserViewModel {
         }
     }
 
+
+    @Test
+    fun `test add a new tab`() = runTest {
+        with(viewModel) {
+            onUiEvent(UiEvent.OnSaveTab(tab1))
+            onUiEvent(UiEvent.OnNewTab)
+            assertThat(state.currentTab).isNull()
+        }
+    }
+
     @Test
     fun `test close selected tabs`() = runTest {
         with(viewModel) {
