@@ -12,4 +12,5 @@ data class BrowserState(
     val externalLink: String? = null,
     val isDefaultBrowser: Boolean = false,
     val tabs: List<TabPage> = emptyList(),
+    val currentTab: TabPage? = null
 )
