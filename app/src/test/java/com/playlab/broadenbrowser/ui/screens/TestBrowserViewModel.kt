@@ -35,7 +35,7 @@ class TestBrowserViewModel {
     fun `test add new tab`() = runTest {
         with(viewModel) {
             assertThat(state.tabs).isEmpty()
-            onUiEvent(UiEvent.OnNewTab(tab1))
+            onUiEvent(UiEvent.OnSaveTab(tab1))
             assertThat(state.tabs.size).isEqualTo(1)
         }
     }
@@ -43,9 +43,9 @@ class TestBrowserViewModel {
     @Test
     fun `test close selected tabs`() = runTest {
         with(viewModel) {
-            onUiEvent(UiEvent.OnNewTab(tab1))
-            onUiEvent(UiEvent.OnNewTab(tab2))
-            onUiEvent(UiEvent.OnNewTab(tab3))
+            onUiEvent(UiEvent.OnSaveTab(tab1))
+            onUiEvent(UiEvent.OnSaveTab(tab2))
+            onUiEvent(UiEvent.OnSaveTab(tab3))
 
             val tabsToClose = listOf(tab1, tab3)
 
@@ -59,9 +59,9 @@ class TestBrowserViewModel {
     @Test
     fun `test close all tabs`() = runTest {
         with(viewModel) {
-            onUiEvent(UiEvent.OnNewTab(tab1))
-            onUiEvent(UiEvent.OnNewTab(tab2))
-            onUiEvent(UiEvent.OnNewTab(tab3))
+            onUiEvent(UiEvent.OnSaveTab(tab1))
+            onUiEvent(UiEvent.OnSaveTab(tab2))
+            onUiEvent(UiEvent.OnSaveTab(tab3))
 
             onUiEvent(UiEvent.OnCloseAllTabs)
 
