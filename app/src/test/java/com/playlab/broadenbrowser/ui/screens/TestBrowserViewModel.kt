@@ -32,7 +32,7 @@ class TestBrowserViewModel {
     }
 
     @Test
-    fun `test add new tab`() = runTest {
+    fun `test save a tab`() = runTest {
         with(viewModel) {
             assertThat(state.tabs).isEmpty()
             onUiEvent(UiEvent.OnSaveTab(tab1))
