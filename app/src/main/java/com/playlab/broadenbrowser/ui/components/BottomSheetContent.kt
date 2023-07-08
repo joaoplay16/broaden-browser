@@ -82,17 +82,15 @@ fun BottomSheetContent(
                 .padding(top = 8.dp)
                 .sizeIn(
                     minHeight = 400.dp,
-                    maxHeight = 600.dp
+                    maxHeight = 450.dp
                 )
         ) {
-            when (selectedTab) {
-                SheetTabBarSection.OpenTabs -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                    ) {
+            Box (Modifier.fillMaxSize()){
+                when (selectedTab) {
+                    SheetTabBarSection.OpenTabs -> {
                         TabsSection(
-                            modifier = Modifier.align(Alignment.TopCenter),
-
+                            modifier = Modifier
+                                .align(Alignment.TopCenter),
                             tabs = browserState.tabs,
                             onCloseTabs = {
                                 onUiEvent(UiEvent.OnCloseTabs(it))
@@ -117,14 +115,14 @@ fun BottomSheetContent(
                             )
                         }
                     }
-                }
 
-                SheetTabBarSection.Favorites -> {
-                    // TODO: Add favorites section
-                }
+                    SheetTabBarSection.Favorites -> {
+                        // TODO: Add favorites section
+                    }
 
-                SheetTabBarSection.History -> {
-                    // TODO: Add history section
+                    SheetTabBarSection.History -> {
+                        // TODO: Add history section
+                    }
                 }
             }
         }
