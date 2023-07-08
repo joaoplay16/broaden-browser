@@ -40,6 +40,17 @@ class TestBrowserViewModel {
         }
     }
 
+    @Test
+    fun `test save a duplicated tab`() = runTest {
+        with(viewModel) {
+            assertThat(state.tabs).isEmpty()
+            onUiEvent(UiEvent.OnSaveTab(tab1))
+            onUiEvent(UiEvent.OnSaveTab(tab1))
+            assertThat(state.tabs.size).isEqualTo(2)
+            assertThat(state.tabs).containsExactly(tab1, tab1)
+        }
+    }
+
 
     @Test
     fun `test add a new tab`() = runTest {
