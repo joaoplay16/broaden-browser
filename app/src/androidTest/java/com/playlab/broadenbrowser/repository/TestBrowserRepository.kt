@@ -6,6 +6,7 @@ import com.google.common.truth.Truth.assertThat
 import com.playlab.broadenbrowser.mocks.MockTabPages.tab1
 import com.playlab.broadenbrowser.mocks.MockTabPages.tab2
 import com.playlab.broadenbrowser.data.local.BrowserDatabase
+import com.playlab.broadenbrowser.model.TabPage
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -54,6 +55,33 @@ TestBrowserRepository {
         assertThat(allTabs.size).isEqualTo(2)
         assertThat(allTabs).contains(tab1)
         assertThat(allTabs).contains(tab2)
+    }
+
+    @Test
+    fun insertDuplicatedTabsReturnsTabsWithSameUrl() = runTest {
+
+        repository.insertTabPage(
+            TabPage(
+                title = tab1.title,
+                url = tab1.url,
+                timestamp = tab1.timestamp
+            )
+        )
+        repository.insertTabPage(
+            TabPage(
+                title = tab1.title,
+                url = tab1.url,
+                timestamp = tab1.timestamp
+            )
+        )
+
+        val allTabs = repository.getTabs().first()
+
+        assertThat(allTabs.size).isEqualTo(2)
+
+        allTabs.forEach{
+            assertThat(it.url).isEqualTo(tab1.url)
+        }
     }
 
     @Test
