@@ -107,7 +107,7 @@ fun BottomSheetContent(
                             containerColor = MaterialTheme.colorScheme.tertiary,
                             contentColor = MaterialTheme.colorScheme.onTertiary,
                             onClick = {
-
+                                onUiEvent(UiEvent.OnNewTab)
                             }) {
                             Icon(
                                 imageVector = Icons.Default.Add,
