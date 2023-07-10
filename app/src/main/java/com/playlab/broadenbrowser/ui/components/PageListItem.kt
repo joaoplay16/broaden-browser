@@ -45,6 +45,7 @@ fun PageListItem(
                     modifier = Modifier
                         .padding(start = 10.dp)
                         .fillMaxWidth(),
+                    maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     text = title
                 )
@@ -52,6 +53,7 @@ fun PageListItem(
                     modifier = Modifier
                         .padding(start = 10.dp)
                         .fillMaxWidth(),
+                    maxLines = 1,
                     text = url,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
