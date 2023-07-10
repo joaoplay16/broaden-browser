@@ -51,6 +51,7 @@ import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberSaveableWebViewState
 import com.google.accompanist.web.rememberWebViewNavigator
 import com.playlab.broadenbrowser.R
+import com.playlab.broadenbrowser.model.TabPage
 import com.playlab.broadenbrowser.ui.components.BottomSheetContent
 import com.playlab.broadenbrowser.ui.components.SearchBar
 import com.playlab.broadenbrowser.ui.components.TabCounter
@@ -108,17 +109,38 @@ fun BrowserScreen(
     }
 
     LaunchedEffect(
-        key1 = webViewState.lastLoadedUrl
-    ){
-        webViewState.lastLoadedUrl?.let{
-            searchBarText = it
+        key1 = webViewState.loadingState,
+        block = {
+            with(webViewState) {
+
+                if (isLoading.not() && browserState.currentTab == null) {
+                    lastLoadedUrl?.let { url ->
+                        searchBarText = url
+
+                        onEvent(
+                            UiEvent.OnSaveTab(
+                                TabPage(
+                                    title = pageTitle ?: url,
+                                    url = url,
+                                    timestamp = System.currentTimeMillis()
+                                )
+                            )
+                        )
+                    }
+                }
+            }
         }
-    }
+    )
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetPeekHeight = 0.dp,
-        sheetContent = { BottomSheetContent() }
+        sheetContent = {
+            BottomSheetContent(
+                browserState = browserState,
+                onUiEvent = onEvent
+            )
+        }
     ) {
         Column(
             verticalArrangement = Arrangement.Bottom
@@ -233,7 +255,7 @@ fun BrowserScreen(
                                 bottomSheetScaffoldState.bottomSheetState.expand()
                             }
                         },
-                        count = 0
+                        count = browserState.tabs.size
                     )
 
                     Spacer(
@@ -272,7 +294,7 @@ fun BrowserScreen(
                             enableArrowLeft = navigator.canGoBack,
                             enableArrowRight = navigator.canGoForward,
                             onNewTabClick = {
-                                /*TODO implement new tab click action*/
+                                onEvent(UiEvent.OnNewTab)
                             },
                             onBookmarksClick = {
                                 /*TODO: implement bookmarks click action*/
@@ -303,7 +325,7 @@ fun BrowserScreen(
                                 }
                                 navigator.reload()
                             },
-                            onSettingClick =  onSettingClick,
+                            onSettingClick = onSettingClick,
                             onArrowLeftClick = {
                                 navigator.navigateBack()
                             },

@@ -79,7 +79,13 @@ class BrowserViewModel @Inject constructor(
                 }
 
                 is UiEvent.OnNewTab -> {
-                    browserRepository.insertTabPage(tabPage = uiEvent.tabPage)
+                    state = state.copy(currentTab = null)
+                }
+
+                is UiEvent.OnSaveTab -> {
+
+                    state = state.copy(currentTab = uiEvent.tabPage)
+                    browserRepository.insertTabPage(uiEvent.tabPage)
                 }
 
                 is UiEvent.OnCloseTabs -> {
