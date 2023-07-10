@@ -1,6 +1,5 @@
 package com.playlab.broadenbrowser.ui.screens
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_MASK
 import android.util.Log
@@ -63,7 +62,6 @@ import com.playlab.broadenbrowser.ui.utils.Util.toSearchMechanismUrl
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun BrowserScreen(
     modifier: Modifier = Modifier,
