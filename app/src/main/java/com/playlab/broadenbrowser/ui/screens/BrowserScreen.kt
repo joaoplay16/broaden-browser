@@ -331,7 +331,8 @@ fun BrowserScreen(
                                 navigator.navigateForward()
                             },
                             onReloadClick = {
-                                navigator.reload()
+                                // check if the current tab has a loaded page
+                                if(browserState.currentTab != null) navigator.reload()
                             },
                             onShareClick = {
                                 val intent = Intent(Intent.ACTION_SEND).apply {
