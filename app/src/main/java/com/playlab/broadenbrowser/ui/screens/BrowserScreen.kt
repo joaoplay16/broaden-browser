@@ -390,7 +390,10 @@ private fun BrowserOptionsMenu(
                     text = stringResource(id = R.string.new_tab)
                 )
             },
-            onClick = onNewTabClick,
+            onClick = {
+                onNewTabClick()
+                onDismissRequest()
+            },
             contentPadding = PaddingValues(
                 start = 12.dp,
                 end = 22.dp
@@ -408,6 +411,7 @@ private fun BrowserOptionsMenu(
                 Row(
                     modifier = Modifier.clickable {
                         onAddBookmarksClick()
+                        onDismissRequest()
                     },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -430,7 +434,10 @@ private fun BrowserOptionsMenu(
                     text = stringResource(id = R.string.bookmarks),
                 )
             },
-            onClick = onBookmarksClick,
+            onClick = {
+                onBookmarksClick()
+                onDismissRequest()
+            },
             contentPadding = PaddingValues(
                 start = 12.dp,
                 end = 22.dp
@@ -448,7 +455,10 @@ private fun BrowserOptionsMenu(
                     text = stringResource(id = R.string.history)
                 )
             },
-            onClick = onHistoryClick,
+            onClick = {
+                onHistoryClick()
+                onDismissRequest()
+            },
             contentPadding = PaddingValues(
                 start = 12.dp,
                 end = 22.dp
@@ -466,7 +476,10 @@ private fun BrowserOptionsMenu(
                     text = stringResource(id = R.string.desktop_site)
                 )
             },
-            onClick = onDesktopSiteClick,
+            onClick = {
+                onDesktopSiteClick()
+                onDismissRequest()
+            },
             contentPadding = PaddingValues(
                 start = 12.dp,
                 end = 22.dp
@@ -484,7 +497,10 @@ private fun BrowserOptionsMenu(
                     text = stringResource(id = R.string.settings)
                 )
             },
-            onClick = onSettingClick,
+            onClick = {
+                onSettingClick()
+                onDismissRequest()
+            },
             contentPadding = PaddingValues(
                 start = 12.dp,
                 end = 22.dp
@@ -516,13 +532,19 @@ private fun BrowserOptionsMenu(
                     else MaterialTheme.colorScheme.onSurface.copy(0.5f)
                 )
             }
-            IconButton(onClick = onShareClick) {
+            IconButton(onClick = {
+                onShareClick()
+                onDismissRequest()
+            }) {
                 Icon(
                     painter = painterResource(id = R.drawable.share_variant_outline),
                     contentDescription = stringResource(id = R.string.ic_share_cd)
                 )
             }
-            IconButton(onClick = onReloadClick) {
+            IconButton(onClick = {
+                onReloadClick()
+                onDismissRequest()
+            }) {
                 Icon(
                     painter = painterResource(id = R.drawable.reload),
                     contentDescription = stringResource(id = R.string.ic_reload_cd)
