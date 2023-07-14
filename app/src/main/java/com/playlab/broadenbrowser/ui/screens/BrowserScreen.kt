@@ -233,7 +233,6 @@ fun BrowserScreen(
                         )
                     )
 
-                    // TODO: Provide counter value
                     TabCounter(
                         modifier = Modifier.clickable {
                             coroutineScope.launch {
