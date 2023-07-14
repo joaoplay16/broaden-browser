@@ -108,6 +108,15 @@ fun BrowserScreen(
         externalLink
     ) {
         if (externalLink != null) {
+            onEvent(
+                UiEvent.OnSaveTab(
+                    TabPage(
+                        title = externalLink,
+                        url = externalLink,
+                        timestamp = System.currentTimeMillis()
+                    )
+                )
+            )
             navigator.loadUrl(externalLink)
         }
     }
