@@ -2,6 +2,7 @@ package com.playlab.broadenbrowser.ui.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -136,9 +137,16 @@ fun TabsSection(
     onCloseTabs: (List<TabPage>) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(modifier = modifier) {
+    LazyColumn(
+        modifier = modifier,
+        reverseLayout = true,
+        verticalArrangement = Arrangement.Top
+    ) {
+        item {
+            Spacer(modifier = Modifier.padding(64.dp))
+        }
         items(
-            items = tabs,
+            items = tabs.sortedBy { it.timestamp },
             key = { it.id }) { page ->
             PageListItem(
                 modifier = Modifier
@@ -155,9 +163,6 @@ fun TabsSection(
                     }
                 }
             )
-        }
-        item{
-            Spacer(modifier = Modifier.padding(64.dp))
         }
     }
 }
