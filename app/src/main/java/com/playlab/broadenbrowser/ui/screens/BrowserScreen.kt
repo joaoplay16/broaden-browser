@@ -2,8 +2,8 @@ package com.playlab.broadenbrowser.ui.screens
 
 import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_MASK
-import android.util.Log
 import android.webkit.WebSettings
+import android.webkit.WebView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -77,6 +78,8 @@ fun BrowserScreen(
         _,
         searchMechanism,
         externalLink,
+        _,_,
+        currentTab
     ) = browserState
 
     val isInEditMode = LocalInspectionMode.current
@@ -97,38 +100,17 @@ fun BrowserScreen(
 
     var isDesktopSite by remember { mutableStateOf(false) }
 
-    val webViewInstance = remember { android.webkit.WebView(context) }
-
-    LaunchedEffect(
-        navigator,
-        externalLink
-    ) {
-         navigator.loadUrl(externalLink ?: "https://m3.material.io/")
+    val webViewInstance: WebView? by remember(currentTab) {
+        derivedStateOf { if (currentTab == null) null else WebView(context) }
     }
 
     LaunchedEffect(
-        key1 = webViewState.loadingState,
-        block = {
-            with(webViewState) {
-
-                if (isLoading.not() && browserState.currentTab == null) {
-                    lastLoadedUrl?.let { url ->
-                        searchBarText = url
-
-                        onEvent(
-                            UiEvent.OnSaveTab(
-                                TabPage(
-                                    title = pageTitle ?: url,
-                                    url = url,
-                                    timestamp = System.currentTimeMillis()
-                                )
-                            )
-                        )
-                    }
-                }
-            }
+        externalLink
+    ) {
+        if (externalLink != null) {
+            navigator.loadUrl(externalLink)
         }
-    )
+    }
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
@@ -176,19 +158,21 @@ fun BrowserScreen(
                     modifier = modifier.weight(1f),
                     Alignment.TopCenter
                 ) {
-                    WebView(
-                        modifier = Modifier.fillMaxSize(),
-                        navigator = navigator,
-                        state = webViewState,
-                        onCreated = {
-                            it.settings.domStorageEnabled = true
-                            it.settings.javaScriptEnabled = isJavascriptAllowed
-                            it.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
-                        },
-                        factory = {
-                            webViewInstance
-                        }
-                    )
+                    if( currentTab != null) {
+                        WebView(
+                            modifier = Modifier.fillMaxSize(),
+                            navigator = navigator,
+                            state = webViewState,
+                            onCreated = {
+                                it.settings.domStorageEnabled = true
+                                it.settings.javaScriptEnabled = isJavascriptAllowed
+                                it.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
+                            },
+                            factory = {
+                                  webViewInstance!!
+                            }
+                        )
+                    }
                     if (isInFullscreenMode) {
                         IconButton(
                             modifier = Modifier
@@ -223,22 +207,25 @@ fun BrowserScreen(
                         onTextChange = { searchBarText = it },
                         onClearClick = { searchBarText = "" },
                         onSearch = {
-                            if (searchBarText.isUrl()) {
-                                navigator.loadUrl(searchBarText)
-                            } else {
-                                Log.d(
-                                    "SETTINGS",
-                                    " $searchMechanism "
-                                )
-                                navigator.loadUrl(
-                                    searchBarText.toSearchMechanismUrl(
-                                        searchMechanism
+                            val url = if (searchBarText.isUrl()) searchBarText
+                            else searchBarText.toSearchMechanismUrl(searchMechanism)
+                            navigator.loadUrl(url)
+
+                            searchBarText = url
+
+                            if(currentTab == null){
+                                onEvent(
+                                    UiEvent.OnSaveTab(
+                                        TabPage(
+                                            title = url,
+                                            url = url,
+                                            timestamp = System.currentTimeMillis()
+                                        )
                                     )
                                 )
                             }
                         }
                     )
-
 
                     Spacer(
                         modifier = Modifier.padding(
@@ -292,7 +279,7 @@ fun BrowserScreen(
                             enableArrowLeft = navigator.canGoBack,
                             enableArrowRight = navigator.canGoForward,
                             onNewTabClick = {
-                                onEvent(UiEvent.OnNewTab)
+                                onEvent(UiEvent.OnNewTab(null))
                             },
                             onBookmarksClick = {
                                 /*TODO: implement bookmarks click action*/
@@ -304,24 +291,26 @@ fun BrowserScreen(
                                 /*TODO implement history click action*/
                             },
                             onDesktopSiteClick = {
-                                isDesktopSite = !isDesktopSite
-                                if (isDesktopSite) {
-                                    // set desktop mode
-                                    webViewInstance.settings.userAgentString =
-                                        "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/113.0"
-                                    /* Sets whether the WebView should enable support for the
-                               "viewport" HTML meta tag or should use a wide viewport.*/
-                                    webViewInstance.settings.useWideViewPort = true
-                                    /* Sets whether the WebView loads pages in overview mode, that
-                                is, zooms out the content to fit on screen by width. */
-                                    webViewInstance.settings.loadWithOverviewMode = true
-                                } else {
-                                    // set mobile mode
-                                    webViewInstance.settings.userAgentString = null
-                                    webViewInstance.settings.useWideViewPort = false
-                                    webViewInstance.settings.loadWithOverviewMode = false
+                                webViewInstance?.apply {
+                                    if (isDesktopSite) {
+                                        // set desktop mode
+                                        settings.userAgentString =
+                                            "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/113.0"
+                                        /* Sets whether the WebView should enable support for the
+                                        "viewport" HTML meta tag or should use a wide viewport.*/
+                                        settings.useWideViewPort = true
+                                        /* Sets whether the WebView loads pages in overview mode, that
+                                        is, zooms out the content to fit on screen by width. */
+                                        settings.loadWithOverviewMode = true
+                                    } else {
+                                        // set mobile mode
+                                        settings.userAgentString = null
+                                        settings.useWideViewPort = false
+                                        settings.loadWithOverviewMode = false
+                                    }
                                 }
                                 navigator.reload()
+                                isDesktopSite = !isDesktopSite
                             },
                             onSettingClick = onSettingClick,
                             onArrowLeftClick = {
@@ -332,7 +321,7 @@ fun BrowserScreen(
                             },
                             onReloadClick = {
                                 // check if the current tab has a loaded page
-                                if(browserState.currentTab != null) navigator.reload()
+                                if(currentTab != null) navigator.reload()
                             },
                             onShareClick = {
                                 val intent = Intent(Intent.ACTION_SEND).apply {
