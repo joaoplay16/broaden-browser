@@ -6,6 +6,7 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,11 +38,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -62,7 +67,10 @@ import com.playlab.broadenbrowser.ui.utils.Util.isUrl
 import com.playlab.broadenbrowser.ui.utils.Util.toSearchMechanismUrl
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun BrowserScreen(
     modifier: Modifier = Modifier,
@@ -78,7 +86,7 @@ fun BrowserScreen(
         _,
         searchMechanism,
         externalLink,
-        _,_,
+        _, _,
         currentTab
     ) = browserState
 
@@ -103,6 +111,10 @@ fun BrowserScreen(
     val webViewInstance: WebView? by remember(currentTab) {
         derivedStateOf { if (currentTab == null) null else WebView(context) }
     }
+
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+    val interactionSource = remember { MutableInteractionSource() }
 
     LaunchedEffect(
         externalLink
@@ -132,6 +144,14 @@ fun BrowserScreen(
         }
     ) {
         Column(
+            modifier = Modifier
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = null,
+                ){
+                    keyboardController?.hide()
+                    focusManager.clearFocus()
+                },
             verticalArrangement = Arrangement.Bottom
         ) {
             if (isInEditMode) {
@@ -178,7 +198,7 @@ fun BrowserScreen(
                                 it.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
                             },
                             factory = {
-                                  webViewInstance!!
+                                webViewInstance!!
                             }
                         )
                     }
@@ -207,11 +227,16 @@ fun BrowserScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
 
+                    var isSearchBarFocused by remember { mutableStateOf(false) }
+
                     SearchBar(
                         modifier = Modifier
                             .padding(start = dimensionResource(id = R.dimen.search_bar_item_hr_padding))
                             .padding(vertical = dimensionResource(id = R.dimen.search_bar_item_hr_padding))
-                            .weight(1f),
+                            .weight(1f)
+                            .onFocusChanged {
+                                isSearchBarFocused = it.isFocused
+                            },
                         text = searchBarText,
                         onTextChange = { searchBarText = it },
                         onClearClick = { searchBarText = "" },
@@ -222,7 +247,7 @@ fun BrowserScreen(
 
                             searchBarText = url
 
-                            if(currentTab == null){
+                            if (currentTab == null) {
                                 onEvent(
                                     UiEvent.OnSaveTab(
                                         TabPage(
@@ -235,119 +260,120 @@ fun BrowserScreen(
                             }
                         }
                     )
-
-                    Spacer(
-                        modifier = Modifier.padding(
-                            horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
+                    if (isSearchBarFocused.not()) {
+                        Spacer(
+                            modifier = Modifier.padding(
+                                horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
+                            )
                         )
-                    )
 
-                    TabCounter(
-                        modifier = Modifier.clickable {
-                            coroutineScope.launch {
-                                bottomSheetScaffoldState.bottomSheetState.expand()
-                            }
-                        },
-                        count = browserState.tabs.size
-                    )
-
-                    Spacer(
-                        modifier = Modifier.padding(
-                            horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
-                        )
-                    )
-
-                    Icon(
-                        modifier = Modifier
-                            .clickable {
-                                onEvent(UiEvent.OnEnableFullscreen(true))
+                        TabCounter(
+                            modifier = Modifier.clickable {
+                                coroutineScope.launch {
+                                    bottomSheetScaffoldState.bottomSheetState.expand()
+                                }
                             },
-                        imageVector = Icons.Default.Expand,
-                        contentDescription = stringResource(id = R.string.expand_icon_cd),
-                        tint = MaterialTheme.colorScheme.outline
-                    )
-
-                    Spacer(
-                        modifier = Modifier.padding(
-                            horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
+                            count = browserState.tabs.size
                         )
-                    )
 
-                    Box {
+                        Spacer(
+                            modifier = Modifier.padding(
+                                horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
+                            )
+                        )
+
                         Icon(
-                            modifier = Modifier.clickable { browserOptionsMenuExpanded = true },
-                            painter = painterResource(id = R.drawable.dots_vertical),
-                            contentDescription = stringResource(id = R.string.menu_icon_cd),
+                            modifier = Modifier
+                                .clickable {
+                                    onEvent(UiEvent.OnEnableFullscreen(true))
+                                },
+                            imageVector = Icons.Default.Expand,
+                            contentDescription = stringResource(id = R.string.expand_icon_cd),
                             tint = MaterialTheme.colorScheme.outline
                         )
 
-                        BrowserOptionsMenu(
-                            expanded = browserOptionsMenuExpanded,
-                            onDismissRequest = { browserOptionsMenuExpanded = false },
-                            enableArrowLeft = navigator.canGoBack,
-                            enableArrowRight = navigator.canGoForward,
-                            onNewTabClick = {
-                                onEvent(UiEvent.OnNewTab(null))
-                            },
-                            onBookmarksClick = {
-                                /*TODO: implement bookmarks click action*/
-                            },
-                            onAddBookmarksClick = {
-                                /*TODO: implement add bookmark click action*/
-                            },
-                            onHistoryClick = {
-                                /*TODO implement history click action*/
-                            },
-                            onDesktopSiteClick = {
-                                webViewInstance?.apply {
-                                    if (isDesktopSite) {
-                                        // set desktop mode
-                                        settings.userAgentString =
-                                            "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/113.0"
-                                        /* Sets whether the WebView should enable support for the
+                        Spacer(
+                            modifier = Modifier.padding(
+                                horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
+                            )
+                        )
+
+                        Box {
+                            Icon(
+                                modifier = Modifier.clickable { browserOptionsMenuExpanded = true },
+                                painter = painterResource(id = R.drawable.dots_vertical),
+                                contentDescription = stringResource(id = R.string.menu_icon_cd),
+                                tint = MaterialTheme.colorScheme.outline
+                            )
+
+                            BrowserOptionsMenu(
+                                expanded = browserOptionsMenuExpanded,
+                                onDismissRequest = { browserOptionsMenuExpanded = false },
+                                enableArrowLeft = navigator.canGoBack,
+                                enableArrowRight = navigator.canGoForward,
+                                onNewTabClick = {
+                                    onEvent(UiEvent.OnNewTab(null))
+                                },
+                                onBookmarksClick = {
+                                    /*TODO: implement bookmarks click action*/
+                                },
+                                onAddBookmarksClick = {
+                                    /*TODO: implement add bookmark click action*/
+                                },
+                                onHistoryClick = {
+                                    /*TODO implement history click action*/
+                                },
+                                onDesktopSiteClick = {
+                                    webViewInstance?.apply {
+                                        if (isDesktopSite) {
+                                            // set desktop mode
+                                            settings.userAgentString =
+                                                "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/113.0"
+                                            /* Sets whether the WebView should enable support for the
                                         "viewport" HTML meta tag or should use a wide viewport.*/
-                                        settings.useWideViewPort = true
-                                        /* Sets whether the WebView loads pages in overview mode, that
+                                            settings.useWideViewPort = true
+                                            /* Sets whether the WebView loads pages in overview mode, that
                                         is, zooms out the content to fit on screen by width. */
-                                        settings.loadWithOverviewMode = true
-                                    } else {
-                                        // set mobile mode
-                                        settings.userAgentString = null
-                                        settings.useWideViewPort = false
-                                        settings.loadWithOverviewMode = false
+                                            settings.loadWithOverviewMode = true
+                                        } else {
+                                            // set mobile mode
+                                            settings.userAgentString = null
+                                            settings.useWideViewPort = false
+                                            settings.loadWithOverviewMode = false
+                                        }
                                     }
+                                    navigator.reload()
+                                    isDesktopSite = !isDesktopSite
+                                },
+                                onSettingClick = onSettingClick,
+                                onArrowLeftClick = {
+                                    navigator.navigateBack()
+                                },
+                                onArrowRightClick = {
+                                    navigator.navigateForward()
+                                },
+                                onReloadClick = {
+                                    // check if the current tab has a loaded page
+                                    if (currentTab != null) navigator.reload()
+                                },
+                                onShareClick = {
+                                    val intent = Intent(Intent.ACTION_SEND).apply {
+                                        type = "text/plain"
+                                        putExtra(
+                                            Intent.EXTRA_TEXT,
+                                            webViewState.lastLoadedUrl
+                                        )
+                                    }
+                                    context.startActivity(intent)
                                 }
-                                navigator.reload()
-                                isDesktopSite = !isDesktopSite
-                            },
-                            onSettingClick = onSettingClick,
-                            onArrowLeftClick = {
-                                navigator.navigateBack()
-                            },
-                            onArrowRightClick = {
-                                navigator.navigateForward()
-                            },
-                            onReloadClick = {
-                                // check if the current tab has a loaded page
-                                if(currentTab != null) navigator.reload()
-                            },
-                            onShareClick = {
-                                val intent = Intent(Intent.ACTION_SEND).apply {
-                                    type = "text/plain"
-                                    putExtra(
-                                        Intent.EXTRA_TEXT,
-                                        webViewState.lastLoadedUrl
-                                    )
-                                }
-                                context.startActivity(intent)
-                            }
+                            )
+                        }
+                        Spacer(
+                            modifier = Modifier.padding(
+                                horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
+                            )
                         )
                     }
-                    Spacer(
-                        modifier = Modifier.padding(
-                            horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
-                        )
-                    )
                 }
             }
         }
