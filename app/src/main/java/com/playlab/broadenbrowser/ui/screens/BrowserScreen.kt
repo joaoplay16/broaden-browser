@@ -113,6 +113,8 @@ fun BrowserScreen(
         derivedStateOf { if (currentTab == null) null else WebView(context) }
     }
 
+    var isSearchBarFocused by remember { mutableStateOf(false) }
+
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     val interactionSource = remember { MutableInteractionSource() }
@@ -228,14 +230,41 @@ fun BrowserScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
 
-                    var isSearchBarFocused by remember { mutableStateOf(false) }
+                    if (isSearchBarFocused.not()) {
+                        Spacer(
+                            modifier = Modifier.padding(
+                                horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
+                            )
+                        )
+
+                        TabCounter(
+                            modifier = Modifier.clickable {
+                                coroutineScope.launch {
+                                    bottomSheetScaffoldState.bottomSheetState.expand()
+                                }
+                            },
+                            count = browserState.tabs.size
+                        )
+
+                        Spacer(
+                            modifier = Modifier.padding(
+                                horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
+                            )
+                        )
+                    }
 
                     SearchBar(
                         modifier = Modifier
-                            .padding(
-                                start = dimensionResource(id = R.dimen.search_bar_item_hr_padding),
-                                end = if(isSearchBarFocused)
-                                    dimensionResource(id = R.dimen.search_bar_item_hr_padding) else 0.dp
+                            .then(
+                                if(isSearchBarFocused){
+                                    Modifier.padding(
+                                        start = dimensionResource(id = R.dimen.search_bar_item_hr_padding),
+                                        end = dimensionResource(id = R.dimen
+                                            .search_bar_item_hr_padding)
+                                    )
+                                }else{
+                                    Modifier
+                                }
                             )
                             .padding(vertical = dimensionResource(id = R.dimen.search_bar_item_hr_padding))
                             .weight(1f)
@@ -267,20 +296,6 @@ fun BrowserScreen(
                         }
                     )
                     if (isSearchBarFocused.not()) {
-                        Spacer(
-                            modifier = Modifier.padding(
-                                horizontal = dimensionResource(id = R.dimen.search_bar_item_hr_padding)
-                            )
-                        )
-
-                        TabCounter(
-                            modifier = Modifier.clickable {
-                                coroutineScope.launch {
-                                    bottomSheetScaffoldState.bottomSheetState.expand()
-                                }
-                            },
-                            count = browserState.tabs.size
-                        )
 
                         Spacer(
                             modifier = Modifier.padding(
