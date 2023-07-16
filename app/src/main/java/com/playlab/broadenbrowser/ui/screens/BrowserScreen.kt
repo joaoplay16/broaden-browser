@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Expand
 import androidx.compose.material3.BottomSheetScaffold
@@ -31,6 +33,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -44,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -120,6 +124,13 @@ fun BrowserScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     val interactionSource = remember { MutableInteractionSource() }
+
+    val customTextSelectionColors = TextSelectionColors(
+        handleColor =  if(searchBarValue.selection == TextRange(0, searchBarValue.text.length))
+            Transparent
+        else LocalTextSelectionColors.current.handleColor,
+        backgroundColor = LocalTextSelectionColors.current.backgroundColor
+    )
 
     LaunchedEffect(
         externalLink
@@ -276,53 +287,58 @@ fun BrowserScreen(
                             )
                         )
                     }
-
-                    SearchBar(
-                        modifier = Modifier
-                            .then(
-                                if(isSearchBarFocused){
-                                    Modifier.padding(
-                                        start = dimensionResource(id = R.dimen.search_bar_item_hr_padding),
-                                        end = dimensionResource(id = R.dimen
-                                            .search_bar_item_hr_padding)
-                                    )
-                                }else{
-                                    Modifier
+                    CompositionLocalProvider(
+                        LocalTextSelectionColors provides customTextSelectionColors,
+                    ) {
+                        SearchBar(
+                            modifier = Modifier
+                                .then(
+                                    if (isSearchBarFocused) {
+                                        Modifier.padding(
+                                            start = dimensionResource(id = R.dimen.search_bar_item_hr_padding),
+                                            end = dimensionResource(
+                                                id = R.dimen
+                                                    .search_bar_item_hr_padding
+                                            )
+                                        )
+                                    } else {
+                                        Modifier
+                                    }
+                                )
+                                .padding(vertical = dimensionResource(id = R.dimen.search_bar_item_hr_padding))
+                                .weight(1f)
+                                .animateContentSize()
+                                .onFocusChanged {
+                                    isSearchBarFocused = it.isFocused
+                                },
+                            value = searchBarValue,
+                            onValueChange = { searchBarValue = it },
+                            onClearClick = { searchBarValue = TextFieldValue("") },
+                            onSearch = {
+                                val url = searchBarValue.let {
+                                    if (it.text.isUrl()) it.text
+                                    else it.text.toSearchMechanismUrl(searchMechanism)
                                 }
-                            )
-                            .padding(vertical = dimensionResource(id = R.dimen.search_bar_item_hr_padding))
-                            .weight(1f)
-                            .animateContentSize()
-                            .onFocusChanged {
-                                isSearchBarFocused = it.isFocused
-                            },
-                        value = searchBarValue,
-                        onValueChange = { searchBarValue = it },
-                        onClearClick = { searchBarValue = TextFieldValue("") },
-                        onSearch = {
-                            val url = searchBarValue.let {
-                                if (it.text.isUrl()) it.text
-                                else it.text.toSearchMechanismUrl(searchMechanism)
-                            }
-                            navigator.loadUrl(url)
+                                navigator.loadUrl(url)
 
                                 searchBarValue = searchBarValue.copy(text = url)
 
-                            if (currentTab == null) {
-                                onEvent(
-                                    UiEvent.OnSaveTab(
-                                        TabPage(
-                                            title = url,
-                                            url = url,
-                                            timestamp = System.currentTimeMillis()
+                                if (currentTab == null) {
+                                    onEvent(
+                                        UiEvent.OnSaveTab(
+                                            TabPage(
+                                                title = url,
+                                                url = url,
+                                                timestamp = System.currentTimeMillis()
+                                            )
                                         )
                                     )
-                                )
-                            }
+                                }
 
-                            focusManager.clearFocus()
-                        }
-                    )
+                                focusManager.clearFocus()
+                            }
+                        )
+                    }
                     if (isSearchBarFocused.not()) {
 
                         Spacer(
