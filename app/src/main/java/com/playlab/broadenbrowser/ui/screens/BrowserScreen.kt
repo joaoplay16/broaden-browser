@@ -293,6 +293,8 @@ fun BrowserScreen(
                                     )
                                 )
                             }
+
+                            focusManager.clearFocus()
                         }
                     )
                     if (isSearchBarFocused.not()) {
