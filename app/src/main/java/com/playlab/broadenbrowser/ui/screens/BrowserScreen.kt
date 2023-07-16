@@ -51,6 +51,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.web.WebView
@@ -95,7 +96,7 @@ fun BrowserScreen(
 
     val webViewState = rememberSaveableWebViewState()
 
-    var searchBarText by remember { mutableStateOf("") }
+    var searchBarValue by remember { mutableStateOf(TextFieldValue("")) }
 
     var browserOptionsMenuExpanded by remember { mutableStateOf(false) }
 
@@ -272,15 +273,17 @@ fun BrowserScreen(
                             .onFocusChanged {
                                 isSearchBarFocused = it.isFocused
                             },
-                        text = searchBarText,
-                        onTextChange = { searchBarText = it },
-                        onClearClick = { searchBarText = "" },
+                        value = searchBarValue,
+                        onValueChange = { searchBarValue = it },
+                        onClearClick = { searchBarValue = TextFieldValue("") },
                         onSearch = {
-                            val url = if (searchBarText.isUrl()) searchBarText
-                            else searchBarText.toSearchMechanismUrl(searchMechanism)
+                            val url = searchBarValue.let {
+                                if (it.text.isUrl()) it.text
+                                else it.text.toSearchMechanismUrl(searchMechanism)
+                            }
                             navigator.loadUrl(url)
 
-                            searchBarText = url
+                            searchBarValue = searchBarValue.copy(text = url)
 
                             if (currentTab == null) {
                                 onEvent(

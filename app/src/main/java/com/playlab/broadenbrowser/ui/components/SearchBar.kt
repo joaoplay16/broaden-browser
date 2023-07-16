@@ -24,6 +24,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,16 +34,16 @@ import com.playlab.broadenbrowser.ui.theme.BroadenBrowserTheme
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier,
-    text: String,
-    onTextChange: (String) -> Unit,
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
     onClearClick: () -> Unit,
     onSearch: () -> Unit = {},
 ) {
     OutlinedTextField(
         modifier = modifier,
-        value = text,
+        value = value,
         shape = RoundedCornerShape(32.dp),
-        onValueChange = onTextChange,
+        onValueChange = onValueChange,
         placeholder = {
             Text(
                 modifier = Modifier
@@ -71,7 +72,7 @@ fun SearchBar(
             unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary.copy(0.6f),
         ),
         trailingIcon = {
-            if (text.isNotEmpty()) {
+            if (value.text.isNotEmpty()) {
                 IconButton(
                     onClick = onClearClick) {
                     Icon(
@@ -89,15 +90,15 @@ fun SearchBar(
 fun SearchBarPreview() {
     BroadenBrowserTheme {
         Surface {
-            var text by remember {
-                mutableStateOf("")
+            var textFieldValue by remember {
+                mutableStateOf(TextFieldValue(""))
             }
 
             SearchBar(
                 modifier = Modifier.fillMaxWidth(),
-                text = text,
-                onTextChange = { text = it },
-                onClearClick = { text = "" }
+                value = textFieldValue,
+                onValueChange = { textFieldValue = it },
+                onClearClick = { textFieldValue = TextFieldValue("") }
             )
         }
     }
