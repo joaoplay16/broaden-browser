@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_MASK
 import android.webkit.WebSettings
 import android.webkit.WebView
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -231,9 +232,14 @@ fun BrowserScreen(
 
                     SearchBar(
                         modifier = Modifier
-                            .padding(start = dimensionResource(id = R.dimen.search_bar_item_hr_padding))
+                            .padding(
+                                start = dimensionResource(id = R.dimen.search_bar_item_hr_padding),
+                                end = if(isSearchBarFocused)
+                                    dimensionResource(id = R.dimen.search_bar_item_hr_padding) else 0.dp
+                            )
                             .padding(vertical = dimensionResource(id = R.dimen.search_bar_item_hr_padding))
                             .weight(1f)
+                            .animateContentSize()
                             .onFocusChanged {
                                 isSearchBarFocused = it.isFocused
                             },
