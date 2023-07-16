@@ -137,6 +137,17 @@ fun BrowserScreen(
         }
     }
 
+    LaunchedEffect(
+        key1 = webViewState.isLoading,
+        block = {
+            webViewState.lastLoadedUrl?.let{
+                searchBarValue = TextFieldValue(
+                    text = it
+                )
+            }
+        }
+    )
+
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetPeekHeight = 0.dp,
