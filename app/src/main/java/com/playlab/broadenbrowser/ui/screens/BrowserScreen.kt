@@ -51,6 +51,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -143,6 +144,17 @@ fun BrowserScreen(
             webViewState.lastLoadedUrl?.let{
                 searchBarValue = TextFieldValue(
                     text = it
+                )
+            }
+        }
+    )
+
+    LaunchedEffect(
+        key1 = isSearchBarFocused,
+        block = {
+            if(isSearchBarFocused){
+                searchBarValue = searchBarValue.copy(
+                    selection = TextRange(0, searchBarValue.text.length)
                 )
             }
         }
@@ -294,7 +306,7 @@ fun BrowserScreen(
                             }
                             navigator.loadUrl(url)
 
-                            searchBarValue = searchBarValue.copy(text = url)
+                                searchBarValue = searchBarValue.copy(text = url)
 
                             if (currentTab == null) {
                                 onEvent(
