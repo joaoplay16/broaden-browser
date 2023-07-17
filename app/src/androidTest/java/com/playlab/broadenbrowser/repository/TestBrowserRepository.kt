@@ -47,8 +47,11 @@ TestBrowserRepository {
     @Test
     fun testInsertAndGetAllTabs() = runTest {
 
-        repository.insertTabPage(tab1)
-        repository.insertTabPage(tab2)
+        val tab1Id = repository.insertTabPage(tab1)
+        val tab2Id = repository.insertTabPage(tab2)
+
+        assertThat(tab1Id).isGreaterThan(-1)
+        assertThat(tab2Id).isGreaterThan(-1)
 
         val allTabs = repository.getTabs().first()
 
