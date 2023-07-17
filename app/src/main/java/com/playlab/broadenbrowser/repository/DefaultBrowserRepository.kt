@@ -22,4 +22,12 @@ class DefaultBrowserRepository @Inject constructor(
     override suspend fun deleteAllTabPages() {
         db.browserDao().deleteAllTabPages()
     }
+
+    override suspend fun editTabPage(tabPage: TabPage): Int {
+        return db.browserDao().editTabPage(tabPage)
+    }
+
+    override suspend fun getTab(id: Long): TabPage? {
+        return db.browserDao().getTab(id)
+    }
 }

@@ -11,4 +11,8 @@ interface BrowserRepository {
     suspend fun deleteTabPages(tabPages: List<TabPage>)
 
     suspend fun deleteAllTabPages()
+
+    suspend fun editTabPage(tabPage: TabPage): Int
+
+    suspend fun getTab(id: Long): TabPage?
 }

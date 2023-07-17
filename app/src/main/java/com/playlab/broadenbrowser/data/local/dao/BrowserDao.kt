@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.playlab.broadenbrowser.model.TabPage
 import kotlinx.coroutines.flow.Flow
 
@@ -21,4 +22,10 @@ interface BrowserDao {
 
     @Query("DELETE FROM tabs")
     suspend fun deleteAllTabPages()
+
+    @Update
+    suspend fun editTabPage(tabPage: TabPage): Int
+
+    @Query("SELECT * FROM tabs WHERE id = :id")
+    suspend fun getTab(id: Long): TabPage?
 }
