@@ -177,7 +177,12 @@ fun BrowserScreen(
         sheetContent = {
             BottomSheetContent(
                 browserState = browserState,
-                onUiEvent = onEvent
+                onUiEvent = { event ->
+                    onEvent(event)
+                    if (event is UiEvent.OnNewTab){
+                        searchBarValue = TextFieldValue()
+                    }
+                }
             )
         }
     ) {
@@ -377,6 +382,7 @@ fun BrowserScreen(
                                 enableArrowLeft = navigator.canGoBack,
                                 enableArrowRight = navigator.canGoForward,
                                 onNewTabClick = {
+                                    searchBarValue = TextFieldValue()
                                     onEvent(UiEvent.OnNewTab(null))
                                 },
                                 onBookmarksClick = {
