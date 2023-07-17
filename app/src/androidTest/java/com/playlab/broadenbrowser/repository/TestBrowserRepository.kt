@@ -3,9 +3,9 @@ package com.playlab.broadenbrowser.repository
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.google.common.truth.Truth.assertThat
+import com.playlab.broadenbrowser.data.local.BrowserDatabase
 import com.playlab.broadenbrowser.mocks.MockTabPages.tab1
 import com.playlab.broadenbrowser.mocks.MockTabPages.tab2
-import com.playlab.broadenbrowser.data.local.BrowserDatabase
 import com.playlab.broadenbrowser.model.TabPage
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -38,7 +38,7 @@ TestBrowserRepository {
     lateinit var db: BrowserDatabase
 
     @Before
-    fun before() = runTest{
+    fun before() = runTest {
         hiltRule.inject()
 
         repository.deleteAllTabPages()
@@ -82,7 +82,7 @@ TestBrowserRepository {
 
         assertThat(allTabs.size).isEqualTo(2)
 
-        allTabs.forEach{
+        allTabs.forEach {
             assertThat(it.url).isEqualTo(tab1.url)
         }
     }
@@ -119,5 +119,35 @@ TestBrowserRepository {
         allTabs = repository.getTabs().first()
 
         assertThat(allTabs).isEmpty()
+    }
+
+    @Test
+    fun gettingATabPageById_shouldReturnTheTabPage() = runTest {
+
+        val id = repository.insertTabPage(tab1)
+
+        val tabPageResult: TabPage? = repository.getTab(id = id)
+
+        assertThat(tabPageResult).isNotNull()
+    }
+
+    @Test
+    fun editingAndGettingATabPage_shouldReturnTheModifiedTabPage() = runTest {
+
+        val tabId = repository.insertTabPage(tab1)
+
+        val tab1Modified = tab1.copy(
+            id = tabId.toInt(),
+            url = "https://m3.material.io",
+            title = "Material Design"
+        )
+
+        val affectedRows: Int = repository.editTabPage(tab1Modified)
+
+        val tabPageResult: TabPage? = repository.getTab(id = tabId)
+
+        assertThat(affectedRows).isGreaterThan(0)
+
+        assertThat(tabPageResult).isEqualTo(tab1Modified)
     }
 }
