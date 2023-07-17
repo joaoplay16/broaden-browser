@@ -11,8 +11,8 @@ class DefaultBrowserRepository @Inject constructor(
 
     override fun getTabs(): Flow<List<TabPage>> = db.browserDao().getTabPages()
 
-    override suspend fun insertTabPage(tabPage: TabPage) {
-        db.browserDao().insertTabPage(tabPage)
+    override suspend fun insertTabPage(tabPage: TabPage): Long {
+        return db.browserDao().insertTabPage(tabPage)
     }
 
     override suspend fun deleteTabPages(tabPages: List<TabPage>) {

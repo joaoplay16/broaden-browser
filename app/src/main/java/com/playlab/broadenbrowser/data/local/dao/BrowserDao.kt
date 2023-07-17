@@ -14,7 +14,7 @@ interface BrowserDao {
     fun getTabPages(): Flow<List<TabPage>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertTabPage(tabPage: TabPage)
+    suspend fun insertTabPage(tabPage: TabPage): Long
 
     @Delete
     suspend fun deleteTabPages(tabPages: List<TabPage>)

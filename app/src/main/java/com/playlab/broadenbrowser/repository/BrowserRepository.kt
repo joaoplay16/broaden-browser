@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface BrowserRepository {
     fun getTabs(): Flow<List<TabPage>>
 
-    suspend fun insertTabPage(tabPage: TabPage)
+    suspend fun insertTabPage(tabPage: TabPage): Long
 
     suspend fun deleteTabPages(tabPages: List<TabPage>)
 
