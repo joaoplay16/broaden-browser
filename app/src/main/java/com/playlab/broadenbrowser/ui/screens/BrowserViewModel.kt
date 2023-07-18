@@ -83,9 +83,9 @@ class BrowserViewModel @Inject constructor(
                 }
 
                 is UiEvent.OnSaveTab -> {
-
-                    state = state.copy(currentTab = uiEvent.tabPage)
-                    browserRepository.insertTabPage(uiEvent.tabPage)
+                    val rowId = browserRepository.insertTabPage(uiEvent.tabPage)
+                    if (rowId != -1L)
+                        state = state.copy(currentTab = uiEvent.tabPage.copy(id = rowId.toInt()))
                 }
 
                 is UiEvent.OnCloseTabs -> {
