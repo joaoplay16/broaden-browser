@@ -12,6 +12,7 @@ sealed class UiEvent {
     data class OnSetAsDefaultBrowser(val isDefaultBrowser: Boolean): UiEvent()
     data class OnNewTab(val tabPage: TabPage?): UiEvent()
     data class OnSaveTab(val tabPage: TabPage): UiEvent()
+    data class OnEditTab(val tabPage: TabPage): UiEvent()
     data class OnCloseTabs(val tabPages: List<TabPage>): UiEvent()
     object OnCloseAllTabs : UiEvent()
 }
