@@ -154,4 +154,21 @@ class TestBrowserViewModel {
             assertThat(state.searchMechanism).isEqualTo(SearchMechanism.BING)
         }
     }
+
+    @Test
+    fun `an successfully modified tab should be set as the current tab` () = runTest {
+        with(viewModel) {
+            onUiEvent(UiEvent.OnSaveTab(tab1))
+
+            val tab1Modified = tab1.copy(
+                id = state.currentTab!!.id,
+                url = "https://m3.material.io",
+                title = "Material Design"
+            )
+
+            onUiEvent(UiEvent.OnEditTab(tab1Modified))
+
+            assertThat(state.currentTab).isEqualTo(tab1Modified)
+        }
+    }
 }
