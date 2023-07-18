@@ -53,6 +53,17 @@ class TestBrowserViewModel {
 
 
     @Test
+    fun `an successfully saved tab should be set as the current tab ` () = runTest {
+        with(viewModel) {
+            onUiEvent(UiEvent.OnSaveTab(tab1))
+
+            assertThat(state.currentTab).isNotNull()
+
+            assertThat(state.currentTab!!.id).isGreaterThan(0)
+        }
+    }
+
+    @Test
     fun `test add a new tab`() = runTest {
         with(viewModel) {
             onUiEvent(UiEvent.OnSaveTab(tab1))
