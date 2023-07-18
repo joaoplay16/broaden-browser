@@ -24,4 +24,17 @@ class FakeBrowserRepository : BrowserRepository {
     override suspend fun deleteAllTabPages() {
         this.tabPages.value = emptyList()
     }
+
+    override suspend fun editTabPage(tabPage: TabPage): Int {
+        val tabToEditIndex = tabPages.value.indexOfFirst { it.id == tabPage.id }
+        val listWithTheModifiedTab = tabPages.value.toMutableList()
+        listWithTheModifiedTab[tabToEditIndex] = tabPage
+        tabPages.value = listWithTheModifiedTab
+
+        return if (tabPages.value.contains(tabPage)) 1 else 0
+    }
+
+    override suspend fun getTab(id: Long): TabPage? {
+        return tabPages.value.find { it.id.toLong() == id }
+    }
 }
