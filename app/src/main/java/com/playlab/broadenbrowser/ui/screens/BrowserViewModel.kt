@@ -88,6 +88,12 @@ class BrowserViewModel @Inject constructor(
                         state = state.copy(currentTab = uiEvent.tabPage.copy(id = rowId.toInt()))
                 }
 
+                is UiEvent.OnEditTab -> {
+                    val result = browserRepository.editTabPage(tabPage = uiEvent.tabPage)
+                    if (result > 0)
+                        state = state.copy(currentTab = uiEvent.tabPage)
+                }
+
                 is UiEvent.OnCloseTabs -> {
                     browserRepository.deleteTabPages(uiEvent.tabPages)
                 }
