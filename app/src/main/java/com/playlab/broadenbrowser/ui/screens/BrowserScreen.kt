@@ -152,10 +152,24 @@ fun BrowserScreen(
     LaunchedEffect(
         key1 = webViewState.isLoading,
         block = {
-            webViewState.lastLoadedUrl?.let{
-                searchBarValue = TextFieldValue(
-                    text = it
-                )
+            with(webViewState) {
+                lastLoadedUrl?.let {
+                    searchBarValue = TextFieldValue(text = it)
+                }
+
+                if (isLoading.not()) {
+                    currentTab?.let { tab ->
+                        onEvent(
+                            UiEvent.OnEditTab(
+                                tab.copy(
+                                    title = pageTitle ?: tab.title,
+                                    url = lastLoadedUrl ?: tab.url,
+                                    timestamp = System.currentTimeMillis()
+                                )
+                            )
+                        )
+                    }
+                }
             }
         }
     )
@@ -179,7 +193,7 @@ fun BrowserScreen(
                 browserState = browserState,
                 onUiEvent = { event ->
                     onEvent(event)
-                    if (event is UiEvent.OnNewTab){
+                    if (event is UiEvent.OnNewTab) {
                         searchBarValue = TextFieldValue()
                     }
                 }
@@ -191,7 +205,7 @@ fun BrowserScreen(
                 .clickable(
                     interactionSource = interactionSource,
                     indication = null,
-                ){
+                ) {
                     keyboardController?.hide()
                     focusManager.clearFocus()
                 },
