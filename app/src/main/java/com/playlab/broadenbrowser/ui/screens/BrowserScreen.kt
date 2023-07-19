@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_MASK
 import android.webkit.WebSettings
 import android.webkit.WebView
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -184,6 +185,11 @@ fun BrowserScreen(
             }
         }
     )
+
+    /* clear the focus of the SearchBar on pressing system back button */
+    BackHandler(enabled = isSearchBarFocused) {
+        focusManager.clearFocus()
+    }
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
