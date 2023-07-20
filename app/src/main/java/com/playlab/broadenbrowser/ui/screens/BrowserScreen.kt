@@ -71,6 +71,7 @@ import com.playlab.broadenbrowser.ui.components.TabCounter
 import com.playlab.broadenbrowser.ui.screens.common.BrowserState
 import com.playlab.broadenbrowser.ui.screens.common.UiEvent
 import com.playlab.broadenbrowser.ui.theme.BroadenBrowserTheme
+import com.playlab.broadenbrowser.ui.utils.Constants.DEFAULT_USER_AGENT_STRING
 import com.playlab.broadenbrowser.ui.utils.Util.isUrl
 import com.playlab.broadenbrowser.ui.utils.Util.toSearchMechanismUrl
 import kotlinx.coroutines.launch
@@ -415,16 +416,15 @@ fun BrowserScreen(
                                     /*TODO implement history click action*/
                                 },
                                 onDesktopSiteClick = {
+                                    // set desktop mode
                                     webViewInstance?.apply {
                                         if (isDesktopSite) {
-                                            // set desktop mode
-                                            settings.userAgentString =
-                                                "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/113.0"
+                                            settings.userAgentString = DEFAULT_USER_AGENT_STRING
                                             /* Sets whether the WebView should enable support for the
-                                        "viewport" HTML meta tag or should use a wide viewport.*/
+                                            "viewport" HTML meta tag or should use a wide viewport.*/
                                             settings.useWideViewPort = true
                                             /* Sets whether the WebView loads pages in overview mode, that
-                                        is, zooms out the content to fit on screen by width. */
+                                            is, zooms out the content to fit on screen by width. */
                                             settings.loadWithOverviewMode = true
                                         } else {
                                             // set mobile mode
