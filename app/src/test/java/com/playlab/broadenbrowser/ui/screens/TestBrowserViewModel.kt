@@ -7,6 +7,7 @@ import com.playlab.broadenbrowser.mocks.MockTabPages.tab2
 import com.playlab.broadenbrowser.mocks.MockTabPages.tab3
 import com.playlab.broadenbrowser.repository.FakeBrowserRepository
 import com.playlab.broadenbrowser.repository.FakePreferencesRepository
+import com.playlab.broadenbrowser.ui.screens.common.BrowserViewModel
 import com.playlab.broadenbrowser.ui.screens.common.UiEvent
 import com.playlab.broadenbrowser.ui.utils.SearchMechanism
 import kotlinx.coroutines.ExperimentalCoroutinesApi

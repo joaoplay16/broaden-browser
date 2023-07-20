@@ -19,7 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.playlab.broadenbrowser.ui.screens.BrowserScreen
-import com.playlab.broadenbrowser.ui.screens.BrowserViewModel
+import com.playlab.broadenbrowser.ui.screens.common.BrowserViewModel
 import com.playlab.broadenbrowser.ui.screens.SettingsScreen
 import com.playlab.broadenbrowser.ui.screens.common.ScreenRoutes
 import com.playlab.broadenbrowser.ui.screens.common.UiEvent

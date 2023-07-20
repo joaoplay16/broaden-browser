@@ -1,4 +1,4 @@
-package com.playlab.broadenbrowser.ui.screens
+package com.playlab.broadenbrowser.ui.screens.common
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,8 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.playlab.broadenbrowser.repository.BrowserRepository
 import com.playlab.broadenbrowser.repository.PreferencesRepository
-import com.playlab.broadenbrowser.ui.screens.common.BrowserState
-import com.playlab.broadenbrowser.ui.screens.common.UiEvent
 import com.playlab.broadenbrowser.ui.utils.SearchMechanism
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
