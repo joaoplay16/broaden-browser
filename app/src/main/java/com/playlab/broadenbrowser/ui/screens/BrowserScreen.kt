@@ -202,6 +202,11 @@ fun BrowserScreen(
                     onEvent(event)
                     if (event is UiEvent.OnNewTab) {
                         searchBarValue = TextFieldValue()
+
+                        // Load selected tab from tab list
+                        event.tabPage?.let {
+                            navigator.loadUrl(it.url)
+                        }
                     }
                 }
             )
