@@ -2,6 +2,7 @@ package com.playlab.broadenbrowser.ui.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -95,6 +96,9 @@ fun BottomSheetContent(
                             tabs = browserState.tabs,
                             onCloseTabs = {
                                 onUiEvent(UiEvent.OnCloseTabs(it))
+                            },
+                            onTabClick = {
+                                onUiEvent(UiEvent.OnNewTab(tabPage = it))
                             }
                         )
                         FloatingActionButton(
@@ -135,7 +139,8 @@ fun BottomSheetContent(
 fun TabsSection(
     tabs: List<TabPage>,
     onCloseTabs: (List<TabPage>) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onTabClick: (TabPage) -> Unit = {}
 ) {
     LazyColumn(
         modifier = modifier,
@@ -151,7 +156,10 @@ fun TabsSection(
             PageListItem(
                 modifier = Modifier
                     .padding(bottom = 4.dp)
-                    .animateItemPlacement(),
+                    .animateItemPlacement()
+                    .clickable {
+                        onTabClick(page)
+                    },
                 title = page.title,
                 url = page.url,
                 buttonSlot = {
