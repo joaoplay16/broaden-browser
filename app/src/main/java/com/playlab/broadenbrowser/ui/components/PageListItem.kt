@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,12 +29,14 @@ fun PageListItem(
     modifier: Modifier = Modifier,
     title: String,
     url: String,
+    shape: Shape =  MaterialTheme.shapes.medium,
+    border: BorderStroke? = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
     buttonSlot: @Composable () -> Unit = {}
 ) {
     Card(
         modifier = modifier,
-        shape = MaterialTheme.shapes.medium,
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
+        shape = shape,
+        border = border
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
