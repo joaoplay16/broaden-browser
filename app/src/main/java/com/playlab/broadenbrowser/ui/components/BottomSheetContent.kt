@@ -1,6 +1,7 @@
 package com.playlab.broadenbrowser.ui.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -93,6 +94,7 @@ fun BottomSheetContent(
                         TabsSection(
                             modifier = Modifier
                                 .align(Alignment.TopCenter),
+                            currentTabPage = browserState.currentTab,
                             tabs = browserState.tabs,
                             onCloseTabs = {
                                 onUiEvent(UiEvent.OnCloseTabs(it))
@@ -138,6 +140,7 @@ fun BottomSheetContent(
 @Composable
 fun TabsSection(
     tabs: List<TabPage>,
+    currentTabPage: TabPage?,
     onCloseTabs: (List<TabPage>) -> Unit,
     modifier: Modifier = Modifier,
     onTabClick: (TabPage) -> Unit = {}
@@ -162,6 +165,15 @@ fun TabsSection(
                     },
                 title = page.title,
                 url = page.url,
+                border =
+                if (page == currentTabPage) BorderStroke(
+                    2.dp,
+                    MaterialTheme.colorScheme.primary
+                )
+                else BorderStroke(
+                    1.dp,
+                    MaterialTheme.colorScheme.outline
+                ),
                 buttonSlot = {
                     IconButton(onClick = { onCloseTabs(listOf(page)) }) {
                         Icon(
