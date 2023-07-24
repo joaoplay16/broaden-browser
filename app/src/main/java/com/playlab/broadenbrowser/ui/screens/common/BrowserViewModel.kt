@@ -46,6 +46,10 @@ class BrowserViewModel @Inject constructor(
             getTabs().onEach {
                 state = state.copy(tabs = it)
             }.launchIn(viewModelScope)
+
+            getHistory().onEach {
+                state = state.copy(history = it)
+            }.launchIn(viewModelScope)
         }
     }
 
@@ -98,6 +102,10 @@ class BrowserViewModel @Inject constructor(
 
                 is UiEvent.OnCloseAllTabs -> {
                     browserRepository.deleteAllTabPages()
+                }
+
+                is UiEvent.OnSaveHistoryPage -> {
+                    browserRepository.insertHistoryPage(uiEvent.historyPage)
                 }
             }
         }
