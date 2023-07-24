@@ -1,5 +1,6 @@
 package com.playlab.broadenbrowser.repository
 
+import com.playlab.broadenbrowser.model.HistoryPage
 import com.playlab.broadenbrowser.model.TabPage
 import kotlinx.coroutines.flow.Flow
 
@@ -15,4 +16,16 @@ interface BrowserRepository {
     suspend fun editTabPage(tabPage: TabPage): Int
 
     suspend fun getTab(id: Long): TabPage?
+
+    fun getHistory(): Flow<List<HistoryPage>>
+
+    suspend fun insertHistoryPage(historyPage: HistoryPage): Long
+
+    suspend fun deleteHistoryPages(historyPages: List<HistoryPage>)
+
+    suspend fun deleteAllHistoryPages()
+
+    suspend fun editHistoryPage(historyPage: HistoryPage): Int
+
+    suspend fun getHistoryPage(id: Long): HistoryPage?
 }

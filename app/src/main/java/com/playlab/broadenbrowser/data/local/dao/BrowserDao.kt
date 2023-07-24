@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.playlab.broadenbrowser.model.HistoryPage
 import com.playlab.broadenbrowser.model.TabPage
 import kotlinx.coroutines.flow.Flow
 
@@ -28,4 +29,22 @@ interface BrowserDao {
 
     @Query("SELECT * FROM tabs WHERE id = :id")
     suspend fun getTab(id: Long): TabPage?
+
+    @Query("SELECT * FROM history")
+    fun getHistory(): Flow<List<HistoryPage>>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertHistoryPage(historyPage: HistoryPage): Long
+
+    @Delete
+    suspend fun deleteHistoryPages(historyPages: List<HistoryPage>)
+
+    @Query("DELETE FROM history")
+    suspend fun deleteAllHistoryPages()
+
+    @Update
+    suspend fun editHistoryPage(tabPage: HistoryPage): Int
+
+    @Query("SELECT * FROM history WHERE id = :id")
+    suspend fun getHistoryPage(id: Long): HistoryPage?
 }
