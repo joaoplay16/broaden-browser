@@ -45,7 +45,7 @@ TestBrowserRepository {
     }
 
     @Test
-    fun testInsertAndGetAllTabs() = runTest {
+    fun insertAndGetAllTabs() = runTest {
 
         val tab1Id = repository.insertTabPage(tab1)
         val tab2Id = repository.insertTabPage(tab2)
@@ -88,7 +88,7 @@ TestBrowserRepository {
     }
 
     @Test
-    fun testDeleteGivenTabs() = runTest {
+    fun deleteGivenTabs() = runTest {
 
         repository.insertTabPage(tab1)
         repository.insertTabPage(tab2)
@@ -105,7 +105,7 @@ TestBrowserRepository {
     }
 
     @Test
-    fun testDeleteAllTabs() = runTest {
+    fun deleteAllTabs() = runTest {
 
         repository.insertTabPage(tab1)
         repository.insertTabPage(tab2)
@@ -122,7 +122,7 @@ TestBrowserRepository {
     }
 
     @Test
-    fun gettingATabPageById_shouldReturnTheTabPage() = runTest {
+    fun gettingATabPageById() = runTest {
 
         val id = repository.insertTabPage(tab1)
 
@@ -132,7 +132,7 @@ TestBrowserRepository {
     }
 
     @Test
-    fun editingAndGettingATabPage_shouldReturnTheModifiedTabPage() = runTest {
+    fun editingAndGettingATabPage() = runTest {
 
         val tabId = repository.insertTabPage(tab1)
 
