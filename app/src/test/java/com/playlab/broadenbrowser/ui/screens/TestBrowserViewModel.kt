@@ -181,4 +181,15 @@ class TestBrowserViewModel {
             assertThat(state.history.size).isEqualTo(1)
         }
     }
+
+    @Test
+    fun `save a duplicated history page`() = runTest {
+        with(viewModel) {
+            onUiEvent(UiEvent.OnSaveHistoryPage(historyPage1))
+            onUiEvent(UiEvent.OnSaveHistoryPage(historyPage1))
+
+            assertThat(state.history.size).isEqualTo(2)
+            assertThat(state.history).containsExactly(historyPage1, historyPage1)
+        }
+    }
 }
