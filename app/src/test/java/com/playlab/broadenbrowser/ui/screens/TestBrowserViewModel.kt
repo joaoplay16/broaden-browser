@@ -2,6 +2,7 @@ package com.playlab.broadenbrowser.ui.screens
 
 import com.google.common.truth.Truth.assertThat
 import com.playlab.broadenbrowser.MainCoroutineRule
+import com.playlab.broadenbrowser.mocks.MockHistoryPages.historyPage1
 import com.playlab.broadenbrowser.mocks.MockTabPages.tab1
 import com.playlab.broadenbrowser.mocks.MockTabPages.tab2
 import com.playlab.broadenbrowser.mocks.MockTabPages.tab3
@@ -170,6 +171,14 @@ class TestBrowserViewModel {
             onUiEvent(UiEvent.OnEditTab(tab1Modified))
 
             assertThat(state.currentTab).isEqualTo(tab1Modified)
+        }
+    }
+
+    @Test
+    fun `save a history page`() = runTest {
+        with(viewModel) {
+            onUiEvent(UiEvent.OnSaveHistoryPage(historyPage1))
+            assertThat(state.history.size).isEqualTo(1)
         }
     }
 }
