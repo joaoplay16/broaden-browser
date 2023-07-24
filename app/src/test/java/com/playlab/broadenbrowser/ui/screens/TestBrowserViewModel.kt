@@ -33,7 +33,7 @@ class TestBrowserViewModel {
     }
 
     @Test
-    fun `test save a tab`() = runTest {
+    fun `save a tab`() = runTest {
         with(viewModel) {
             assertThat(state.tabs).isEmpty()
             onUiEvent(UiEvent.OnSaveTab(tab1))
@@ -42,7 +42,7 @@ class TestBrowserViewModel {
     }
 
     @Test
-    fun `test save a duplicated tab`() = runTest {
+    fun `save a duplicated tab`() = runTest {
         with(viewModel) {
             assertThat(state.tabs).isEmpty()
             onUiEvent(UiEvent.OnSaveTab(tab1))
@@ -54,7 +54,7 @@ class TestBrowserViewModel {
 
 
     @Test
-    fun `an successfully saved tab should be set as the current tab ` () = runTest {
+    fun `set the successfully saved tab as current tab ` () = runTest {
         with(viewModel) {
             onUiEvent(UiEvent.OnSaveTab(tab1))
 
@@ -65,7 +65,7 @@ class TestBrowserViewModel {
     }
 
     @Test
-    fun `test add a new tab`() = runTest {
+    fun `add a new tab`() = runTest {
         with(viewModel) {
             onUiEvent(UiEvent.OnSaveTab(tab1))
             onUiEvent(UiEvent.OnNewTab(null))
@@ -74,7 +74,7 @@ class TestBrowserViewModel {
     }
 
     @Test
-    fun `test close selected tabs`() = runTest {
+    fun `close selected tabs`() = runTest {
         with(viewModel) {
             onUiEvent(UiEvent.OnSaveTab(tab1))
             onUiEvent(UiEvent.OnSaveTab(tab2))
@@ -90,7 +90,7 @@ class TestBrowserViewModel {
     }
 
     @Test
-    fun `test close all tabs`() = runTest {
+    fun `close all tabs`() = runTest {
         with(viewModel) {
             onUiEvent(UiEvent.OnSaveTab(tab1))
             onUiEvent(UiEvent.OnSaveTab(tab2))
@@ -103,7 +103,7 @@ class TestBrowserViewModel {
     }
 
     @Test
-    fun `test javascript enabling`() = runTest {
+    fun `enable javascript `() = runTest {
         with(viewModel) {
             assertThat(state.isJavascriptAllowed).isTrue()
             onUiEvent(UiEvent.OnAllowJavascript(false))
@@ -113,7 +113,7 @@ class TestBrowserViewModel {
     }
 
     @Test
-    fun `test fullscreen enabling`() = runTest {
+    fun `enable fullscreen`() = runTest {
         with(viewModel) {
             assertThat(state.isInFullscreen).isFalse()
 
@@ -124,7 +124,7 @@ class TestBrowserViewModel {
     }
 
     @Test
-    fun `test fullscreen startup enabling`() = runTest {
+    fun `enable in fullscreen startup`() = runTest {
         with(viewModel) {
             assertThat(state.isStartInFullscreenEnabled).isFalse()
 
@@ -135,7 +135,7 @@ class TestBrowserViewModel {
     }
 
     @Test
-    fun `test dark theme enabling`() = runTest {
+    fun `enable dark theme`() = runTest {
         with(viewModel) {
             assertThat(state.isDarkThemeEnabled).isFalse()
 
@@ -146,7 +146,7 @@ class TestBrowserViewModel {
     }
 
     @Test
-    fun `test search engine setting`() = runTest {
+    fun `set search engine`() = runTest {
         with(viewModel) {
             assertThat(state.searchMechanism).isEqualTo(SearchMechanism.GOOGLE)
 
@@ -157,7 +157,7 @@ class TestBrowserViewModel {
     }
 
     @Test
-    fun `an successfully modified tab should be set as the current tab` () = runTest {
+    fun `set the successfully modified tab as current tab` () = runTest {
         with(viewModel) {
             onUiEvent(UiEvent.OnSaveTab(tab1))
 
