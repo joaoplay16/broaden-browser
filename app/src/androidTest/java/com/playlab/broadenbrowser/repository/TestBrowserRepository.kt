@@ -150,4 +150,34 @@ TestBrowserRepository {
 
         assertThat(tabPageResult).isEqualTo(tab1Modified)
     }
+
+    @Test
+    fun insertAndGetHistoryPages() = runTest {
+        TODO("Not implemented")
+    }
+
+    @Test
+    fun deleteHistoryPages() = runTest {
+        TODO("Not implemented")
+    }
+
+    @Test
+    fun deleteAllHistoryPages() = runTest {
+        TODO("Not implemented")
+    }
+
+    @Test
+    fun insertDuplicatedHistoryPageReturnHistoryPagesWithSameUrl() = runTest {
+        TODO("Not implemented")
+    }
+
+    @Test
+    fun gettingAHistoryPageById() = runTest {
+        TODO("Not implemented")
+    }
+
+    @Test
+    fun editingAndGettingAHistoryPage() = runTest {
+        TODO("Not implemented")
+    }
 }
