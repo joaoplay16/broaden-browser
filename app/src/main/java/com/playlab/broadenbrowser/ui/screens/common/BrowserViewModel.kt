@@ -59,53 +59,45 @@ class BrowserViewModel @Inject constructor(
                 is UiEvent.OnAllowJavascript -> {
                     preferencesRepository.allowJavascript(uiEvent.allowed)
                 }
-
                 is UiEvent.OnEnableFullscreen -> {
                     state = state.copy(isInFullscreen = uiEvent.enabled)
                 }
-
                 is UiEvent.OnEnableStartInFullscreen -> {
                     preferencesRepository.enableStartInFullscreen(uiEvent.enabled)
                 }
-
                 is UiEvent.OnEnableDarkTheme -> {
                     preferencesRepository.enableDarkTheme(uiEvent.enabled)
                 }
-
                 is UiEvent.OnSetSearchMechanism -> {
                     preferencesRepository.setSearchMechanism(uiEvent.searchMechanism.name)
                 }
-
                 is UiEvent.OnSetAsDefaultBrowser -> {
                     state = state.copy(isDefaultBrowser = uiEvent.isDefaultBrowser)
                 }
-
                 is UiEvent.OnNewTab -> {
                     state = state.copy(currentTab = uiEvent.tabPage)
                 }
-
                 is UiEvent.OnSaveTab -> {
                     val rowId = browserRepository.insertTabPage(uiEvent.tabPage)
                     if (rowId != -1L)
                         state = state.copy(currentTab = uiEvent.tabPage.copy(id = rowId.toInt()))
                 }
-
                 is UiEvent.OnEditTab -> {
                     val result = browserRepository.editTabPage(tabPage = uiEvent.tabPage)
                     if (result > 0)
                         state = state.copy(currentTab = uiEvent.tabPage)
                 }
-
                 is UiEvent.OnCloseTabs -> {
                     browserRepository.deleteTabPages(uiEvent.tabPages)
                 }
-
                 is UiEvent.OnCloseAllTabs -> {
                     browserRepository.deleteAllTabPages()
                 }
-
                 is UiEvent.OnSaveHistoryPage -> {
                     browserRepository.insertHistoryPage(uiEvent.historyPage)
+                }
+                is UiEvent.OnDeleteHistoryPages -> {
+                    browserRepository.deleteHistoryPages(uiEvent.historyPages)
                 }
             }
         }
