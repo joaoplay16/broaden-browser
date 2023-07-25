@@ -3,6 +3,8 @@ package com.playlab.broadenbrowser.ui.screens
 import com.google.common.truth.Truth.assertThat
 import com.playlab.broadenbrowser.MainCoroutineRule
 import com.playlab.broadenbrowser.mocks.MockHistoryPages.historyPage1
+import com.playlab.broadenbrowser.mocks.MockHistoryPages.historyPage2
+import com.playlab.broadenbrowser.mocks.MockHistoryPages.historyPage3
 import com.playlab.broadenbrowser.mocks.MockTabPages.tab1
 import com.playlab.broadenbrowser.mocks.MockTabPages.tab2
 import com.playlab.broadenbrowser.mocks.MockTabPages.tab3
@@ -190,6 +192,22 @@ class TestBrowserViewModel {
 
             assertThat(state.history.size).isEqualTo(2)
             assertThat(state.history).containsExactly(historyPage1, historyPage1)
+        }
+    }
+
+    @Test
+    fun `delete selected history pages`() = runTest {
+        with(viewModel) {
+            onUiEvent(UiEvent.OnSaveHistoryPage(historyPage1))
+            onUiEvent(UiEvent.OnSaveHistoryPage(historyPage2))
+            onUiEvent(UiEvent.OnSaveHistoryPage(historyPage3))
+
+            val historyPagesToDelete = listOf(historyPage1, historyPage3)
+
+            onUiEvent(UiEvent.OnDeleteHistoryPages(historyPagesToDelete))
+
+            assertThat(state.history.size).isEqualTo(1)
+            assertThat(state.history).containsExactly(historyPage2)
         }
     }
 }
