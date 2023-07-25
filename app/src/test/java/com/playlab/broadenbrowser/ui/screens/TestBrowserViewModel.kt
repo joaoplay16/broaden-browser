@@ -210,4 +210,17 @@ class TestBrowserViewModel {
             assertThat(state.history).containsExactly(historyPage2)
         }
     }
+
+    @Test
+    fun `delete all history pages`() = runTest {
+        with(viewModel) {
+            onUiEvent(UiEvent.OnSaveHistoryPage(historyPage1))
+            onUiEvent(UiEvent.OnSaveHistoryPage(historyPage2))
+            onUiEvent(UiEvent.OnSaveHistoryPage(historyPage3))
+
+            onUiEvent(UiEvent.OnDeleteAllHistoryPages)
+
+            assertThat(state.history).isEmpty()
+        }
+    }
 }
