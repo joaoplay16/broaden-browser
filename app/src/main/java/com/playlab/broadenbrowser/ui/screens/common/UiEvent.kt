@@ -18,4 +18,5 @@ sealed class UiEvent {
     object OnCloseAllTabs : UiEvent()
     data class OnSaveHistoryPage(val historyPage: HistoryPage) : UiEvent()
     data class OnDeleteHistoryPages(val historyPages: List<HistoryPage>) : UiEvent()
+    object OnDeleteAllHistoryPages : UiEvent()
 }
