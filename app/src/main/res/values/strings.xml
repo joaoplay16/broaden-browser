@@ -28,4 +28,7 @@
     <string name="search_mechanism">Search</string>
     <string name="close_icon_cd">close</string>
     <string name="icon_add_cd">Add new tab</string>
+    <string name="ic_delete_cd">Delete</string>
+    <string name="no_history_here">No history here</string>
+    <string name="ic_delete_all_cd">Delete all</string>
 </resources>

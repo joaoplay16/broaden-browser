@@ -20,11 +20,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,10 +38,12 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.playlab.broadenbrowser.R
 import com.playlab.broadenbrowser.mocks.MockTabPages
+import com.playlab.broadenbrowser.model.HistoryPage
 import com.playlab.broadenbrowser.model.TabPage
 import com.playlab.broadenbrowser.ui.screens.common.BrowserState
 import com.playlab.broadenbrowser.ui.screens.common.UiEvent
@@ -88,7 +92,7 @@ fun BottomSheetContent(
                     maxHeight = 450.dp
                 )
         ) {
-            Box (Modifier.fillMaxSize()){
+            Box(Modifier.fillMaxSize()) {
                 when (selectedTab) {
                     SheetTabBarSection.OpenTabs -> {
                         TabsSection(
@@ -128,7 +132,13 @@ fun BottomSheetContent(
                     }
 
                     SheetTabBarSection.History -> {
-                        // TODO: Add history section
+                        HistorySection(
+                            modifier = Modifier.fillMaxSize(),
+                            history = browserState.history,
+                            onHistoryPageClick = { TODO("Implement click on history page") },
+                            onDeleteHistoryPages = { onUiEvent(UiEvent.OnDeleteHistoryPages(it))},
+                            onDeleteAllHistoryClick = { onUiEvent(UiEvent.OnDeleteAllHistoryPages) }
+                        )
                     }
                 }
             }
@@ -182,6 +192,104 @@ fun TabsSection(
                         )
                     }
                 }
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun HistorySection(
+    history: List<HistoryPage>,
+    modifier: Modifier = Modifier,
+    onHistoryPageClick: (HistoryPage) -> Unit,
+    onDeleteHistoryPages: (List<HistoryPage>) -> Unit,
+    onDeleteAllHistoryClick: () -> Unit
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        if (history.isNotEmpty()) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                IconButton(onClick = onDeleteAllHistoryClick) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(id = R.string.ic_delete_all_cd)
+                    )
+                }
+            }
+        }
+
+        if (history.isNotEmpty()) {
+            LazyColumn(
+                reverseLayout = true,
+                verticalArrangement = Arrangement.Top
+            ) {
+                item {
+                    Spacer(modifier = Modifier.padding(64.dp))
+                }
+                items(
+                    items = history.sortedBy { it.timestamp },
+                    key = { it.id }) { page ->
+                    PageListItem(
+                        modifier = Modifier
+                            .padding(bottom = 4.dp)
+                            .animateItemPlacement()
+                            .clickable {
+                                onHistoryPageClick(page)
+                            },
+                        title = page.title,
+                        border = BorderStroke(
+                            0.dp,
+                            Color.Transparent
+                        ),
+                        url = page.url,
+                        buttonSlot = {
+                            IconButton(onClick = { onDeleteHistoryPages(listOf(page)) }) {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = stringResource(id = R.string.ic_delete_cd)
+                                )
+                            }
+                        }
+                    )
+                }
+            }
+        } else {
+            Box(
+                modifier = Modifier.weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(id = R.string.no_history_here),
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+}
+
+@Preview(uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun HistorySectionPreview() {
+    BroadenBrowserTheme {
+        Surface {
+            var state by rememberBrowserState(
+                BrowserState(history = emptyList())
+            )
+            HistorySection(
+                modifier = Modifier.fillMaxSize(),
+                history = state.history,
+                onHistoryPageClick = { },
+                onDeleteHistoryPages = {
+                    state = state.copy(history = state.history.minus(it.toSet()))
+                },
+                onDeleteAllHistoryClick = {state = state.copy(history = emptyList()) }
             )
         }
     }
