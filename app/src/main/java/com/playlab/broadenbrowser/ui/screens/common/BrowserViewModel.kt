@@ -99,6 +99,9 @@ class BrowserViewModel @Inject constructor(
                 is UiEvent.OnDeleteHistoryPages -> {
                     browserRepository.deleteHistoryPages(uiEvent.historyPages)
                 }
+                is UiEvent.OnDeleteAllHistoryPages -> {
+                    browserRepository.deleteAllHistoryPages()
+                }
             }
         }
     }
