@@ -9,8 +9,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Entity(tableName = HISTORY_TABLE)
 data class HistoryPage(
-    @PrimaryKey
-    override val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    override val id: Int = 0,
     override val title: String,
     override val url: String,
     override val timestamp: Long
