@@ -47,4 +47,12 @@ interface BrowserDao {
 
     @Query("SELECT * FROM history WHERE id = :id")
     suspend fun getHistoryPage(id: Long): HistoryPage?
+
+    @Query(
+        """SELECT * FROM history 
+            WHERE url = :url
+            and date(timestamp/1000, 'unixepoch', 'localtime') = date('now', 'localtime') 
+            ORDER by timestamp desc LIMIT 1"""
+    )
+    suspend fun getTodayLatestHistoryPageByUrl(url: String): HistoryPage?
 }
