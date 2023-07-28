@@ -10,6 +10,7 @@ import com.playlab.broadenbrowser.mocks.MockTabPages.tab1
 import com.playlab.broadenbrowser.mocks.MockTabPages.tab2
 import com.playlab.broadenbrowser.model.HistoryPage
 import com.playlab.broadenbrowser.model.TabPage
+import com.playlab.broadenbrowser.ui.utils.Util.isDateToday
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,6 +22,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.minutes
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltAndroidTest
@@ -240,5 +243,31 @@ TestBrowserRepository {
         assertThat(affectedRows).isGreaterThan(0)
 
         assertThat(historyPageResult).isEqualTo(historyPage1Modified)
+    }
+
+    @Test
+    fun gettingTodayMostRecentHistoryPageByUrl() = runTest {
+        val todayDateInMillis = System.currentTimeMillis()
+
+        repository.insertHistoryPage(historyPage1.copy(timestamp = todayDateInMillis))
+        repository.insertHistoryPage(
+            historyPage1.copy(
+                timestamp = todayDateInMillis - 1.minutes.inWholeMilliseconds
+            )
+        )
+        repository.insertHistoryPage(
+            historyPage1.copy(
+                timestamp = todayDateInMillis - 1.days.inWholeMilliseconds
+            )
+        )
+
+        val historyPage = repository.getTodayLatestHistoryPageByUrl(url = historyPage1.url)
+
+        assertThat(historyPage).isNotNull()
+
+        historyPage?.let {
+            assertThat(isDateToday(it.timestamp)).isTrue()
+            assertThat(it.timestamp).isEqualTo(todayDateInMillis)
+        }
     }
 }
