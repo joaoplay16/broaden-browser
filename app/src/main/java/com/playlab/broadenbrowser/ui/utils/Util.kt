@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Patterns
+import java.util.Calendar
 
 object Util {
 
@@ -23,12 +24,25 @@ object Util {
         }
     }
 
-    fun isDefaultBrowser(context: Context): Boolean{
+    fun isDefaultBrowser(context: Context): Boolean {
         val defaultBrowserPkg: String? = Intent(
             Intent.ACTION_VIEW,
             Uri.parse("http://google.com")
         ).resolveActivity(context.packageManager)?.packageName
 
         return context.packageName == defaultBrowserPkg
+    }
+
+    fun isDateToday(timestamp: Long): Boolean {
+
+        val calendar = Calendar.getInstance()
+
+        calendar.timeInMillis = timestamp
+
+        val today = Calendar.getInstance()
+
+        return (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR)
+                && calendar.get(Calendar.MONTH) == today.get(Calendar.MONTH)
+                && calendar.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH))
     }
 }
