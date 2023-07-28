@@ -4,6 +4,7 @@ import com.playlab.broadenbrowser.model.HistoryPage
 import com.playlab.broadenbrowser.model.TabPage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 
 class FakeBrowserRepository : BrowserRepository {
 
@@ -68,5 +69,9 @@ class FakeBrowserRepository : BrowserRepository {
 
     override suspend fun getHistoryPage(id: Long): HistoryPage? {
         return history.value.find { it.id.toLong() == id }
+    }
+
+    override suspend fun getTodayLatestHistoryPageByUrl(url: String): HistoryPage? {
+        return history.firstOrNull()?.filter { it.url == url }?.maxBy { it.timestamp }
     }
 }

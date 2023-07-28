@@ -55,4 +55,8 @@ class DefaultBrowserRepository @Inject constructor(
     override suspend fun getHistoryPage(id: Long): HistoryPage? {
         return db.browserDao().getHistoryPage(id)
     }
+
+    override suspend fun getTodayLatestHistoryPageByUrl(url: String): HistoryPage? {
+        return db.browserDao().getTodayLatestHistoryPageByUrl(url)
+    }
 }

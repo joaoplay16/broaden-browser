@@ -28,4 +28,6 @@ interface BrowserRepository {
     suspend fun editHistoryPage(historyPage: HistoryPage): Int
 
     suspend fun getHistoryPage(id: Long): HistoryPage?
+
+    suspend fun getTodayLatestHistoryPageByUrl(url: String): HistoryPage?
 }
