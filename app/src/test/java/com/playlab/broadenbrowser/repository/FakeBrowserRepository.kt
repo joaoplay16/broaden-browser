@@ -72,6 +72,6 @@ class FakeBrowserRepository : BrowserRepository {
     }
 
     override suspend fun getTodayLatestHistoryPageByUrl(url: String): HistoryPage? {
-        return history.firstOrNull()?.filter { it.url == url }?.maxBy { it.timestamp }
+        return history.firstOrNull()?.filter { it.url == url }?.maxByOrNull { it.timestamp }
     }
 }
