@@ -18,6 +18,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import kotlin.time.Duration.Companion.days
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TestBrowserViewModel {
@@ -185,15 +186,26 @@ class TestBrowserViewModel {
     }
 
     @Test
-    fun `save a duplicated history page`() = runTest {
-        with(viewModel) {
-            onUiEvent(UiEvent.OnSaveHistoryPage(historyPage1))
-            onUiEvent(UiEvent.OnSaveHistoryPage(historyPage1))
+    fun `save a duplicated history page only if it isn't in the current day's history`() =
+        runTest {
+            val todayDateInMillis = System.currentTimeMillis()
+            with(viewModel) {
+                onUiEvent(
+                    UiEvent.OnSaveHistoryPage(
+                        historyPage1.copy(
+                            timestamp = todayDateInMillis - 2.days.inWholeMilliseconds
+                        )
+                    )
+                )
+                onUiEvent(
+                    UiEvent.OnSaveHistoryPage(
+                        historyPage1.copy(timestamp = todayDateInMillis)
+                    )
+                )
 
-            assertThat(state.history.size).isEqualTo(2)
-            assertThat(state.history).containsExactly(historyPage1, historyPage1)
+                assertThat(state.history.size).isEqualTo(2)
+            }
         }
-    }
 
     @Test
     fun `delete selected history pages`() = runTest {
