@@ -19,6 +19,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.minutes
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TestBrowserViewModel {
@@ -184,6 +185,33 @@ class TestBrowserViewModel {
             assertThat(state.history.size).isEqualTo(1)
         }
     }
+
+    @Test
+    fun `saving a history page that it's already in today history, just updates the timestamp`() =
+        runTest {
+
+            val todayDateInMillis = System.currentTimeMillis()
+            val historyPageToSave = historyPage1.copy(timestamp = todayDateInMillis)
+
+            with(viewModel) {
+                onUiEvent(UiEvent.OnSaveHistoryPage(historyPageToSave))
+                onUiEvent(UiEvent.OnSaveHistoryPage(historyPageToSave))
+                onUiEvent(
+                    UiEvent.OnSaveHistoryPage(
+                        historyPageToSave.copy(
+                            timestamp = todayDateInMillis + 1.minutes.inWholeMilliseconds
+                        )
+                    )
+                )
+
+                assertThat(state.history).isNotEmpty()
+                assertThat(state.history.size).isEqualTo(1)
+
+                val savedHistoryPage = state.history.first()
+
+                assertThat(savedHistoryPage.timestamp >= historyPageToSave.timestamp).isTrue()
+            }
+        }
 
     @Test
     fun `save a duplicated history page only if it isn't in the current day's history`() =
