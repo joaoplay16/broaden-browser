@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.playlab.broadenbrowser.repository.BrowserRepository
 import com.playlab.broadenbrowser.repository.PreferencesRepository
 import com.playlab.broadenbrowser.ui.utils.SearchMechanism
+import com.playlab.broadenbrowser.ui.utils.Util.isDateToday
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -94,7 +95,16 @@ class BrowserViewModel @Inject constructor(
                     browserRepository.deleteAllTabPages()
                 }
                 is UiEvent.OnSaveHistoryPage -> {
-                    browserRepository.insertHistoryPage(uiEvent.historyPage)
+                    val existingHistoryPage = browserRepository
+                        .getTodayLatestHistoryPageByUrl(uiEvent.historyPage.url)
+
+                    if (existingHistoryPage != null && isDateToday(existingHistoryPage.timestamp)) {
+                        browserRepository.editHistoryPage(
+                            historyPage = uiEvent.historyPage
+                        )
+                    }else{
+                        browserRepository.insertHistoryPage(uiEvent.historyPage)
+                    }
                 }
                 is UiEvent.OnDeleteHistoryPages -> {
                     browserRepository.deleteHistoryPages(uiEvent.historyPages)
