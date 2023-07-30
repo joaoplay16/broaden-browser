@@ -62,6 +62,7 @@ class FakeBrowserRepository : BrowserRepository {
 
     override suspend fun editHistoryPage(historyPage: HistoryPage): Int {
         val tabToEditIndex = history.value.indexOfFirst { it.id == historyPage.id }
+        if(tabToEditIndex == -1) return 0
         val listWithTheModifiedHistoryPage = history.value.toMutableList()
         listWithTheModifiedHistoryPage[tabToEditIndex] = historyPage
         history.value = listWithTheModifiedHistoryPage
