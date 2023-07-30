@@ -4,28 +4,28 @@ import com.playlab.broadenbrowser.model.TabPage
 
 object MockTabPages {
     val tab1 = TabPage(
-        1,
-        "Google",
-        "https://google.com",
-        0L
+        id = 1,
+        title = "Google",
+        url = "https://google.com",
+        timestamp = 1000000001000L
     )
     val tab2 = TabPage(
-        2,
-        "Bing",
-        "https://bing.com",
-        0L
+        id = 2,
+        title = "Bing",
+        url = "https://bing.com",
+        timestamp = 1000000002000L
     )
     val tab3 = TabPage(
-        3,
-        "Yahoo",
-        "https://yahoo.com",
-        0L
+        id = 3,
+        title = "Yahoo",
+        url = "https://yahoo.com",
+        timestamp = 1000000003000L
     )
     val tab4 = TabPage(
-        4,
-        "Duck Duck Go",
-        "https://duckduckgo.com",
-        0L
+        id = 4,
+        title = "Duck Duck Go",
+        url = "https://duckduckgo.com",
+        timestamp = 1000000004000L
     )
 
     val tabList = listOf(tab1, tab2, tab3, tab4)
