@@ -190,7 +190,9 @@ class TestBrowserViewModel {
         runTest {
 
             val todayDateInMillis = System.currentTimeMillis()
-            val historyPageToSave = historyPage1.copy(timestamp = todayDateInMillis)
+            val historyPageToSave = historyPage1.copy(
+                id = 0,
+                timestamp = todayDateInMillis)
 
             with(viewModel) {
                 onUiEvent(UiEvent.OnSaveHistoryPage(historyPageToSave))
@@ -208,7 +210,7 @@ class TestBrowserViewModel {
 
                 val savedHistoryPage = state.history.first()
 
-                assertThat(savedHistoryPage.timestamp >= historyPageToSave.timestamp).isTrue()
+                assertThat(savedHistoryPage.timestamp).isGreaterThan(historyPageToSave.timestamp)
             }
         }
 
