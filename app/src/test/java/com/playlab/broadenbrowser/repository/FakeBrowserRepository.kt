@@ -16,8 +16,9 @@ class FakeBrowserRepository : BrowserRepository {
     }
 
     override suspend fun insertTabPage(tabPage: TabPage): Long {
-        tabPages.value = tabPages.value.plus(tabPage)
-        return tabPages.value.size.toLong()
+        val newId = tabPages.value.size + 1
+        tabPages.value = tabPages.value.plus(tabPage.copy(id = newId))
+        return newId.toLong()
     }
 
     override suspend fun deleteTabPages(tabPages: List<TabPage>) {
