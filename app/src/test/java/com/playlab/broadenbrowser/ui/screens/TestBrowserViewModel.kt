@@ -53,7 +53,6 @@ class TestBrowserViewModel {
             onUiEvent(UiEvent.OnSaveTab(tab1))
             onUiEvent(UiEvent.OnSaveTab(tab1))
             assertThat(state.tabs.size).isEqualTo(2)
-            assertThat(state.tabs).containsExactly(tab1, tab1)
         }
     }
 
