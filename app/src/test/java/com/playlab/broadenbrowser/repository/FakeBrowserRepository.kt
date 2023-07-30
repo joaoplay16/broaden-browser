@@ -42,8 +42,9 @@ class FakeBrowserRepository : BrowserRepository {
     }
 
     override suspend fun insertHistoryPage(historyPage: HistoryPage): Long {
-        history.value = history.value.plus(historyPage)
-        return history.value.size.toLong()
+        val newId = history.value.size + 1
+        history.value = history.value.plus(historyPage.copy(id = newId))
+        return newId.toLong()
     }
 
     override fun getHistory(): Flow<List<HistoryPage>> {
