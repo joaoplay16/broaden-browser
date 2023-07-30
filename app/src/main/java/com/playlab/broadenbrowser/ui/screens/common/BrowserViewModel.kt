@@ -100,7 +100,9 @@ class BrowserViewModel @Inject constructor(
 
                     if (existingHistoryPage != null && isDateToday(existingHistoryPage.timestamp)) {
                         browserRepository.editHistoryPage(
-                            historyPage = uiEvent.historyPage
+                            historyPage = existingHistoryPage.copy(
+                                timestamp = uiEvent.historyPage.timestamp
+                            )
                         )
                     }else{
                         browserRepository.insertHistoryPage(uiEvent.historyPage)
