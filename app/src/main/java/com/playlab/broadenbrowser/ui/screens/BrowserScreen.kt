@@ -64,6 +64,7 @@ import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberSaveableWebViewState
 import com.google.accompanist.web.rememberWebViewNavigator
 import com.playlab.broadenbrowser.R
+import com.playlab.broadenbrowser.model.HistoryPage
 import com.playlab.broadenbrowser.model.TabPage
 import com.playlab.broadenbrowser.ui.components.BottomSheetContent
 import com.playlab.broadenbrowser.ui.components.SearchBar
@@ -161,12 +162,26 @@ fun BrowserScreen(
 
                 if (isLoading.not()) {
                     currentTab?.let { tab ->
+                        val title = pageTitle ?: tab.title
+                        val url = lastLoadedUrl ?: tab.url
+                        val timestamp = System.currentTimeMillis()
+
                         onEvent(
                             UiEvent.OnEditTab(
                                 tab.copy(
-                                    title = pageTitle ?: tab.title,
-                                    url = lastLoadedUrl ?: tab.url,
-                                    timestamp = System.currentTimeMillis()
+                                    title = title,
+                                    url = url,
+                                    timestamp = timestamp
+                                )
+                            )
+                        )
+
+                        onEvent(
+                            UiEvent.OnSaveHistoryPage(
+                                HistoryPage(
+                                    title = title,
+                                    url = url,
+                                    timestamp = timestamp
                                 )
                             )
                         )
