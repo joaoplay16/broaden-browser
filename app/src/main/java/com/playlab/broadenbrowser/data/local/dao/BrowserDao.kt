@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BrowserDao {
-    @Query("SELECT * FROM tabs")
+    @Query("SELECT * FROM tabs ORDER BY timestamp DESC")
     fun getTabPages(): Flow<List<TabPage>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
