@@ -157,14 +157,10 @@ fun TabsSection(
 ) {
     LazyColumn(
         modifier = modifier,
-        reverseLayout = true,
         verticalArrangement = Arrangement.Top
     ) {
-        item {
-            Spacer(modifier = Modifier.padding(64.dp))
-        }
         items(
-            items = tabs.sortedBy { it.timestamp },
+            items = tabs,
             key = { it.id }) { page ->
             PageListItem(
                 modifier = Modifier
@@ -193,6 +189,9 @@ fun TabsSection(
                     }
                 }
             )
+        }
+        item {
+            Spacer(modifier = Modifier.padding(64.dp))
         }
     }
 }
