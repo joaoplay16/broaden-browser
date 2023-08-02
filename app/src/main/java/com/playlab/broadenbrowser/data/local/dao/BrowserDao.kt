@@ -30,7 +30,7 @@ interface BrowserDao {
     @Query("SELECT * FROM tabs WHERE id = :id")
     suspend fun getTab(id: Long): TabPage?
 
-    @Query("SELECT * FROM history")
+    @Query("SELECT * FROM history ORDER BY timestamp DESC")
     fun getHistory(): Flow<List<HistoryPage>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
