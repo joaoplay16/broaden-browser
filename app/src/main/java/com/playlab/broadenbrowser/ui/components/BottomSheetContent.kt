@@ -225,14 +225,10 @@ fun HistorySection(
 
         if (history.isNotEmpty()) {
             LazyColumn(
-                reverseLayout = true,
                 verticalArrangement = Arrangement.Top
             ) {
-                item {
-                    Spacer(modifier = Modifier.padding(64.dp))
-                }
                 items(
-                    items = history.sortedBy { it.timestamp },
+                    items = history,
                     key = { it.id }) { page ->
                     PageListItem(
                         modifier = Modifier
@@ -256,6 +252,9 @@ fun HistorySection(
                             }
                         }
                     )
+                }
+                item {
+                    Spacer(modifier = Modifier.padding(16.dp))
                 }
             }
         } else {
