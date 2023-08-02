@@ -52,7 +52,7 @@ import com.playlab.broadenbrowser.ui.theme.BroadenBrowserTheme
 @Composable
 fun BottomSheetContent(
     modifier: Modifier = Modifier,
-    browserState: BrowserState = rememberBrowserState().value,
+    browserState: BrowserState,
     onUiEvent: (UiEvent) -> Unit = {}
 ) {
     var selectedTab by remember { mutableStateOf(SheetTabBarSection.OpenTabs) }
