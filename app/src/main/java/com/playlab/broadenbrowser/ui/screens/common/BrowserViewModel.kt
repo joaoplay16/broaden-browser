@@ -5,10 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.playlab.broadenbrowser.domain.SaveEditHistoryPageUseCase
 import com.playlab.broadenbrowser.repository.BrowserRepository
 import com.playlab.broadenbrowser.repository.PreferencesRepository
 import com.playlab.broadenbrowser.ui.utils.SearchMechanism
-import com.playlab.broadenbrowser.ui.utils.Util.isDateToday
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -18,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class BrowserViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository,
-    private val browserRepository: BrowserRepository
+    private val browserRepository: BrowserRepository,
+    private val saveEditHistoryPageUseCase: SaveEditHistoryPageUseCase
 ) : ViewModel() {
 
     var state by mutableStateOf(BrowserState())
@@ -95,18 +96,7 @@ class BrowserViewModel @Inject constructor(
                     browserRepository.deleteAllTabPages()
                 }
                 is UiEvent.OnSaveHistoryPage -> {
-                    val existingHistoryPage = browserRepository
-                        .getTodayLatestHistoryPageByUrl(uiEvent.historyPage.url)
-
-                    if (existingHistoryPage != null && isDateToday(existingHistoryPage.timestamp)) {
-                        browserRepository.editHistoryPage(
-                            historyPage = existingHistoryPage.copy(
-                                timestamp = uiEvent.historyPage.timestamp
-                            )
-                        )
-                    }else{
-                        browserRepository.insertHistoryPage(uiEvent.historyPage)
-                    }
+                    saveEditHistoryPageUseCase(uiEvent.historyPage)
                 }
                 is UiEvent.OnDeleteHistoryPages -> {
                     browserRepository.deleteHistoryPages(uiEvent.historyPages)
