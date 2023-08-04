@@ -2,6 +2,7 @@ package com.playlab.broadenbrowser.ui.screens
 
 import com.google.common.truth.Truth.assertThat
 import com.playlab.broadenbrowser.MainCoroutineRule
+import com.playlab.broadenbrowser.domain.SaveEditHistoryPageUseCase
 import com.playlab.broadenbrowser.mocks.MockHistoryPages.historyPage1
 import com.playlab.broadenbrowser.mocks.MockHistoryPages.historyPage2
 import com.playlab.broadenbrowser.mocks.MockHistoryPages.historyPage3
@@ -31,9 +32,11 @@ class TestBrowserViewModel {
 
     @Before
     fun before() = runTest {
+        val fakeBrowserRepository = FakeBrowserRepository()
         viewModel = BrowserViewModel(
             FakePreferencesRepository(),
-            FakeBrowserRepository()
+            fakeBrowserRepository,
+            SaveEditHistoryPageUseCase(fakeBrowserRepository)
         )
     }
 
