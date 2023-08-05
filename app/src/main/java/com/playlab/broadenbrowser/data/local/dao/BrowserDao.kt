@@ -7,11 +7,15 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.playlab.broadenbrowser.model.HistoryPage
+import com.playlab.broadenbrowser.model.TabHistoryEntry
 import com.playlab.broadenbrowser.model.TabPage
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BrowserDao {
+
+    // TABS
+
     @Query("SELECT * FROM tabs ORDER BY timestamp DESC")
     fun getTabPages(): Flow<List<TabPage>>
 
@@ -32,6 +36,8 @@ interface BrowserDao {
 
     @Query("SELECT * FROM history ORDER BY timestamp DESC")
     fun getHistory(): Flow<List<HistoryPage>>
+
+    // BROWSER HISTORY
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertHistoryPage(historyPage: HistoryPage): Long
@@ -54,5 +60,11 @@ interface BrowserDao {
             and date(timestamp/1000, 'unixepoch', 'localtime') = date('now', 'localtime') 
             ORDER by timestamp desc LIMIT 1"""
     )
+
     suspend fun getTodayLatestHistoryPageByUrl(url: String): HistoryPage?
+
+    // TAB HISTORY
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertTabHistoryEntry(tabHistoryEntry: TabHistoryEntry): Long
 }
