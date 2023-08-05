@@ -1,6 +1,7 @@
 package com.playlab.broadenbrowser.repository
 
 import com.playlab.broadenbrowser.model.HistoryPage
+import com.playlab.broadenbrowser.model.TabHistoryEntry
 import com.playlab.broadenbrowser.model.TabPage
 import kotlinx.coroutines.flow.Flow
 
@@ -30,4 +31,6 @@ interface BrowserRepository {
     suspend fun getHistoryPage(id: Long): HistoryPage?
 
     suspend fun getTodayLatestHistoryPageByUrl(url: String): HistoryPage?
+
+    suspend fun insertTabHistoryEntry(tabHistoryEntry: TabHistoryEntry): Long
 }

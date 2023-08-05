@@ -1,6 +1,7 @@
 package com.playlab.broadenbrowser.repository
 
 import com.playlab.broadenbrowser.model.HistoryPage
+import com.playlab.broadenbrowser.model.TabHistoryEntry
 import com.playlab.broadenbrowser.model.TabPage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -76,5 +77,9 @@ class FakeBrowserRepository : BrowserRepository {
 
     override suspend fun getTodayLatestHistoryPageByUrl(url: String): HistoryPage? {
         return history.firstOrNull()?.filter { it.url == url }?.maxByOrNull { it.timestamp }
+    }
+
+    override suspend fun insertTabHistoryEntry(tabHistoryEntry: TabHistoryEntry): Long {
+        TODO("Not yet implemented")
     }
 }

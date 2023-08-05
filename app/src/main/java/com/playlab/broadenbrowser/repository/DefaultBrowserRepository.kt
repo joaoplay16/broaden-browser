@@ -2,6 +2,7 @@ package com.playlab.broadenbrowser.repository
 
 import com.playlab.broadenbrowser.data.local.BrowserDatabase
 import com.playlab.broadenbrowser.model.HistoryPage
+import com.playlab.broadenbrowser.model.TabHistoryEntry
 import com.playlab.broadenbrowser.model.TabPage
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -58,5 +59,9 @@ class DefaultBrowserRepository @Inject constructor(
 
     override suspend fun getTodayLatestHistoryPageByUrl(url: String): HistoryPage? {
         return db.browserDao().getTodayLatestHistoryPageByUrl(url)
+    }
+
+    override suspend fun insertTabHistoryEntry(tabHistoryEntry: TabHistoryEntry): Long {
+        return db.browserDao().insertTabHistoryEntry(tabHistoryEntry)
     }
 }
