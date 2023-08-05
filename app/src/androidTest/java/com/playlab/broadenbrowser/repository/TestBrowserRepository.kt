@@ -9,6 +9,7 @@ import com.playlab.broadenbrowser.mocks.MockHistoryPages.historyPage2
 import com.playlab.broadenbrowser.mocks.MockTabPages.tab1
 import com.playlab.broadenbrowser.mocks.MockTabPages.tab2
 import com.playlab.broadenbrowser.model.HistoryPage
+import com.playlab.broadenbrowser.model.TabHistoryEntry
 import com.playlab.broadenbrowser.model.TabPage
 import com.playlab.broadenbrowser.ui.utils.Util.isDateToday
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -269,5 +270,18 @@ TestBrowserRepository {
             assertThat(isDateToday(it.timestamp)).isTrue()
             assertThat(it.timestamp).isEqualTo(todayDateInMillis)
         }
+    }
+
+    @Test
+    fun insertingATabHistoryEntry() = runTest {
+        val tabHistoryEntry = TabHistoryEntry(
+            tabId =  2,
+            historyPageId = 1,
+            creationTime = System.currentTimeMillis()
+        )
+        val id = repository.insertTabHistoryEntry(tabHistoryEntry)
+
+        assertThat(id != -1L).isTrue()
+        assertThat(id ).isGreaterThan(0)
     }
 }
