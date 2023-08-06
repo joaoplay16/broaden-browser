@@ -75,4 +75,7 @@ interface BrowserDao {
         WHERE tabs.id = :tabId ORDER BY timestamp
     """)
     fun getTabHistory(tabId: Long): Flow<List<HistoryPage>>
+
+    @Query("DELETE FROM tab_history WHERE tabId = :tabId")
+    suspend fun deleteTabHistory(tabId: Long): Int
 }
