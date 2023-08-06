@@ -312,4 +312,28 @@ TestBrowserRepository {
         assertThat(tabHistory).isNotEmpty()
         assertThat(tabHistory.size).isEqualTo(2)
     }
+
+    @Test
+    fun deletingAllTabHistory() = runTest {
+
+        val tabId = 2L
+
+        val tabHistoryEntry1 = TabHistoryEntry(
+            tabId = tabId,
+            historyPageId = 1,
+            creationTime = System.currentTimeMillis()
+        )
+        val tabHistoryEntry2 = TabHistoryEntry(
+            tabId =  tabId,
+            historyPageId = 2,
+            creationTime = System.currentTimeMillis()
+        )
+
+        repository.insertTabHistoryEntry(tabHistoryEntry1)
+        repository.insertTabHistoryEntry(tabHistoryEntry2)
+
+        val affectedRows = repository.deleteTabHistory(tabId)
+
+        assertThat(affectedRows).isEqualTo(2)
+    }
 }
