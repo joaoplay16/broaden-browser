@@ -35,4 +35,6 @@ interface BrowserRepository {
     suspend fun insertTabHistoryEntry(tabHistoryEntry: TabHistoryEntry): Long
 
     fun getTabHistory(tabId:Long): Flow<List<HistoryPage>>
+
+    suspend fun deleteTabHistory(tabId: Long): Int
 }
