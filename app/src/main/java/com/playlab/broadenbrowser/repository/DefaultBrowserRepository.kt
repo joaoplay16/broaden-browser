@@ -64,4 +64,8 @@ class DefaultBrowserRepository @Inject constructor(
     override suspend fun insertTabHistoryEntry(tabHistoryEntry: TabHistoryEntry): Long {
         return db.browserDao().insertTabHistoryEntry(tabHistoryEntry)
     }
+
+    override fun getTabHistory(tabId: Long): Flow<List<HistoryPage>> {
+        return db.browserDao().getTabHistory(tabId)
+    }
 }

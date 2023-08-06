@@ -82,4 +82,8 @@ class FakeBrowserRepository : BrowserRepository {
     override suspend fun insertTabHistoryEntry(tabHistoryEntry: TabHistoryEntry): Long {
         TODO("Not yet implemented")
     }
+
+    override fun getTabHistory(tabId: Long): Flow<List<HistoryPage>> {
+        TODO("Not yet implemented")
+    }
 }

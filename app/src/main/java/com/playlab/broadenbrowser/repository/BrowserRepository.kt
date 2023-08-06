@@ -33,4 +33,6 @@ interface BrowserRepository {
     suspend fun getTodayLatestHistoryPageByUrl(url: String): HistoryPage?
 
     suspend fun insertTabHistoryEntry(tabHistoryEntry: TabHistoryEntry): Long
+
+    fun getTabHistory(tabId:Long): Flow<List<HistoryPage>>
 }
