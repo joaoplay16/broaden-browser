@@ -13,12 +13,26 @@ class SaveTabHistoryEntryUseCase @Inject constructor(
         tabPage: TabPage,
         historyPage: HistoryPage
     ): Long {
-        val tabHistoryEntry = TabHistoryEntry(
-            tabId = tabPage.id.toLong(),
-            historyPageId = historyPage.id.toLong(),
-            creationTime = System.currentTimeMillis()
-        )
+        val lastSavedTabHistoryEntry = repository.getLatestEntryFromTabHistory(tabPage.id.toLong())
 
-        return repository.insertTabHistoryEntry(tabHistoryEntry)
+        if (isTheSameHistoryPage(historyPage, lastSavedTabHistoryEntry).not()) {
+            val tabHistoryEntry = TabHistoryEntry(
+                tabId = tabPage.id.toLong(),
+                historyPageId = historyPage.id.toLong(),
+                creationTime = System.currentTimeMillis()
+            )
+            // returning the id
+            return repository.insertTabHistoryEntry(tabHistoryEntry)
+        }
+
+        // returning the id
+        return 0
+    }
+
+    private fun isTheSameHistoryPage(
+        currentHistoryPage: HistoryPage,
+        lastSavedTabHistoryEntry: HistoryPage?
+    ): Boolean {
+        return currentHistoryPage.url == lastSavedTabHistoryEntry?.url
     }
 }
