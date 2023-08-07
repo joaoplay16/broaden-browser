@@ -6,11 +6,13 @@ import com.playlab.broadenbrowser.model.TabPage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flow
 
 class FakeBrowserRepository : BrowserRepository {
 
     private var tabPages: MutableStateFlow<List<TabPage>> = MutableStateFlow(emptyList())
     private var history: MutableStateFlow<List<HistoryPage>> = MutableStateFlow(emptyList())
+    private var tabsHistory: MutableStateFlow<List<TabHistoryEntry>> = MutableStateFlow(emptyList())
 
     override fun getTabs(): Flow<List<TabPage>> {
         return tabPages
@@ -80,14 +82,31 @@ class FakeBrowserRepository : BrowserRepository {
     }
 
     override suspend fun insertTabHistoryEntry(tabHistoryEntry: TabHistoryEntry): Long {
-        TODO("Not yet implemented")
+        val newId = tabsHistory.value.size + 1L
+        tabsHistory.value = tabsHistory.value.plus(tabHistoryEntry.copy(id = newId))
+        return newId
     }
 
     override fun getTabHistory(tabId: Long): Flow<List<HistoryPage>> {
-        TODO("Not yet implemented")
+        val tabHistoryEntries = this.tabsHistory.value.filter { it.tabId == tabId }
+        val historyPages = tabHistoryEntries.mapNotNull { tabHistoryEntry ->
+            history.value.find { it.id.toLong() == tabHistoryEntry.historyPageId }
+        }
+        return flow{emit(historyPages)}
     }
 
     override suspend fun deleteTabHistory(tabId: Long): Int {
-        TODO("Not yet implemented")
+        var deletedCount = 0
+
+        this.tabsHistory.value = this.tabsHistory.value
+            .filter {
+                if (it.tabId != tabId) true
+                else {
+                    deletedCount++
+                    false
+                }
+            }
+
+        return deletedCount
     }
 }
