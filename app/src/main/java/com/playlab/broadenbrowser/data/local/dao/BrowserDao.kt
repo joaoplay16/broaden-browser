@@ -76,6 +76,14 @@ interface BrowserDao {
     """)
     fun getTabHistory(tabId: Long): Flow<List<HistoryPage>>
 
+    @Query("""
+        SELECT history.* FROM history 
+        JOIN tab_history ON tab_history.historyPageId = history.id 
+        JOIN tabs ON tab_history.tabId = tabs.id 
+        WHERE tabs.id = :tabId ORDER BY timestamp DESC LIMIT 1
+    """)
+    fun getLatestEntryFromTabHistory(tabId: Long): HistoryPage?
+
     @Query("DELETE FROM tab_history WHERE tabId = :tabId")
     suspend fun deleteTabHistory(tabId: Long): Int
 }
