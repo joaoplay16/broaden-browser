@@ -23,7 +23,7 @@ class TestSaveTabHistoryEntryUseCase {
     private lateinit var repository: FakeBrowserRepository
 
     @Before
-    fun before(){
+    fun before() {
         repository = FakeBrowserRepository()
         saveEditHistoryPageUseCase = SaveTabHistoryEntryUseCase(repository)
     }
@@ -48,6 +48,28 @@ class TestSaveTabHistoryEntryUseCase {
             val tabHistory = repository.getTabHistory(tabId).first()
 
             assertThat(tabHistory).isNotEmpty()
+            assertThat(tabHistory.size).isEqualTo(2)
+        }
+
+    @Test
+    fun `save only if the history page isn't the same as the latest saved page`() =
+        runTest {
+            val tabId = repository.insertTabPage(tab4)
+            repository.insertHistoryPage(historyPage1)
+            repository.insertHistoryPage(historyPage2)
+            repository.insertHistoryPage(historyPage2)
+
+            val history = repository.getHistory().first()
+
+            history.forEach {
+                saveEditHistoryPageUseCase(
+                    tabPage = tab4.copy(id = tabId.toInt()), // tab with updated the id
+                    historyPage = it
+                )
+            }
+
+            val tabHistory = repository.getTabHistory(tabId).first()
+
             assertThat(tabHistory.size).isEqualTo(2)
         }
 }
