@@ -5,6 +5,7 @@ import com.playlab.broadenbrowser.model.TabHistoryEntry
 import com.playlab.broadenbrowser.model.TabPage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 
@@ -93,6 +94,10 @@ class FakeBrowserRepository : BrowserRepository {
             history.value.find { it.id.toLong() == tabHistoryEntry.historyPageId }
         }
         return flow{emit(historyPages)}
+    }
+
+    override suspend fun getLatestEntryFromTabHistory(tabId: Long): HistoryPage? {
+        return getTabHistory(tabId).first().lastOrNull()
     }
 
     override suspend fun deleteTabHistory(tabId: Long): Int {

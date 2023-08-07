@@ -36,5 +36,7 @@ interface BrowserRepository {
 
     fun getTabHistory(tabId:Long): Flow<List<HistoryPage>>
 
+    suspend fun getLatestEntryFromTabHistory(tabId: Long): HistoryPage?
+
     suspend fun deleteTabHistory(tabId: Long): Int
 }

@@ -72,4 +72,8 @@ class DefaultBrowserRepository @Inject constructor(
     override suspend fun deleteTabHistory(tabId: Long): Int {
         return db.browserDao().deleteTabHistory(tabId)
     }
+
+    override suspend fun getLatestEntryFromTabHistory(tabId: Long): HistoryPage? {
+        return db.browserDao().getLatestEntryFromTabHistory(tabId)
+    }
 }
