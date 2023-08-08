@@ -97,7 +97,7 @@ class FakeBrowserRepository : BrowserRepository {
     }
 
     override suspend fun getLatestEntryFromTabHistory(tabId: Long): HistoryPage? {
-        return getTabHistory(tabId).first().lastOrNull()
+        return getTabHistory(tabId).first().maxByOrNull { it.timestamp }
     }
 
     override suspend fun deleteTabHistory(tabId: Long): Int {
