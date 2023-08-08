@@ -314,6 +314,34 @@ TestBrowserRepository {
     }
 
     @Test
+    fun gettingLatestEntryFromTabHistory() = runTest {
+
+        val tabId = repository.insertTabPage(tab1)
+
+        val historyPage1Id = repository.insertHistoryPage(historyPage1)
+        val historyPage2Id = repository.insertHistoryPage(historyPage2)
+
+        val tabHistoryEntry1 = TabHistoryEntry(
+            tabId = tabId,
+            historyPageId = historyPage1Id,
+            creationTime = System.currentTimeMillis()
+        )
+        val tabHistoryEntry2 = TabHistoryEntry(
+            tabId =  tabId,
+            historyPageId = historyPage2Id,
+            creationTime = System.currentTimeMillis()
+        )
+
+        repository.insertTabHistoryEntry(tabHistoryEntry1)
+        repository.insertTabHistoryEntry(tabHistoryEntry2)
+
+        val latestTabHistoryEntry = repository.getLatestEntryFromTabHistory(tabId)
+
+        assertThat(latestTabHistoryEntry).isNotNull()
+        assertThat(latestTabHistoryEntry?.id).isEqualTo(historyPage2Id)
+    }
+
+    @Test
     fun deletingAllTabHistory() = runTest {
 
         val tabId = 2L
