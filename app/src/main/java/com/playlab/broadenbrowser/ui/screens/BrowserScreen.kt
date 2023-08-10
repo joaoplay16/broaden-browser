@@ -29,6 +29,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -422,6 +423,7 @@ fun BrowserScreen(
                                 onDismissRequest = { browserOptionsMenuExpanded = false },
                                 enableArrowLeft = navigator.canGoBack,
                                 enableArrowRight = navigator.canGoForward,
+                                isDesktopSite = isDesktopSite,
                                 onNewTabClick = {
                                     searchBarValue = TextFieldValue()
                                     onEvent(UiEvent.OnNewTab(null))
@@ -496,6 +498,7 @@ private fun BrowserOptionsMenu(
     expanded: Boolean,
     enableArrowLeft: Boolean,
     enableArrowRight: Boolean,
+    isDesktopSite: Boolean,
     onDismissRequest: () -> Unit = {},
     onNewTabClick: () -> Unit,
     onBookmarksClick: () -> Unit,
@@ -602,7 +605,9 @@ private fun BrowserOptionsMenu(
             leadingIcon = {
                 Icon(
                     painter = painterResource(id = R.drawable.monitor),
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = if (isDesktopSite) MaterialTheme.colorScheme.tertiary else
+                        LocalContentColor.current
                 )
             },
             text = {
@@ -700,6 +705,7 @@ fun DropdownPreview() {
                 expanded = false,
                 enableArrowLeft = false,
                 enableArrowRight = true,
+                isDesktopSite = true,
                 onDismissRequest = {},
                 onNewTabClick = {},
                 onBookmarksClick = {},
