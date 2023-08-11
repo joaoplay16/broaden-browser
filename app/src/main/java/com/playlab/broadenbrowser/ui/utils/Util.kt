@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Patterns
+import android.webkit.WebView
 import java.util.Calendar
 
 object Util {
@@ -44,5 +45,29 @@ object Util {
         return (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR)
                 && calendar.get(Calendar.MONTH) == today.get(Calendar.MONTH)
                 && calendar.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH))
+    }
+
+    fun WebView.setDesktopSite(isDesktopMode: Boolean){
+        if (isDesktopMode) {
+            settings.userAgentString = Constants.DEFAULT_USER_AGENT_STRING
+            /* Sets whether the WebView should enable support for the
+               "viewport" HTML meta tag or should use a wide viewport.*/
+            settings.useWideViewPort = true
+            /* Sets whether the WebView loads pages in overview mode, that
+               is, zooms out the content to fit on screen by width. */
+            settings.loadWithOverviewMode = true
+            settings.setSupportZoom(true)
+            settings.builtInZoomControls = true
+            settings.displayZoomControls = false
+            evaluateJavascript(
+                Constants.SET_DESKTOP_VIEWPORT_SCRIPT,
+                null
+            )
+        } else {
+            // set mobile mode
+            settings.userAgentString = null
+            settings.useWideViewPort = false
+            settings.loadWithOverviewMode = false
+        }
     }
 }

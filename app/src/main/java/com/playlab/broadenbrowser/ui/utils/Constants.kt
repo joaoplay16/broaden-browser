@@ -8,4 +8,12 @@ object Constants {
 
     const val DEFAULT_USER_AGENT_STRING =
         "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/113.0"
+
+        const val SET_DESKTOP_VIEWPORT_SCRIPT = """
+        document.querySelector('meta[name=\"viewport\"]')
+            .setAttribute(
+                'content',
+                'width=1024px, initial-scale=' + (document.documentElement.clientWidth / 1024)
+                );
+                """
 }
