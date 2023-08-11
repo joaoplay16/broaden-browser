@@ -31,6 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
@@ -111,7 +112,12 @@ fun BrowserScreen(
 
     val coroutineScope = rememberCoroutineScope()
 
-    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
+    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = SheetState(
+            skipHiddenState = false,
+            skipPartiallyExpanded = true
+        )
+    )
 
     val navigator = rememberWebViewNavigator()
 
@@ -223,6 +229,10 @@ fun BrowserScreen(
                         event.tabPage?.let {
                             navigator.loadUrl(it.url)
                         }
+
+                        coroutineScope.launch {
+                            bottomSheetScaffoldState.bottomSheetState.hide()
+                        }
                     }
                 }
             )
@@ -272,7 +282,7 @@ fun BrowserScreen(
                     modifier = modifier.weight(1f),
                     Alignment.TopCenter
                 ) {
-                    if( currentTab != null) {
+                    if( webViewInstance != null) {
                         WebView(
                             modifier = Modifier.fillMaxSize(),
                             navigator = navigator,
