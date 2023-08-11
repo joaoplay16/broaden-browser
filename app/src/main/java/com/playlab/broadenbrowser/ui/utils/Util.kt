@@ -59,10 +59,6 @@ object Util {
             settings.setSupportZoom(true)
             settings.builtInZoomControls = true
             settings.displayZoomControls = false
-            evaluateJavascript(
-                Constants.SET_DESKTOP_VIEWPORT_SCRIPT,
-                null
-            )
         } else {
             // set mobile mode
             settings.userAgentString = null
