@@ -116,7 +116,7 @@ fun BrowserScreen(
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = SheetState(
             skipHiddenState = false,
-            skipPartiallyExpanded = true
+            skipPartiallyExpanded = false
         )
     )
 
