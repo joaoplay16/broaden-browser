@@ -2,6 +2,7 @@ package com.playlab.broadenbrowser.ui.screens
 
 import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_MASK
+import android.view.View
 import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.activity.compose.BackHandler
@@ -38,7 +39,6 @@ import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -74,8 +74,9 @@ import com.playlab.broadenbrowser.ui.components.TabCounter
 import com.playlab.broadenbrowser.ui.screens.common.BrowserState
 import com.playlab.broadenbrowser.ui.screens.common.UiEvent
 import com.playlab.broadenbrowser.ui.theme.BroadenBrowserTheme
-import com.playlab.broadenbrowser.ui.utils.Constants.DEFAULT_USER_AGENT_STRING
+import com.playlab.broadenbrowser.ui.utils.Constants
 import com.playlab.broadenbrowser.ui.utils.Util.isUrl
+import com.playlab.broadenbrowser.ui.utils.Util.setDesktopSite
 import com.playlab.broadenbrowser.ui.utils.Util.toSearchMechanismUrl
 import kotlinx.coroutines.launch
 
@@ -125,9 +126,7 @@ fun BrowserScreen(
 
     var isDesktopSite by remember { mutableStateOf(false) }
 
-    val webViewInstance: WebView? by remember(currentTab) {
-        derivedStateOf { if (currentTab == null) null else WebView(context) }
-    }
+    val webViewInstance = remember { WebView(context) }
 
     var isSearchBarFocused by remember { mutableStateOf(false) }
 
@@ -193,6 +192,14 @@ fun BrowserScreen(
                             )
                         )
                     }
+
+                    // Applies the desktop viewport after the page has been loaded
+                    if(isDesktopSite){
+                        webViewInstance.evaluateJavascript(
+                            Constants.SET_DESKTOP_VIEWPORT_SCRIPT,
+                            null
+                        )
+                    }
                 }
             }
         }
@@ -205,6 +212,17 @@ fun BrowserScreen(
                 searchBarValue = searchBarValue.copy(
                     selection = TextRange(0, searchBarValue.text.length)
                 )
+            }
+        }
+    )
+
+    LaunchedEffect(
+        key1 = currentTab,
+        block = {
+            if(currentTab == null) {
+                webViewInstance.visibility = View.GONE
+            }else{
+                webViewInstance.visibility = View.VISIBLE
             }
         }
     )
@@ -282,21 +300,19 @@ fun BrowserScreen(
                     modifier = modifier.weight(1f),
                     Alignment.TopCenter
                 ) {
-                    if( webViewInstance != null) {
-                        WebView(
-                            modifier = Modifier.fillMaxSize(),
-                            navigator = navigator,
-                            state = webViewState,
-                            onCreated = {
-                                it.settings.domStorageEnabled = true
-                                it.settings.javaScriptEnabled = isJavascriptAllowed
-                                it.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
-                            },
-                            factory = {
-                                webViewInstance!!
-                            }
-                        )
-                    }
+                    WebView(
+                        modifier = Modifier.fillMaxSize(),
+                        navigator = navigator,
+                        state = webViewState,
+                        onCreated = {
+                            it.settings.domStorageEnabled = true
+                            it.settings.javaScriptEnabled = isJavascriptAllowed
+                            it.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
+                        },
+                        factory = {
+                            webViewInstance
+                        }
+                    )
                     if (isInFullscreenMode) {
                         IconButton(
                             modifier = Modifier
@@ -448,25 +464,9 @@ fun BrowserScreen(
                                     /*TODO implement history click action*/
                                 },
                                 onDesktopSiteClick = {
-                                    // set desktop mode
-                                    webViewInstance?.apply {
-                                        if (isDesktopSite) {
-                                            settings.userAgentString = DEFAULT_USER_AGENT_STRING
-                                            /* Sets whether the WebView should enable support for the
-                                            "viewport" HTML meta tag or should use a wide viewport.*/
-                                            settings.useWideViewPort = true
-                                            /* Sets whether the WebView loads pages in overview mode, that
-                                            is, zooms out the content to fit on screen by width. */
-                                            settings.loadWithOverviewMode = true
-                                        } else {
-                                            // set mobile mode
-                                            settings.userAgentString = null
-                                            settings.useWideViewPort = false
-                                            settings.loadWithOverviewMode = false
-                                        }
-                                    }
-                                    navigator.reload()
                                     isDesktopSite = !isDesktopSite
+                                    webViewInstance.setDesktopSite(isDesktopSite)
+                                    navigator.reload()
                                 },
                                 onSettingClick = onSettingClick,
                                 onArrowLeftClick = {
