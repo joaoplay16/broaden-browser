@@ -104,7 +104,7 @@ fun BottomSheetContent(
                                 onUiEvent(UiEvent.OnCloseTabs(it))
                             },
                             onTabClick = {
-                                onUiEvent(UiEvent.OnNewTab(tabPage = it))
+                                onUiEvent(UiEvent.OnTabChange(tabPage = it))
                             }
                         )
                         FloatingActionButton(
@@ -118,7 +118,7 @@ fun BottomSheetContent(
                             containerColor = MaterialTheme.colorScheme.tertiary,
                             contentColor = MaterialTheme.colorScheme.onTertiary,
                             onClick = {
-                                onUiEvent(UiEvent.OnNewTab(null))
+                                onUiEvent(UiEvent.OnTabChange(null))
                             }) {
                             Icon(
                                 imageVector = Icons.Default.Add,

@@ -75,7 +75,7 @@ class TestBrowserViewModel {
     fun `add a new tab`() = runTest {
         with(viewModel) {
             onUiEvent(UiEvent.OnSaveTab(tab1))
-            onUiEvent(UiEvent.OnNewTab(null))
+            onUiEvent(UiEvent.OnTabChange(null))
             assertThat(state.currentTab).isNull()
         }
     }

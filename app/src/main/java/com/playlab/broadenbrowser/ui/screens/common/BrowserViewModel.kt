@@ -76,7 +76,7 @@ class BrowserViewModel @Inject constructor(
                 is UiEvent.OnSetAsDefaultBrowser -> {
                     state = state.copy(isDefaultBrowser = uiEvent.isDefaultBrowser)
                 }
-                is UiEvent.OnNewTab -> {
+                is UiEvent.OnTabChange -> {
                     state = state.copy(currentTab = uiEvent.tabPage)
                 }
                 is UiEvent.OnSaveTab -> {

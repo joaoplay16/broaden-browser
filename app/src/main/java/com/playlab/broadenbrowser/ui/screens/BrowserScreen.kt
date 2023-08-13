@@ -240,7 +240,7 @@ fun BrowserScreen(
                 browserState = browserState,
                 onUiEvent = { event ->
                     onEvent(event)
-                    if (event is UiEvent.OnNewTab) {
+                    if (event is UiEvent.OnTabChange) {
                         searchBarValue = TextFieldValue()
 
                         // Load selected tab from tab list
@@ -452,7 +452,7 @@ fun BrowserScreen(
                                 isDesktopSite = isDesktopSite,
                                 onNewTabClick = {
                                     searchBarValue = TextFieldValue()
-                                    onEvent(UiEvent.OnNewTab(null))
+                                    onEvent(UiEvent.OnTabChange(null))
                                 },
                                 onBookmarksClick = {
                                     /*TODO: implement bookmarks click action*/
