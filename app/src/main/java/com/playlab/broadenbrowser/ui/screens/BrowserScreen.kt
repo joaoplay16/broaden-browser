@@ -162,12 +162,12 @@ fun BrowserScreen(
         key1 = webViewState.isLoading,
         block = {
             with(webViewState) {
-                lastLoadedUrl?.let {
-                    searchBarValue = TextFieldValue(text = it)
-                }
+                currentTab?.let { tab ->
+                    lastLoadedUrl?.let {
+                        searchBarValue = TextFieldValue(text = it)
+                    }
 
-                if (isLoading.not()) {
-                    currentTab?.let { tab ->
+                    if (isLoading.not()) {
                         val title = pageTitle ?: tab.title
                         val url = lastLoadedUrl ?: tab.url
                         val timestamp = System.currentTimeMillis()
