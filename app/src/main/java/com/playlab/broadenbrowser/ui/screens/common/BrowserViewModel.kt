@@ -91,9 +91,12 @@ class BrowserViewModel @Inject constructor(
                 }
                 is UiEvent.OnCloseTabs -> {
                     browserRepository.deleteTabPages(uiEvent.tabPages)
+                    if(state.currentTab in uiEvent.tabPages)
+                        state = state.copy(currentTab = null)
                 }
                 is UiEvent.OnCloseAllTabs -> {
                     browserRepository.deleteAllTabPages()
+                    state = state.copy(currentTab = null)
                 }
                 is UiEvent.OnSaveHistoryPage -> {
                     saveEditHistoryPageUseCase(uiEvent.historyPage)
