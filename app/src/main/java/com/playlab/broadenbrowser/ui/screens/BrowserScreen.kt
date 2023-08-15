@@ -222,6 +222,7 @@ fun BrowserScreen(
         block = {
             if(currentTab == null) {
                 webViewInstance.visibility = View.GONE
+                searchBarValue = TextFieldValue()
             }else{
                 webViewInstance.visibility = View.VISIBLE
             }
