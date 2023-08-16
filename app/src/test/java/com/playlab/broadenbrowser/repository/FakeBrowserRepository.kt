@@ -34,12 +34,16 @@ class FakeBrowserRepository : BrowserRepository {
     }
 
     override suspend fun editTabPage(tabPage: TabPage): Int {
-        val tabToEditIndex = tabPages.value.indexOfFirst { it.id == tabPage.id }
-        val listWithTheModifiedTab = tabPages.value.toMutableList()
-        listWithTheModifiedTab[tabToEditIndex] = tabPage
-        tabPages.value = listWithTheModifiedTab
-
-        return if (tabPages.value.contains(tabPage)) 1 else 0
+        return try {
+            val tabToEditIndex = tabPages.value.indexOfFirst { it.id == tabPage.id }
+            val listWithTheModifiedTab = tabPages.value.toMutableList()
+            listWithTheModifiedTab[tabToEditIndex] = tabPage
+            tabPages.value = listWithTheModifiedTab
+            return if (tabPages.value.contains(tabPage)) 1 else 0
+        } catch (e: IndexOutOfBoundsException) {
+            e.printStackTrace()
+            0
+        }
     }
 
     override suspend fun getTab(id: Long): TabPage? {
