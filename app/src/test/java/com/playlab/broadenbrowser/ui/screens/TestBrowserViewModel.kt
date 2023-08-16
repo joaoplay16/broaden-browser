@@ -3,6 +3,7 @@ package com.playlab.broadenbrowser.ui.screens
 import com.google.common.truth.Truth.assertThat
 import com.playlab.broadenbrowser.MainCoroutineRule
 import com.playlab.broadenbrowser.domain.SaveEditHistoryPageUseCase
+import com.playlab.broadenbrowser.domain.SaveEditTabUseCase
 import com.playlab.broadenbrowser.mocks.MockHistoryPages.historyPage1
 import com.playlab.broadenbrowser.mocks.MockHistoryPages.historyPage2
 import com.playlab.broadenbrowser.mocks.MockHistoryPages.historyPage3
@@ -36,7 +37,8 @@ class TestBrowserViewModel {
         viewModel = BrowserViewModel(
             FakePreferencesRepository(),
             fakeBrowserRepository,
-            SaveEditHistoryPageUseCase(fakeBrowserRepository)
+            SaveEditHistoryPageUseCase(fakeBrowserRepository),
+            SaveEditTabUseCase(fakeBrowserRepository)
         )
     }
 
@@ -44,7 +46,7 @@ class TestBrowserViewModel {
     fun `save a tab`() = runTest {
         with(viewModel) {
             assertThat(state.tabs).isEmpty()
-            onUiEvent(UiEvent.OnSaveTab(tab1))
+            onUiEvent(UiEvent.OnSaveEditTab(tab1))
             assertThat(state.tabs.size).isEqualTo(1)
         }
     }
@@ -53,8 +55,9 @@ class TestBrowserViewModel {
     fun `save a duplicated tab`() = runTest {
         with(viewModel) {
             assertThat(state.tabs).isEmpty()
-            onUiEvent(UiEvent.OnSaveTab(tab1))
-            onUiEvent(UiEvent.OnSaveTab(tab1))
+            // set id to 0 to indicate a new tab
+            onUiEvent(UiEvent.OnSaveEditTab(tab1.copy(id = 0)))
+            onUiEvent(UiEvent.OnSaveEditTab(tab1.copy(id = 0)))
             assertThat(state.tabs.size).isEqualTo(2)
         }
     }
@@ -63,7 +66,7 @@ class TestBrowserViewModel {
     @Test
     fun `set the successfully saved tab as current tab ` () = runTest {
         with(viewModel) {
-            onUiEvent(UiEvent.OnSaveTab(tab1))
+            onUiEvent(UiEvent.OnSaveEditTab(tab1))
 
             assertThat(state.currentTab).isNotNull()
 
@@ -74,7 +77,7 @@ class TestBrowserViewModel {
     @Test
     fun `add a new tab`() = runTest {
         with(viewModel) {
-            onUiEvent(UiEvent.OnSaveTab(tab1))
+            onUiEvent(UiEvent.OnSaveEditTab(tab1))
             onUiEvent(UiEvent.OnTabChange(null))
             assertThat(state.currentTab).isNull()
         }
@@ -83,9 +86,10 @@ class TestBrowserViewModel {
     @Test
     fun `close selected tabs`() = runTest {
         with(viewModel) {
-            onUiEvent(UiEvent.OnSaveTab(tab1))
-            onUiEvent(UiEvent.OnSaveTab(tab2))
-            onUiEvent(UiEvent.OnSaveTab(tab3))
+            // set id to 0 to indicate a new tab
+            onUiEvent(UiEvent.OnSaveEditTab(tab1.copy(id = 0)))
+            onUiEvent(UiEvent.OnSaveEditTab(tab2.copy(id = 0)))
+            onUiEvent(UiEvent.OnSaveEditTab(tab3.copy(id = 0)))
 
             val tabsToClose = listOf(tab1, tab3)
 
@@ -99,9 +103,10 @@ class TestBrowserViewModel {
     @Test
     fun `close all tabs`() = runTest {
         with(viewModel) {
-            onUiEvent(UiEvent.OnSaveTab(tab1))
-            onUiEvent(UiEvent.OnSaveTab(tab2))
-            onUiEvent(UiEvent.OnSaveTab(tab3))
+            // set id to 0 to indicate a new tab
+            onUiEvent(UiEvent.OnSaveEditTab(tab1.copy(id = 0)))
+            onUiEvent(UiEvent.OnSaveEditTab(tab2.copy(id = 0)))
+            onUiEvent(UiEvent.OnSaveEditTab(tab3.copy(id = 0)))
 
             onUiEvent(UiEvent.OnCloseAllTabs)
 
@@ -166,7 +171,7 @@ class TestBrowserViewModel {
     @Test
     fun `set the successfully modified tab as current tab` () = runTest {
         with(viewModel) {
-            onUiEvent(UiEvent.OnSaveTab(tab1))
+            onUiEvent(UiEvent.OnSaveEditTab(tab1))
 
             val tab1Modified = tab1.copy(
                 id = state.currentTab!!.id,
@@ -174,7 +179,7 @@ class TestBrowserViewModel {
                 title = "Material Design"
             )
 
-            onUiEvent(UiEvent.OnEditTab(tab1Modified))
+            onUiEvent(UiEvent.OnSaveEditTab(tab1Modified))
 
             assertThat(state.currentTab).isEqualTo(tab1Modified)
         }

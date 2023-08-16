@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.playlab.broadenbrowser.domain.SaveEditHistoryPageUseCase
+import com.playlab.broadenbrowser.domain.SaveEditTabUseCase
 import com.playlab.broadenbrowser.repository.BrowserRepository
 import com.playlab.broadenbrowser.repository.PreferencesRepository
 import com.playlab.broadenbrowser.ui.utils.SearchMechanism
@@ -19,7 +20,8 @@ import javax.inject.Inject
 class BrowserViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository,
     private val browserRepository: BrowserRepository,
-    private val saveEditHistoryPageUseCase: SaveEditHistoryPageUseCase
+    private val saveEditHistoryPageUseCase: SaveEditHistoryPageUseCase,
+    private val saveEditTabUseCase: SaveEditTabUseCase
 ) : ViewModel() {
 
     var state by mutableStateOf(BrowserState())
@@ -79,15 +81,12 @@ class BrowserViewModel @Inject constructor(
                 is UiEvent.OnTabChange -> {
                     state = state.copy(currentTab = uiEvent.tabPage)
                 }
-                is UiEvent.OnSaveTab -> {
-                    val rowId = browserRepository.insertTabPage(uiEvent.tabPage)
-                    if (rowId != -1L)
-                        state = state.copy(currentTab = uiEvent.tabPage.copy(id = rowId.toInt()))
-                }
-                is UiEvent.OnEditTab -> {
-                    val result = browserRepository.editTabPage(tabPage = uiEvent.tabPage)
-                    if (result > 0)
-                        state = state.copy(currentTab = uiEvent.tabPage)
+                is UiEvent.OnSaveEditTab -> {
+                    val result = saveEditTabUseCase(
+                        currentTabPage = state.currentTab,
+                        tabPage = uiEvent.tabPage
+                    )
+                   state = state.copy(currentTab = result)
                 }
                 is UiEvent.OnCloseTabs -> {
                     browserRepository.deleteTabPages(uiEvent.tabPages)

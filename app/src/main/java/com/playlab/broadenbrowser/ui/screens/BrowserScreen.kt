@@ -147,7 +147,7 @@ fun BrowserScreen(
     ) {
         if (externalLink != null) {
             onEvent(
-                UiEvent.OnSaveTab(
+                UiEvent.OnSaveEditTab(
                     TabPage(
                         title = externalLink,
                         url = externalLink,
@@ -174,7 +174,7 @@ fun BrowserScreen(
                         val timestamp = System.currentTimeMillis()
 
                         onEvent(
-                            UiEvent.OnEditTab(
+                            UiEvent.OnSaveEditTab(
                                 tab.copy(
                                     title = title,
                                     url = url,
@@ -400,7 +400,7 @@ fun BrowserScreen(
 
                                 if (currentTab == null) {
                                     onEvent(
-                                        UiEvent.OnSaveTab(
+                                        UiEvent.OnSaveEditTab(
                                             TabPage(
                                                 title = url,
                                                 url = url,
