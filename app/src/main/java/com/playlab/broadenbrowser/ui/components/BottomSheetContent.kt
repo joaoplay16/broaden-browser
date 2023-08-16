@@ -135,8 +135,18 @@ fun BottomSheetContent(
                         HistorySection(
                             modifier = Modifier.fillMaxSize(),
                             history = browserState.history,
-                            onHistoryPageClick = { TODO("Implement click on history page") },
-                            onDeleteHistoryPages = { onUiEvent(UiEvent.OnDeleteHistoryPages(it))},
+                            onHistoryPageClick = {
+                                onUiEvent(UiEvent.OnSaveEditTab(
+                                    TabPage(
+                                        // update the current tab or create a new one
+                                        id = browserState.currentTab?.id ?: 0,
+                                        title = it.title,
+                                        url = it.url,
+                                        timestamp = System.currentTimeMillis()
+                                    )
+                                ))
+                            },
+                            onDeleteHistoryPages = { onUiEvent(UiEvent.OnDeleteHistoryPages(it)) },
                             onDeleteAllHistoryClick = { onUiEvent(UiEvent.OnDeleteAllHistoryPages) }
                         )
                     }
