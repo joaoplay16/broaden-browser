@@ -142,6 +142,12 @@ fun BrowserScreen(
         backgroundColor = LocalTextSelectionColors.current.backgroundColor
     )
 
+    val hideBottomSheet: () -> Unit = {
+        coroutineScope.launch {
+            bottomSheetScaffoldState.bottomSheetState.hide()
+        }
+    }
+
     LaunchedEffect(
         externalLink
     ) {
@@ -242,17 +248,24 @@ fun BrowserScreen(
                 browserState = browserState,
                 onUiEvent = { event ->
                     onEvent(event)
-                    if (event is UiEvent.OnTabChange) {
-                        searchBarValue = TextFieldValue()
+                    when (event) {
+                        is UiEvent.OnTabChange -> {
+                            // Load selected tab from tab list
+                            event.tabPage?.let {
+                                navigator.loadUrl(it.url)
+                            }
 
-                        // Load selected tab from tab list
-                        event.tabPage?.let {
-                            navigator.loadUrl(it.url)
+                            hideBottomSheet()
                         }
+                        is UiEvent.OnSaveEditTab -> {
+                            // Load selected page from the history
+                            event.tabPage.let {
+                                navigator.loadUrl(it.url)
+                            }
 
-                        coroutineScope.launch {
-                            bottomSheetScaffoldState.bottomSheetState.hide()
+                            hideBottomSheet()
                         }
+                        else -> {}
                     }
                 }
             )
