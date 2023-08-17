@@ -148,7 +148,11 @@ fun SettingsScreen(
                 }
             }
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .clickable {
+                        onEvent(UiEvent.OnEnableDarkTheme(!isDarkThemeEnabled))
+                    }
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -166,7 +170,11 @@ fun SettingsScreen(
                 )
             }
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .clickable {
+                        onEvent(UiEvent.OnEnableStartInFullscreen(!isStartInFullscreenEnabled))
+                    }
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -183,7 +191,11 @@ fun SettingsScreen(
                 )
             }
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .clickable {
+                        onEvent(UiEvent.OnAllowJavascript(!isJavascriptAllowed))
+                    }
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
