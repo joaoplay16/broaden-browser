@@ -220,9 +220,7 @@ fun SettingsScreen(
                     Switch(
                         modifier = Modifier.scale(0.7f),
                         checked = browserState.isDefaultBrowser,
-                        onCheckedChange = {
-
-                        }
+                        onCheckedChange = null
                     )
                 }
             }
