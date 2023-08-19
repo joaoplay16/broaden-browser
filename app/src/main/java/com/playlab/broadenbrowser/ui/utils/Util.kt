@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Patterns
 import android.webkit.WebView
+import com.playlab.broadenbrowser.model.HistoryPage
 import java.util.Calendar
 
 object Util {
@@ -65,5 +66,17 @@ object Util {
             settings.useWideViewPort = false
             settings.loadWithOverviewMode = false
         }
+    }
+
+    fun List<HistoryPage>.nextTabHistoryEntry(currentTabHistoryEntry: HistoryPage): HistoryPage? {
+        val entryIndex = this.indexOf(currentTabHistoryEntry)
+        return if (entryIndex >= 0 && entryIndex < this.size - 1)
+            this[entryIndex + 1] else null
+
+    }
+
+    fun List<HistoryPage>.previousTabHistoryEntry(currentTabHistoryEntry: HistoryPage): HistoryPage? {
+        val entryIndex = this.indexOf(currentTabHistoryEntry)
+        return if (entryIndex > 0) this[entryIndex - 1] else null
     }
 }
