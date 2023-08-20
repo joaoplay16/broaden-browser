@@ -19,13 +19,13 @@ class TestSaveTabHistoryEntryUseCase {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var saveEditHistoryPageUseCase: SaveTabHistoryEntryUseCase
+    private lateinit var saveTabHistoryEntryUseCase: SaveTabHistoryEntryUseCase
     private lateinit var repository: FakeBrowserRepository
 
     @Before
     fun before() {
         repository = FakeBrowserRepository()
-        saveEditHistoryPageUseCase = SaveTabHistoryEntryUseCase(repository)
+        saveTabHistoryEntryUseCase = SaveTabHistoryEntryUseCase(repository)
     }
 
     @Test
@@ -39,7 +39,7 @@ class TestSaveTabHistoryEntryUseCase {
             val history = repository.getHistory().first()
 
             history.forEach {
-                saveEditHistoryPageUseCase(
+                saveTabHistoryEntryUseCase(
                     tabPage = tab4.copy(id = tabId.toInt()), // tab with updated the id
                     historyPage = it
                 )
@@ -62,7 +62,7 @@ class TestSaveTabHistoryEntryUseCase {
             val history = repository.getHistory().first()
 
             history.forEach {
-                saveEditHistoryPageUseCase(
+                saveTabHistoryEntryUseCase(
                     tabPage = tab4.copy(id = tabId.toInt()), // tab with updated the id
                     historyPage = it
                 )
