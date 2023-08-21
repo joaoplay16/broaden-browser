@@ -26,7 +26,7 @@ class SaveTabHistoryEntryUseCase @Inject constructor(
         }
 
         // returning the id
-        return 0
+        return -1
     }
 
     private fun isTheSameHistoryPage(
