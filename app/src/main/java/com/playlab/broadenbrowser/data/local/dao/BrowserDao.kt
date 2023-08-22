@@ -82,7 +82,7 @@ interface BrowserDao {
         JOIN tabs ON tab_history.tabId = tabs.id 
         WHERE tabs.id = :tabId ORDER BY timestamp DESC LIMIT 1
     """)
-    fun getLatestEntryFromTabHistory(tabId: Long): HistoryPage?
+    suspend fun getLatestEntryFromTabHistory(tabId: Long): HistoryPage?
 
     @Query("DELETE FROM tab_history WHERE tabId = :tabId")
     suspend fun deleteTabHistory(tabId: Long): Int
