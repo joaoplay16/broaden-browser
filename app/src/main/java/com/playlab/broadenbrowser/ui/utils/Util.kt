@@ -68,14 +68,16 @@ object Util {
         }
     }
 
-    fun List<HistoryPage>.nextTabHistoryEntry(currentTabHistoryEntry: HistoryPage): HistoryPage? {
+    fun List<HistoryPage>.nextTabHistoryEntry(currentTabHistoryEntry: HistoryPage? = null):
+            HistoryPage? {
         val entryIndex = this.indexOf(currentTabHistoryEntry)
         return if (entryIndex >= 0 && entryIndex < this.size - 1)
             this[entryIndex + 1] else null
 
     }
 
-    fun List<HistoryPage>.previousTabHistoryEntry(currentTabHistoryEntry: HistoryPage): HistoryPage? {
+    fun List<HistoryPage>.previousTabHistoryEntry(currentTabHistoryEntry: HistoryPage? = null):
+            HistoryPage? {
         val entryIndex = this.indexOf(currentTabHistoryEntry)
         return if (entryIndex > 0) this[entryIndex - 1] else null
     }
