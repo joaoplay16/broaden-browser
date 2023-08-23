@@ -37,12 +37,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.playlab.broadenbrowser.R
+import com.playlab.broadenbrowser.mocks.FakeBookmarks
 import com.playlab.broadenbrowser.mocks.MockTabPages
+import com.playlab.broadenbrowser.model.Bookmark
 import com.playlab.broadenbrowser.model.HistoryPage
 import com.playlab.broadenbrowser.model.TabPage
 import com.playlab.broadenbrowser.ui.screens.common.BrowserState
@@ -278,6 +281,84 @@ fun HistorySection(
                     textAlign = TextAlign.Center
                 )
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun BookmarksSection(
+    bookmarks: List<Bookmark>,
+    modifier: Modifier = Modifier,
+    onBookmarkClick: (Bookmark) -> Unit,
+    onDeleteBookmarks: (List<Bookmark>) -> Unit,
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+         if (bookmarks.isNotEmpty()) {
+            LazyColumn(
+                verticalArrangement = Arrangement.Top
+            ) {
+                items(
+                    items = bookmarks,
+                    key = { it.id }) { bookmark ->
+                    PageListItem(
+                        modifier = Modifier
+                            .padding(bottom = 4.dp)
+                            .animateItemPlacement()
+                            .clickable {
+                                onBookmarkClick(bookmark)
+                            },
+                        title = bookmark.title,
+                        border = BorderStroke(
+                            0.dp,
+                            Color.Transparent
+                        ),
+                        url = bookmark.url,
+                        buttonSlot = {
+                            IconButton(onClick = { TODO("Implement bookmark menu icon click") }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.dots_vertical),
+                                    contentDescription = stringResource(
+                                        id = R.string.bookmark_item_options_cd
+                                    )
+                                )
+                            }
+                        }
+                    )
+                }
+                item {
+                    Spacer(modifier = Modifier.padding(16.dp))
+                }
+            }
+        } else {
+            Box(
+                modifier = Modifier.weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(id = R.string.no_bookmarks_here),
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+}
+
+@Preview(uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun BookmarksSectionPreview() {
+    BroadenBrowserTheme {
+        Surface {
+            BookmarksSection(
+                modifier = Modifier.fillMaxSize(),
+                bookmarks = FakeBookmarks.fakeBookmarks,
+                onBookmarkClick = {},
+                onDeleteBookmarks = {}
+            )
         }
     }
 }
