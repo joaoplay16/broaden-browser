@@ -1,5 +1,6 @@
 package com.playlab.broadenbrowser.repository
 
+import com.playlab.broadenbrowser.model.Bookmark
 import com.playlab.broadenbrowser.model.HistoryPage
 import com.playlab.broadenbrowser.model.TabHistoryEntry
 import com.playlab.broadenbrowser.model.TabPage
@@ -121,5 +122,26 @@ class FakeBrowserRepository : BrowserRepository {
             }
 
         return deletedCount
+    }
+
+    // BOOKMARKS
+    override suspend fun getBookmarks(): List<Bookmark> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun insertBookmark(bookmark: Bookmark): Long {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteBookmarks(bookmarks: List<Bookmark>) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun editBookmark(bookmark: Bookmark): Int {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getBookmark(id: Long): Bookmark? {
+        TODO("Not yet implemented")
     }
 }

@@ -1,5 +1,6 @@
 package com.playlab.broadenbrowser.repository
 
+import com.playlab.broadenbrowser.model.Bookmark
 import com.playlab.broadenbrowser.model.HistoryPage
 import com.playlab.broadenbrowser.model.TabHistoryEntry
 import com.playlab.broadenbrowser.model.TabPage
@@ -39,4 +40,16 @@ interface BrowserRepository {
     suspend fun getLatestEntryFromTabHistory(tabId: Long): HistoryPage?
 
     suspend fun deleteTabHistory(tabId: Long): Int
+
+    // BOOKMARKS
+
+    suspend fun getBookmarks(): List<Bookmark>
+
+    suspend fun insertBookmark(bookmark: Bookmark): Long
+
+    suspend fun deleteBookmarks(bookmarks: List<Bookmark>)
+
+    suspend fun editBookmark(bookmark: Bookmark): Int
+
+    suspend fun getBookmark(id: Long): Bookmark?
 }

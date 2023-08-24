@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.playlab.broadenbrowser.model.Bookmark
 import com.playlab.broadenbrowser.model.HistoryPage
 import com.playlab.broadenbrowser.model.TabHistoryEntry
 import com.playlab.broadenbrowser.model.TabPage
@@ -86,4 +87,21 @@ interface BrowserDao {
 
     @Query("DELETE FROM tab_history WHERE tabId = :tabId")
     suspend fun deleteTabHistory(tabId: Long): Int
+
+    // BOOKMARKS
+
+    @Query("SELECT * FROM bookmarks ORDER BY id")
+    suspend fun getBookmarks(): List<Bookmark>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertBookmark(bookmark: Bookmark): Long
+
+    @Delete
+    suspend fun deleteBookmarks(bookmark: List<Bookmark>)
+
+    @Update
+    suspend fun editBookmark(bookmark: Bookmark): Int
+
+    @Query("SELECT * FROM bookmarks WHERE id = :id")
+    suspend fun getBookmark(id: Long): Bookmark?
 }
