@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.playlab.broadenbrowser.MainCoroutineRule
 import com.playlab.broadenbrowser.domain.SaveEditHistoryPageUseCase
 import com.playlab.broadenbrowser.domain.SaveEditTabUseCase
+import com.playlab.broadenbrowser.domain.SaveTabHistoryEntryUseCase
 import com.playlab.broadenbrowser.mocks.MockHistoryPages.historyPage1
 import com.playlab.broadenbrowser.mocks.MockHistoryPages.historyPage2
 import com.playlab.broadenbrowser.mocks.MockHistoryPages.historyPage3
@@ -37,6 +38,7 @@ class TestBrowserViewModel {
             fakeBrowserRepository,
             SaveEditHistoryPageUseCase(fakeBrowserRepository),
             SaveEditTabUseCase(fakeBrowserRepository),
+            SaveTabHistoryEntryUseCase(fakeBrowserRepository)
         )
     }
 

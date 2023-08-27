@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.playlab.broadenbrowser.domain.SaveEditHistoryPageUseCase
 import com.playlab.broadenbrowser.domain.SaveEditTabUseCase
+import com.playlab.broadenbrowser.domain.SaveTabHistoryEntryUseCase
 import com.playlab.broadenbrowser.repository.BrowserRepository
 import com.playlab.broadenbrowser.repository.PreferencesRepository
 import com.playlab.broadenbrowser.ui.utils.SearchMechanism
@@ -22,6 +23,7 @@ class BrowserViewModel @Inject constructor(
     private val browserRepository: BrowserRepository,
     private val saveEditHistoryPageUseCase: SaveEditHistoryPageUseCase,
     private val saveEditTabUseCase: SaveEditTabUseCase,
+    private val saveTabHistoryEntryUseCase: SaveTabHistoryEntryUseCase
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(BrowserState())
@@ -109,7 +111,14 @@ class BrowserViewModel @Inject constructor(
                 }
 
                 is UiEvent.OnSaveHistoryPage -> {
-                    saveEditHistoryPageUseCase(uiEvent.historyPage)
+                    saveEditHistoryPageUseCase(uiEvent.historyPage)?.let { historyPage ->
+                        state.value.currentTab?.let { tab ->
+                            saveTabHistoryEntryUseCase(
+                                tab,
+                                historyPage
+                            )
+                        }
+                    }
                 }
 
                 is UiEvent.OnDeleteHistoryPages -> {
