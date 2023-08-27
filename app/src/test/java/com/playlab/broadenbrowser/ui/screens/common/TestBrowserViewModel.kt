@@ -36,27 +36,27 @@ class TestBrowserViewModel {
             FakePreferencesRepository(),
             fakeBrowserRepository,
             SaveEditHistoryPageUseCase(fakeBrowserRepository),
-            SaveEditTabUseCase(fakeBrowserRepository)
+            SaveEditTabUseCase(fakeBrowserRepository),
         )
     }
 
     @Test
     fun `save a tab`() = runTest {
         with(viewModel) {
-            assertThat(state.tabs).isEmpty()
+            assertThat(state.value.tabs).isEmpty()
             onUiEvent(UiEvent.OnSaveEditTab(tab1))
-            assertThat(state.tabs.size).isEqualTo(1)
+            assertThat(state.value.tabs.size).isEqualTo(1)
         }
     }
 
     @Test
     fun `save a duplicated tab`() = runTest {
         with(viewModel) {
-            assertThat(state.tabs).isEmpty()
+            assertThat(state.value.tabs).isEmpty()
             // set id to 0 to indicate a new tab
             onUiEvent(UiEvent.OnSaveEditTab(tab1.copy(id = 0)))
             onUiEvent(UiEvent.OnSaveEditTab(tab1.copy(id = 0)))
-            assertThat(state.tabs.size).isEqualTo(2)
+            assertThat(state.value.tabs.size).isEqualTo(2)
         }
     }
 
@@ -66,9 +66,9 @@ class TestBrowserViewModel {
         with(viewModel) {
             onUiEvent(UiEvent.OnSaveEditTab(tab1))
 
-            assertThat(state.currentTab).isNotNull()
+            assertThat(state.value.currentTab).isNotNull()
 
-            assertThat(state.currentTab!!.id).isGreaterThan(0)
+            assertThat(state.value.currentTab!!.id).isGreaterThan(0)
         }
     }
 
@@ -77,7 +77,7 @@ class TestBrowserViewModel {
         with(viewModel) {
             onUiEvent(UiEvent.OnSaveEditTab(tab1))
             onUiEvent(UiEvent.OnTabChange(null))
-            assertThat(state.currentTab).isNull()
+            assertThat(state.value.currentTab).isNull()
         }
     }
 
@@ -93,8 +93,8 @@ class TestBrowserViewModel {
 
             onUiEvent(UiEvent.OnCloseTabs(tabsToClose))
 
-            assertThat(state.tabs.size).isEqualTo(1)
-            assertThat(state.tabs).containsExactly(tab2)
+            assertThat(state.value.tabs.size).isEqualTo(1)
+            assertThat(state.value.tabs).containsExactly(tab2)
         }
     }
 
@@ -108,61 +108,61 @@ class TestBrowserViewModel {
 
             onUiEvent(UiEvent.OnCloseAllTabs)
 
-            assertThat(state.tabs).isEmpty()
+            assertThat(state.value.tabs).isEmpty()
         }
     }
 
     @Test
     fun `enable javascript `() = runTest {
         with(viewModel) {
-            assertThat(state.isJavascriptAllowed).isTrue()
+            assertThat(state.value.isJavascriptAllowed).isTrue()
             onUiEvent(UiEvent.OnAllowJavascript(false))
 
-            assertThat(state.isJavascriptAllowed).isFalse()
+            assertThat(state.value.isJavascriptAllowed).isFalse()
         }
     }
 
     @Test
     fun `enable fullscreen`() = runTest {
         with(viewModel) {
-            assertThat(state.isInFullscreen).isFalse()
+            assertThat(state.value.isInFullscreen).isFalse()
 
             onUiEvent(UiEvent.OnEnableFullscreen(true))
 
-            assertThat(state.isInFullscreen).isTrue()
+            assertThat(state.value.isInFullscreen).isTrue()
         }
     }
 
     @Test
     fun `enable in fullscreen startup`() = runTest {
         with(viewModel) {
-            assertThat(state.isStartInFullscreenEnabled).isFalse()
+            assertThat(state.value.isStartInFullscreenEnabled).isFalse()
 
             onUiEvent(UiEvent.OnEnableStartInFullscreen(true))
 
-            assertThat(state.isStartInFullscreenEnabled).isTrue()
+            assertThat(state.value.isStartInFullscreenEnabled).isTrue()
         }
     }
 
     @Test
     fun `enable dark theme`() = runTest {
         with(viewModel) {
-            assertThat(state.isDarkThemeEnabled).isFalse()
+            assertThat(state.value.isDarkThemeEnabled).isFalse()
 
             onUiEvent(UiEvent.OnEnableDarkTheme(true))
 
-            assertThat(state.isDarkThemeEnabled).isTrue()
+            assertThat(state.value.isDarkThemeEnabled).isTrue()
         }
     }
 
     @Test
     fun `set search engine`() = runTest {
         with(viewModel) {
-            assertThat(state.searchMechanism).isEqualTo(SearchMechanism.GOOGLE)
+            assertThat(state.value.searchMechanism).isEqualTo(SearchMechanism.GOOGLE)
 
             onUiEvent(UiEvent.OnSetSearchMechanism(SearchMechanism.BING))
 
-            assertThat(state.searchMechanism).isEqualTo(SearchMechanism.BING)
+            assertThat(state.value.searchMechanism).isEqualTo(SearchMechanism.BING)
         }
     }
 
@@ -172,14 +172,14 @@ class TestBrowserViewModel {
             onUiEvent(UiEvent.OnSaveEditTab(tab1))
 
             val tab1Modified = tab1.copy(
-                id = state.currentTab!!.id,
+                id = state.value.currentTab!!.id,
                 url = "https://m3.material.io",
                 title = "Material Design"
             )
 
             onUiEvent(UiEvent.OnSaveEditTab(tab1Modified))
 
-            assertThat(state.currentTab).isEqualTo(tab1Modified)
+            assertThat(state.value.currentTab).isEqualTo(tab1Modified)
         }
     }
 
@@ -187,7 +187,7 @@ class TestBrowserViewModel {
     fun `save a history page`() = runTest {
         with(viewModel) {
             onUiEvent(UiEvent.OnSaveHistoryPage(historyPage1))
-            assertThat(state.history.size).isEqualTo(1)
+            assertThat(state.value.history.size).isEqualTo(1)
         }
     }
 
@@ -211,10 +211,10 @@ class TestBrowserViewModel {
                     )
                 )
 
-                assertThat(state.history).isNotEmpty()
-                assertThat(state.history.size).isEqualTo(1)
+                assertThat(state.value.history).isNotEmpty()
+                assertThat(state.value.history.size).isEqualTo(1)
 
-                val savedHistoryPage = state.history.first()
+                val savedHistoryPage = state.value.history.first()
 
                 assertThat(savedHistoryPage.timestamp).isGreaterThan(historyPageToSave.timestamp)
             }
@@ -238,7 +238,7 @@ class TestBrowserViewModel {
                     )
                 )
 
-                assertThat(state.history.size).isEqualTo(2)
+                assertThat(state.value.history.size).isEqualTo(2)
             }
         }
 
@@ -253,8 +253,8 @@ class TestBrowserViewModel {
 
             onUiEvent(UiEvent.OnDeleteHistoryPages(historyPagesToDelete))
 
-            assertThat(state.history.size).isEqualTo(1)
-            assertThat(state.history).containsExactly(historyPage2)
+            assertThat(state.value.history.size).isEqualTo(1)
+            assertThat(state.value.history).containsExactly(historyPage2)
         }
     }
 
@@ -267,7 +267,7 @@ class TestBrowserViewModel {
 
             onUiEvent(UiEvent.OnDeleteAllHistoryPages)
 
-            assertThat(state.history).isEmpty()
+            assertThat(state.value.history).isEmpty()
         }
     }
 }

@@ -1,8 +1,5 @@
 package com.playlab.broadenbrowser.ui.screens.common
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.playlab.broadenbrowser.domain.SaveEditHistoryPageUseCase
@@ -11,8 +8,11 @@ import com.playlab.broadenbrowser.repository.BrowserRepository
 import com.playlab.broadenbrowser.repository.PreferencesRepository
 import com.playlab.broadenbrowser.ui.utils.SearchMechanism
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,38 +21,38 @@ class BrowserViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository,
     private val browserRepository: BrowserRepository,
     private val saveEditHistoryPageUseCase: SaveEditHistoryPageUseCase,
-    private val saveEditTabUseCase: SaveEditTabUseCase
+    private val saveEditTabUseCase: SaveEditTabUseCase,
 ) : ViewModel() {
 
-    var state by mutableStateOf(BrowserState())
-        private set
+    private var _state = MutableStateFlow(BrowserState())
+    val state = _state.asStateFlow()
 
     init {
         with(preferencesRepository) {
-            isStartInFullscreenEnabled().onEach {
-                state = state.copy(isStartInFullscreenEnabled = it)
+            isStartInFullscreenEnabled().onEach { enabled ->
+                _state.update { it.copy(isStartInFullscreenEnabled = enabled) }
             }.launchIn(viewModelScope)
 
-            isJavascriptAllowed().onEach {
-                state = state.copy(isJavascriptAllowed = it)
+            isJavascriptAllowed().onEach { value ->
+                _state.update { it.copy(isJavascriptAllowed = value) }
             }.launchIn(viewModelScope)
 
-            isDarkThemeEnabled().onEach {
-                state = state.copy(isDarkThemeEnabled = it)
+            isDarkThemeEnabled().onEach { value ->
+                _state.update { it.copy(isDarkThemeEnabled = value) }
             }.launchIn(viewModelScope)
 
-            searchMechanism().onEach {
-                state = state.copy(searchMechanism = SearchMechanism.valueOf(it))
+            searchMechanism().onEach { value ->
+                _state.update { it.copy(searchMechanism = SearchMechanism.valueOf(value)) }
             }.launchIn(viewModelScope)
         }
 
         with(browserRepository) {
-            getTabs().onEach {
-                state = state.copy(tabs = it)
+            getTabs().onEach { value ->
+                _state.update { it.copy(tabs = value) }
             }.launchIn(viewModelScope)
 
-            getHistory().onEach {
-                state = state.copy(history = it)
+            getHistory().onEach { value ->
+                _state.update { it.copy(history = value) }
             }.launchIn(viewModelScope)
         }
     }
@@ -63,46 +63,59 @@ class BrowserViewModel @Inject constructor(
                 is UiEvent.OnAllowJavascript -> {
                     preferencesRepository.allowJavascript(uiEvent.allowed)
                 }
+
                 is UiEvent.OnEnableFullscreen -> {
-                    state = state.copy(isInFullscreen = uiEvent.enabled)
+                    _state.update { it.copy(isInFullscreen = uiEvent.enabled) }
                 }
+
                 is UiEvent.OnEnableStartInFullscreen -> {
                     preferencesRepository.enableStartInFullscreen(uiEvent.enabled)
                 }
+
                 is UiEvent.OnEnableDarkTheme -> {
                     preferencesRepository.enableDarkTheme(uiEvent.enabled)
                 }
+
                 is UiEvent.OnSetSearchMechanism -> {
                     preferencesRepository.setSearchMechanism(uiEvent.searchMechanism.name)
                 }
+
                 is UiEvent.OnSetAsDefaultBrowser -> {
-                    state = state.copy(isDefaultBrowser = uiEvent.isDefaultBrowser)
+                    _state.update { it.copy(isDefaultBrowser = uiEvent.isDefaultBrowser) }
                 }
+
                 is UiEvent.OnTabChange -> {
-                    state = state.copy(currentTab = uiEvent.tabPage)
+                    _state.update { it.copy(currentTab = uiEvent.tabPage) }
                 }
+
                 is UiEvent.OnSaveEditTab -> {
                     val result = saveEditTabUseCase(
-                        currentTabPage = state.currentTab,
+                        currentTabPage = _state.value.currentTab,
                         tabPage = uiEvent.tabPage
                     )
-                   state = state.copy(currentTab = result)
+                    _state.update { it.copy(currentTab = result) }
+
                 }
+
                 is UiEvent.OnCloseTabs -> {
                     browserRepository.deleteTabPages(uiEvent.tabPages)
-                    if(state.currentTab in uiEvent.tabPages)
-                        state = state.copy(currentTab = null)
+                    if (_state.value.currentTab in uiEvent.tabPages)
+                        _state.update { it.copy(currentTab = null) }
                 }
+
                 is UiEvent.OnCloseAllTabs -> {
                     browserRepository.deleteAllTabPages()
-                    state = state.copy(currentTab = null)
+                    _state.update { it.copy(currentTab = null) }
                 }
+
                 is UiEvent.OnSaveHistoryPage -> {
                     saveEditHistoryPageUseCase(uiEvent.historyPage)
                 }
+
                 is UiEvent.OnDeleteHistoryPages -> {
                     browserRepository.deleteHistoryPages(uiEvent.historyPages)
                 }
+
                 is UiEvent.OnDeleteAllHistoryPages -> {
                     browserRepository.deleteAllHistoryPages()
                 }
