@@ -62,9 +62,9 @@ class TestTabHistoryManager {
         assertThat(tabHistoryManager.previousTabHistoryEntry()).isEqualTo(historyPage1)
         assertThat(tabHistoryManager.nextTabHistoryEntry()).isEqualTo(historyPage2)
 
-        tabHistoryManager.setCurrentHistoryEntry(historyPage2)
-        // Simulating switch to other tab history
+        // Simulating the tab history updating
         tabHistoryManager.updateTabHistory(listOf(historyPage3, historyPage2, historyPage1))
+        tabHistoryManager.setCurrentHistoryEntry(historyPage2)
 
         assertThat(tabHistoryManager.nextTabHistoryEntry()).isEqualTo(historyPage1)
     }
