@@ -8,7 +8,7 @@ import javax.inject.Inject
 class SaveEditHistoryPageUseCase @Inject constructor(
     private val browserRepository: BrowserRepository
 ){
-    suspend operator fun invoke(historyPage: HistoryPage){
+    suspend operator fun invoke(historyPage: HistoryPage): HistoryPage?{
         val existingHistoryPage = browserRepository
             .getTodayLatestHistoryPageByUrl(historyPage.url)
 
@@ -17,9 +17,18 @@ class SaveEditHistoryPageUseCase @Inject constructor(
                 historyPage = existingHistoryPage.copy(
                     timestamp = historyPage.timestamp
                 )
-            )
+            ).let {affectedRows ->
+                if(affectedRows > 0) {
+                    return existingHistoryPage.copy(
+                        timestamp = historyPage.timestamp
+                    )
+                }
+            }
         }else{
-            browserRepository.insertHistoryPage(historyPage)
+            return browserRepository.insertHistoryPage(historyPage).let {
+                historyPage.copy(id = it.toInt())
+            }
         }
+        return null
     }
 }
