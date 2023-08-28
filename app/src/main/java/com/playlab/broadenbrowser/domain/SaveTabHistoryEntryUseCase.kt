@@ -12,7 +12,7 @@ class SaveTabHistoryEntryUseCase @Inject constructor(
     suspend operator fun invoke(
         tabPage: TabPage,
         historyPage: HistoryPage
-    ): Long {
+    ): HistoryPage? {
         val lastSavedTabHistoryEntry = repository.getLatestEntryFromTabHistory(tabPage.id.toLong())
 
         if (isTheSameHistoryPage(historyPage, lastSavedTabHistoryEntry).not()) {
@@ -21,12 +21,13 @@ class SaveTabHistoryEntryUseCase @Inject constructor(
                 historyPageId = historyPage.id.toLong(),
                 creationTime = System.currentTimeMillis()
             )
-            // returning the id
-            return repository.insertTabHistoryEntry(tabHistoryEntry)
-        }
 
-        // returning the id
-        return -1
+            return repository.insertTabHistoryEntry(tabHistoryEntry).let{
+                  historyPage.copy(id = it.toInt())
+            }
+        }
+        
+        return null
     }
 
     private fun isTheSameHistoryPage(
