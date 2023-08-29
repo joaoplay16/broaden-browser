@@ -72,7 +72,7 @@ interface BrowserDao {
         SELECT history.* FROM history 
         JOIN tab_history ON tab_history.historyPageId = history.id 
         JOIN tabs ON tab_history.tabId = tabs.id 
-        WHERE tabs.id = :tabId ORDER BY timestamp
+        WHERE tabs.id = :tabId ORDER BY tab_history.id
     """)
     fun getTabHistory(tabId: Long): Flow<List<HistoryPage>>
 
