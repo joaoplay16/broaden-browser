@@ -15,6 +15,7 @@ class FakeBrowserRepository : BrowserRepository {
     private var tabPages: MutableStateFlow<List<TabPage>> = MutableStateFlow(emptyList())
     private var history: MutableStateFlow<List<HistoryPage>> = MutableStateFlow(emptyList())
     private var tabsHistory: MutableStateFlow<List<TabHistoryEntry>> = MutableStateFlow(emptyList())
+    private var bookmarks: List<Bookmark> = mutableListOf()
 
     override fun getTabs(): Flow<List<TabPage>> {
         return tabPages
@@ -126,22 +127,34 @@ class FakeBrowserRepository : BrowserRepository {
 
     // BOOKMARKS
     override suspend fun getBookmarks(): List<Bookmark> {
-        TODO("Not yet implemented")
+        return bookmarks
     }
 
     override suspend fun insertBookmark(bookmark: Bookmark): Long {
-        TODO("Not yet implemented")
+        val newId = bookmarks.size + 1
+        bookmarks.plus(bookmark.copy(id = newId))
+        return newId.toLong()
     }
 
     override suspend fun deleteBookmarks(bookmarks: List<Bookmark>) {
-        TODO("Not yet implemented")
+        this.bookmarks.minus(bookmarks.toSet())
     }
 
     override suspend fun editBookmark(bookmark: Bookmark): Int {
-        TODO("Not yet implemented")
+        return try {
+            val bookmarkToEditIndex = bookmarks.indexOfFirst { it.id == bookmark.id }
+            if (bookmarkToEditIndex == -1) return 0
+            val listWithTheModifiedBookmark = bookmarks.toMutableList()
+            listWithTheModifiedBookmark[bookmarkToEditIndex] = bookmark
+            bookmarks = listWithTheModifiedBookmark
+            return if (bookmarks.contains(bookmark)) 1 else 0
+        } catch (e: IndexOutOfBoundsException) {
+            e.printStackTrace()
+            0
+        }
     }
 
     override suspend fun getBookmark(id: Long): Bookmark? {
-        TODO("Not yet implemented")
+        return bookmarks.find { it.id == id.toInt() }
     }
 }
