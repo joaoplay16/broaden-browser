@@ -2,6 +2,7 @@ package com.playlab.broadenbrowser.model
 
 class TabHistoryManager {
     private var historyPages: List<HistoryPage> = mutableListOf()
+    val historySize get() = historyPages.size
     private var currentIndex: Int = 0
 
     val currentHistoryPage: HistoryPage?
