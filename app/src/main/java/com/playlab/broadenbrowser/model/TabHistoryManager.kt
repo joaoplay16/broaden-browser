@@ -1,8 +1,11 @@
 package com.playlab.broadenbrowser.model
 
 class TabHistoryManager {
-    private var currentIndex: Int = 0
     private var historyPages: List<HistoryPage> = mutableListOf()
+    private var currentIndex: Int = 0
+
+    val currentHistoryPage: HistoryPage?
+        get() = historyPages.getOrNull(currentIndex)
 
     fun setCurrentHistoryEntry(
         currentHistoryEntry: HistoryPage? = null,
