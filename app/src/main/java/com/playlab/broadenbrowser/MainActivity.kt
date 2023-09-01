@@ -11,6 +11,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -19,8 +21,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.playlab.broadenbrowser.ui.screens.BrowserScreen
-import com.playlab.broadenbrowser.ui.screens.common.BrowserViewModel
 import com.playlab.broadenbrowser.ui.screens.SettingsScreen
+import com.playlab.broadenbrowser.ui.screens.common.BrowserViewModel
 import com.playlab.broadenbrowser.ui.screens.common.ScreenRoutes
 import com.playlab.broadenbrowser.ui.screens.common.UiEvent
 import com.playlab.broadenbrowser.ui.theme.BroadenBrowserTheme
@@ -46,12 +48,12 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val isInFullScreenMode = browserViewModel.state.isInFullscreen
+                    val browserState by browserViewModel.state.collectAsState()
 
                     LaunchedEffect(
-                        key1 = isInFullScreenMode
+                        key1 = browserState.isInFullscreen
                     ) {
-                        if (isInFullScreenMode) {
+                        if (browserState.isInFullscreen) {
                             enterFullScreenMode()
                         } else {
                             leaveFullScreenMode()
@@ -113,15 +115,17 @@ fun DefaultNavController(
     startDestination: String = ScreenRoutes.HOME.name,
     externalLink: String? = null
 ) {
+    val browserState by browserViewModel.state.collectAsState()
     NavHost(
         modifier = modifier,
         navController = navController,
         startDestination = startDestination,
     ) {
         composable(ScreenRoutes.HOME.name) {
+
             BrowserScreen(
                 onEvent = browserViewModel::onUiEvent,
-                browserState = browserViewModel.state.copy(
+                browserState = browserState.copy(
                     externalLink = externalLink
                 ),
                 onSettingClick = {
@@ -133,7 +137,7 @@ fun DefaultNavController(
         composable(ScreenRoutes.SETTINGS.name){
             SettingsScreen(
                 onEvent = browserViewModel::onUiEvent,
-                browserState = browserViewModel.state,
+                browserState = browserState,
                 onArrowBackPressed = {
                     navController.popBackStack()
                 }
