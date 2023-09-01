@@ -16,6 +16,7 @@ class TabHistoryManager {
     }
 
     fun updateTabHistory(historyPages: List<HistoryPage>) {
+        currentIndex = historyPages.size - 1
         this.historyPages = historyPages
     }
 

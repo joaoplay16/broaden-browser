@@ -56,6 +56,9 @@ class TestTabHistoryManager {
         val tabHistoryManager = TabHistoryManager()
 
         tabHistoryManager.updateTabHistory(browserHistory)
+        // The currentHistoryPage should be the most recent one
+        assertThat(tabHistoryManager.currentHistoryPage).isEqualTo(historyPage4)
+
         tabHistoryManager.setCurrentHistoryEntry(historyPage3)
 
         assertThat(tabHistoryManager.previousTabHistoryEntry()).isEqualTo(historyPage2)
