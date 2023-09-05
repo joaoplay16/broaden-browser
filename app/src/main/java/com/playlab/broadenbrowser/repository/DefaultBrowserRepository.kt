@@ -1,6 +1,7 @@
 package com.playlab.broadenbrowser.repository
 
 import com.playlab.broadenbrowser.data.local.BrowserDatabase
+import com.playlab.broadenbrowser.model.Bookmark
 import com.playlab.broadenbrowser.model.HistoryPage
 import com.playlab.broadenbrowser.model.TabHistoryEntry
 import com.playlab.broadenbrowser.model.TabPage
@@ -75,5 +76,27 @@ class DefaultBrowserRepository @Inject constructor(
 
     override suspend fun getLatestEntryFromTabHistory(tabId: Long): HistoryPage? {
         return db.browserDao().getLatestEntryFromTabHistory(tabId)
+    }
+
+    // BOOKMARKS
+
+    override suspend fun getBookmarks(): List<Bookmark> {
+        return db.browserDao().getBookmarks()
+    }
+
+    override suspend fun insertBookmark(bookmark: Bookmark): Long {
+        return db.browserDao().insertBookmark(bookmark)
+    }
+
+    override suspend fun deleteBookmarks(bookmarks: List<Bookmark>) {
+        return db.browserDao().deleteBookmarks(bookmarks)
+    }
+
+    override suspend fun editBookmark(bookmark: Bookmark): Int {
+        return db.browserDao().editBookmark(bookmark)
+    }
+
+    override suspend fun getBookmark(id: Long): Bookmark? {
+        return db.browserDao().getBookmark(id)
     }
 }

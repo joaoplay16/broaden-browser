@@ -1,5 +1,6 @@
 package com.playlab.broadenbrowser.repository
 
+import com.playlab.broadenbrowser.model.Bookmark
 import com.playlab.broadenbrowser.model.HistoryPage
 import com.playlab.broadenbrowser.model.TabHistoryEntry
 import com.playlab.broadenbrowser.model.TabPage
@@ -14,6 +15,7 @@ class FakeBrowserRepository : BrowserRepository {
     private var tabPages: MutableStateFlow<List<TabPage>> = MutableStateFlow(emptyList())
     private var history: MutableStateFlow<List<HistoryPage>> = MutableStateFlow(emptyList())
     private var tabsHistory: MutableStateFlow<List<TabHistoryEntry>> = MutableStateFlow(emptyList())
+    private var bookmarks: List<Bookmark> = mutableListOf()
 
     override fun getTabs(): Flow<List<TabPage>> {
         return tabPages
@@ -121,5 +123,38 @@ class FakeBrowserRepository : BrowserRepository {
             }
 
         return deletedCount
+    }
+
+    // BOOKMARKS
+    override suspend fun getBookmarks(): List<Bookmark> {
+        return bookmarks
+    }
+
+    override suspend fun insertBookmark(bookmark: Bookmark): Long {
+        val newId = bookmarks.size + 1
+        bookmarks.plus(bookmark.copy(id = newId))
+        return newId.toLong()
+    }
+
+    override suspend fun deleteBookmarks(bookmarks: List<Bookmark>) {
+        this.bookmarks.minus(bookmarks.toSet())
+    }
+
+    override suspend fun editBookmark(bookmark: Bookmark): Int {
+        return try {
+            val bookmarkToEditIndex = bookmarks.indexOfFirst { it.id == bookmark.id }
+            if (bookmarkToEditIndex == -1) return 0
+            val listWithTheModifiedBookmark = bookmarks.toMutableList()
+            listWithTheModifiedBookmark[bookmarkToEditIndex] = bookmark
+            bookmarks = listWithTheModifiedBookmark
+            return if (bookmarks.contains(bookmark)) 1 else 0
+        } catch (e: IndexOutOfBoundsException) {
+            e.printStackTrace()
+            0
+        }
+    }
+
+    override suspend fun getBookmark(id: Long): Bookmark? {
+        return bookmarks.find { it.id == id.toInt() }
     }
 }

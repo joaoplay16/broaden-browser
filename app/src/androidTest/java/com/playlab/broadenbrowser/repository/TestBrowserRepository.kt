@@ -4,6 +4,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.google.common.truth.Truth.assertThat
 import com.playlab.broadenbrowser.data.local.BrowserDatabase
+import com.playlab.broadenbrowser.mocks.FakeBookmarks.bookmark1
+import com.playlab.broadenbrowser.mocks.FakeBookmarks.bookmark2
 import com.playlab.broadenbrowser.mocks.MockHistoryPages.historyPage1
 import com.playlab.broadenbrowser.mocks.MockHistoryPages.historyPage2
 import com.playlab.broadenbrowser.mocks.MockTabPages.tab1
@@ -363,5 +365,59 @@ TestBrowserRepository {
         val affectedRows = repository.deleteTabHistory(tabId)
 
         assertThat(affectedRows).isEqualTo(2)
+    }
+
+    @Test
+    fun insertingAndGettingBookmarks() = runTest {
+        val bookmark1Id = repository.insertBookmark(bookmark1)
+        val bookmark2Id = repository.insertBookmark(bookmark2)
+
+        assertThat(bookmark1Id).isGreaterThan(-1)
+        assertThat(bookmark2Id).isGreaterThan(-1)
+
+        val bookmarks = repository.getBookmarks()
+
+        assertThat(bookmarks.size).isEqualTo(2)
+        assertThat(bookmarks).contains(bookmark1)
+        assertThat(bookmarks).contains(bookmark2)
+    }
+
+    @Test
+    fun deletingGivenBookmarks() = runTest {
+        repository.insertBookmark(bookmark1)
+        repository.insertBookmark(bookmark2)
+
+        repository.deleteBookmarks(listOf(bookmark1))
+
+        val bookmarks = repository.getBookmarks()
+
+        assertThat(bookmarks.size).isEqualTo(1)
+    }
+
+
+    @Test
+    fun gettingABookmarkById() = runTest {
+
+        val id = repository.insertBookmark(bookmark1)
+
+        val bookmark = repository.getBookmark(id = id)
+
+        assertThat(bookmark).isNotNull()
+    }
+
+    @Test
+    fun editingABookmark() = runTest {
+
+        val id = repository.insertBookmark(bookmark1)
+
+        val bookmark1Modified = bookmark1.copy(
+            id = id.toInt(),
+            url = "https://m3.material.io",
+            title = "Material Design"
+        )
+
+        val affectedRows: Int = repository.editBookmark(bookmark1Modified)
+
+        assertThat(affectedRows).isGreaterThan(0)
     }
 }

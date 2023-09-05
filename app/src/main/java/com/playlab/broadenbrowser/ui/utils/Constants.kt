@@ -6,6 +6,7 @@ object Constants {
     const val HISTORY_TABLE = "history"
     const val TAB_HISTORY = "tab_history"
     const val TAB_CURRENT_WEBPAGE = "tab_current_webpage"
+    const val BOOKMARK_TABLE = "bookmarks"
 
     const val DEFAULT_USER_AGENT_STRING =
         "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/113.0"
