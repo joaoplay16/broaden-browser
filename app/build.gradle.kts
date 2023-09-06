@@ -148,8 +148,8 @@ dependencies {
     implementation(libs.accompanist.webview)
 
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
-    kapt(libs.hilt.ext.compiler)
+    ksp(libs.hilt.compiler)
+    ksp(libs.hilt.ext.compiler)
 
     implementation(libs.androidx.datastore.preferences)
 
@@ -173,5 +173,5 @@ dependencies {
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.hilt.android.testing)
     androidTestImplementation(libs.kotlinx.coroutines.test)
-    kaptAndroidTest(libs.hilt.compiler)
+    kspAndroidTest(libs.hilt.compiler)
 }
