@@ -44,7 +44,8 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            BroadenBrowserTheme {
+            val isDark = browserViewModel.state.collectAsState().value.isDarkThemeEnabled
+            BroadenBrowserTheme(darkTheme = isDark) {
                 Surface(
                     color = MaterialTheme.colorScheme.background
                 ) {
